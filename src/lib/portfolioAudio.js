@@ -23,6 +23,14 @@ export function isAudioPrefOn() {
   }
 }
 
+export function shouldAutoEnableOnGesture() {
+  try {
+    return sessionStorage.getItem(AUDIO_PREF_KEY) === null
+  } catch (_) {
+    return false
+  }
+}
+
 function setAudioPref(on) {
   try {
     sessionStorage.setItem(AUDIO_PREF_KEY, on ? "1" : "0")
@@ -114,7 +122,12 @@ export async function startAmbientMusic() {
 }
 
 function tryPlayAmbient() {
+  if (!isAudioPrefOn()) return
   queueAmbientPlay()
+}
+
+export function requestAmbientPlay() {
+  tryPlayAmbient()
 }
 
 export function stopAmbientMusic() {
@@ -146,8 +159,10 @@ export function unlockAudio() {
     notifyUnlock()
   }
 
-  tryPlayAmbient()
-  initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+  if (isAudioPrefOn()) {
+    tryPlayAmbient()
+    initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+  }
   return !wasUnlocked
 }
 
@@ -155,8 +170,9 @@ export function setupAudioOnMouseMove(onUnlock) {
   let notified = false
   const handler = () => {
     unlockAudio()
-    tryPlayAmbient()
-    if (!notified) {
+    if (isAudioPrefOn()) {
+      tryPlayAmbient()
+    } else if (!notified && shouldAutoEnableOnGesture()) {
       notified = true
       onUnlock?.()
     }

@@ -109,6 +109,7 @@ export function pauseAmbientTrack() {
   wantPlay = false
   try {
     player?.pauseVideo?.()
+    player?.mute?.()
   } catch (_) {}
 }
 

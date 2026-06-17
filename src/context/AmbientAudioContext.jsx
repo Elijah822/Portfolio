@@ -2,13 +2,15 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import {
   isAudioPrefOn,
   onAudioUnlock,
+  requestAmbientPlay,
   setAmbientVolume,
   setupAudioOnMouseMove,
+  shouldAutoEnableOnGesture,
   startAmbientMusic,
   stopAmbientMusic,
   unlockAudio,
 } from "../lib/portfolioAudio.js"
-import { initAmbientPlayer, queueAmbientPlay } from "../lib/youtubePlayer.js"
+import { initAmbientPlayer } from "../lib/youtubePlayer.js"
 
 const AmbientAudioContext = createContext(null)
 
@@ -24,7 +26,9 @@ export function AmbientAudioProvider({ children }) {
   useEffect(() => {
     initAmbientPlayer().catch(() => {})
 
-    const offUnlock = onAudioUnlock(enableSound)
+    const offUnlock = onAudioUnlock(() => {
+      if (isAudioPrefOn() || shouldAutoEnableOnGesture()) enableSound()
+    })
     const cleanupGesture = setupAudioOnMouseMove(enableSound)
 
     if (isAudioPrefOn()) enableSound()
@@ -37,8 +41,8 @@ export function AmbientAudioProvider({ children }) {
 
   useEffect(() => {
     if (!soundOn) return undefined
-    queueAmbientPlay()
-    const id = setInterval(() => queueAmbientPlay(), 1500)
+    requestAmbientPlay()
+    const id = setInterval(() => requestAmbientPlay(), 1500)
     return () => clearInterval(id)
   }, [soundOn])
 
