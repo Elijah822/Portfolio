@@ -25,7 +25,7 @@ export function AccessibilityProvider({ children }) {
   }, [])
 
   const setTextSize = useCallback(id => {
-    setPrefs(p => ({ ...p, textSize: id }))
+    setPrefs(p => ({ ...p, textSize: Number(id) }))
   }, [])
 
   const toggleReduceMotion = useCallback(() => {

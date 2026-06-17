@@ -82,7 +82,7 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div style={{ background: BG, minHeight: "100vh", color: TEXT, padding: 120, textAlign: "center" }}>
+      <div className="page-pad-x" style={{ background: BG, minHeight: "100vh", color: TEXT, paddingTop: 120, paddingBottom: 120, textAlign: "center" }}>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 28 }}>Project not found.</p>
         <Link to="/" style={{ color: GOLD }}>← Back home</Link>
       </div>
@@ -170,13 +170,13 @@ export default function ProjectPage() {
         }
       `}</style>
       <SiteNav sticky />
-      <div className="page-pad-x" style={{ padding: "12px 0 0", display: "flex", justifyContent: "flex-end" }}>
+      <div className="page-pad-x page-shell" style={{ maxWidth: 900, paddingTop: 12, display: "flex", justifyContent: "flex-end" }}>
         <button data-h type="button" onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", textTransform: "uppercase" }}>
           ← All work
         </button>
       </div>
 
-      <main className="project-main page-main" style={{ maxWidth: 900, margin: "0 auto", padding: "24px 0 120px" }}>
+      <main className="project-main page-main page-shell" style={{ maxWidth: 900, paddingTop: 24, paddingBottom: 120 }}>
         <ScrollReveal variant="fade-up">
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>

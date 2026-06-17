@@ -46,7 +46,7 @@ export default function Exploration() {
 
       <SiteNav sticky />
 
-      <main className="explore-main page-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 0 120px" }}>
+      <main className="explore-main page-main page-shell" style={{ paddingTop: 100, paddingBottom: 120 }}>
         <ScrollReveal variant="fade-up">
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>Exploration</div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>

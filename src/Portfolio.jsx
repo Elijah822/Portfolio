@@ -318,7 +318,7 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
 function Showreel() {
   const doubled = [...SHOWREEL, ...SHOWREEL]
   return (
-    <ScrollReveal as="section" variant="fade-up" threshold={0.08} className="showreel-section" style={{ padding: "72px 0 80px" }}>
+    <ScrollReveal as="section" variant="fade-up" threshold={0.08} className="showreel-section" style={{ paddingTop: 72, paddingBottom: 80 }}>
       <div className="page-pad-x" style={{ marginBottom: 48 }}>
         <div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
@@ -529,10 +529,10 @@ function ProjectDetail({ project, onClose }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(7,7,12,0.97)", overflow: "auto", animation: "fadeIn 0.3s ease" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "120px 56px 80px" }}>
+      <div className="page-pad-x page-shell" style={{ paddingTop: 120, paddingBottom: 80 }}>
 
         {/* Close */}
-        <button data-h onClick={onClose} style={{ position: "fixed", top: 32, right: 56, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", transition: "all 0.2s", textTransform: "uppercase" }} onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }} onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = DIM }}>
+        <button data-h onClick={onClose} style={{ position: "fixed", top: 32, right: "var(--page-gutter)", fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", transition: "all 0.2s", textTransform: "uppercase" }} onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }} onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = DIM }}>
           ESC / Close
         </button>
 
@@ -863,7 +863,7 @@ function Testimonials() {
   const goNext = () => setIdx(i => (i + 1) % total)
 
   return (
-    <section id="testimonials" className="testimonials-section page-pad-x" style={{ padding: "120px 0", borderTop: `1px solid ${BORDER}` }}>
+    <section id="testimonials" className="testimonials-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 120, borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 Testimonials ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
@@ -912,7 +912,7 @@ function Testimonials() {
 // ── CONTACT ───────────────────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" className="contact-section page-pad-x" style={{ padding: "120px 0 80px", borderTop: `1px solid ${BORDER}` }}>
+    <section id="contact" className="contact-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 80, borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 Contact ]</div>
       </ScrollReveal>
@@ -1276,13 +1276,20 @@ export default function Portfolio() {
           .project-card {
             min-height: auto !important;
           }
+          .project-grid {
+            gap: 24px;
+          }
           .project-card > div:last-child {
-            padding: 20px 16px !important;
+            padding: 28px 16px !important;
+          }
+          .project-card > div:last-child > div:last-child {
+            margin-top: 32px !important;
           }
           .project-card-mobile-detail {
             display: block;
-            margin-top: 18px;
-            padding-top: 18px;
+            margin-top: 26px;
+            padding-top: 26px;
+            padding-bottom: 8px;
             border-top: 1px solid ${BORDER};
           }
           .project-card-mobile-desc {
@@ -1291,13 +1298,14 @@ export default function Portfolio() {
             font-weight: 400;
             color: ${DIM};
             line-height: 1.75;
-            margin: 0 0 14px;
+            margin: 0 0 22px;
           }
           .project-card-mobile-cta {
             font-family: var(--font-body);
             font-size: 11px;
             letter-spacing: 3px;
             text-transform: uppercase;
+            padding-bottom: 8px;
           }
           .showreel-item {
             width: min(78vw, 300px) !important;

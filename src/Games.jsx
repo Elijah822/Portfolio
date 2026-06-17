@@ -73,9 +73,14 @@ function TrailerPreview({ videoId, active = false, opacity = 0.55 }) {
 function ConsoleGameCard({ g, onTrailer }) {
   const [hov, setHov] = useState(false)
   return (
-    <div data-h onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+    <div
+      data-h
+      className={`console-card${hov ? " is-hovered" : ""}`}
+      onMouseEnter={()=>setHov(true)}
+      onMouseLeave={()=>setHov(false)}
       onClick={() => !g.locked && g.trailerId && onTrailer?.(g)}
-      style={{ position:"relative", width:"100%", paddingBottom:"145%", overflow:"hidden", cursor:"none", userSelect:"none" }}>
+      style={{ position:"relative", width:"100%", paddingBottom:"155%", overflow:"hidden", cursor:"none", userSelect:"none" }}
+    >
       {g.trailerId ? (
         <TrailerPreview videoId={g.trailerId} active={hov} opacity={hov ? 0.72 : 0.55} />
       ) : (
@@ -95,7 +100,7 @@ function ConsoleGameCard({ g, onTrailer }) {
           <div style={{ fontFamily:'var(--font-heading)', fontSize:"clamp(20px,2.2vw,28px)", fontWeight:300, color:g.locked?DIM:TEXT, lineHeight:1.15, marginBottom:8 }}>
             {g.short}
           </div>
-          <div style={{ fontFamily:'var(--font-body)', fontSize:13, fontWeight:400, color:"rgba(224,219,210,0.75)", lineHeight:1.65, maxHeight:hov?"80px":"0px", opacity:hov?1:0, overflow:"hidden", transition:"all 0.35s ease" }}>
+          <div style={{ fontFamily:'var(--font-body)', fontSize:13, fontWeight:400, color:"rgba(224,219,210,0.75)", lineHeight:1.65, maxHeight:hov?"100px":"0px", opacity:hov?1:0, overflow:"hidden", transition:"all 0.35s ease" }}>
             {g.note}
           </div>
         </div>
@@ -111,7 +116,7 @@ function ConsoleGameCard({ g, onTrailer }) {
 
 function ConsoleGames({ onTrailer }) {
   return (
-    <div style={{ padding:"60px 56px" }}>
+    <div className="page-pad-x" style={{ paddingTop: 60, paddingBottom: 60 }}>
       <div style={{ marginBottom:48 }}>
         <div style={{ fontFamily:'var(--font-body)', fontSize:11, letterSpacing:5, color:GOLD, marginBottom:20, textTransform:"uppercase" }}>PS · Xbox Collection</div>
         <div style={{ fontFamily:'var(--font-heading)', fontSize:"clamp(28px,3.5vw,44px)", fontWeight:300, color:TEXT, lineHeight:1.2, marginBottom:16 }}>
@@ -122,7 +127,7 @@ function ConsoleGames({ onTrailer }) {
         </div>
       </div>
 
-      <div className="console-poster-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:1, background:BORDER, border:`1px solid ${BORDER}` }}>
+      <div className="console-poster-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:1, background:BORDER, border:`1px solid ${BORDER}` }}>
         {CONSOLE_GAMES.map(g => (
           <div key={g.id} style={{ background:BG }}>
             <ConsoleGameCard g={g} onTrailer={onTrailer} />
@@ -816,16 +821,16 @@ function GameCard({ game, onClick }) {
   return (
     <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={!game.locked?onClick:undefined}
       data-h={!game.locked ? "" : undefined}
-      className="arcade-card"
-      style={{padding:0,border:`1px solid ${hov&&!game.locked?game.color+"55":BORDER}`,cursor:"none",position:"relative",transition:"all 0.25s",background:BG,userSelect:"none",overflow:"hidden",minHeight:220}}>
-      <div style={{height:100,background:`linear-gradient(135deg, ${game.color}22, ${BG})`,borderBottom:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:42,fontWeight:300,color:game.color,opacity:0.35,lineHeight:1}}>{String(game.id).padStart(2,"0")}</div>
+      className={`arcade-card${hov ? " is-hovered" : ""}`}
+      style={{padding:0,border:`1px solid ${hov&&!game.locked?game.color+"55":BORDER}`,cursor:"none",position:"relative",transition:"border-color 0.25s, box-shadow 0.25s",background:BG,userSelect:"none",overflow:"hidden",minHeight:280}}>
+      <div style={{height:132,background:`linear-gradient(135deg, ${game.color}22, ${BG})`,borderBottom:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+        <div style={{fontFamily:'var(--font-body)',fontSize:52,fontWeight:300,color:game.color,opacity:0.35,lineHeight:1}}>{String(game.id).padStart(2,"0")}</div>
         <div style={{position:"absolute",inset:0,background:`radial-gradient(circle at 50% 120%, ${game.color}33, transparent 60%)`}} />
       </div>
-      <div style={{padding:"22px 24px"}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:28,fontWeight:300,color:game.locked?DIM:TEXT,marginBottom:8,transition:"color 0.2s"}}>{game.name}</div>
-        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:10}}>{game.tag}</div>
-        <div style={{fontFamily:'var(--font-body)',fontSize:14,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.55}}>{game.desc}</div>
+      <div style={{padding:"26px 28px"}}>
+        <div style={{fontFamily:'var(--font-body)',fontSize:32,fontWeight:300,color:game.locked?DIM:TEXT,marginBottom:10,transition:"color 0.2s"}}>{game.name}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:12}}>{game.tag}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:15,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.6}}>{game.desc}</div>
       </div>
       {!game.locked&&hov&&<div style={{position:"absolute",bottom:16,right:20,fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:game.color}}>PLAY →</div>}
       {game.locked&&<div style={{position:"absolute",top:14,right:16,fontFamily:'var(--font-body)',fontSize:8,letterSpacing:3,color:DIM}}>SOON</div>}
@@ -876,14 +881,23 @@ export default function Games() {
       <div className="vr-hud" aria-hidden="true" />
       <div className="vr-grid-floor" aria-hidden="true" />
 
-      <div style={{position:"fixed",top:0,left:0,right:0,padding:"18px 56px",display:"flex",justifyContent:"space-between",alignItems:"center",zIndex:100,background:"rgba(7,7,12,0.94)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${BORDER}`}}>
+      <div className="games-nav page-pad-x">
         <Link to="/" style={{fontFamily:'var(--font-body)',fontSize:22,color:TEXT,letterSpacing:3,fontWeight:300,textDecoration:"none",cursor:"none"}}>AE</Link>
         <SoundButton compact />
-        <Link to="/" data-h style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
+        <Link to="/" data-h className="games-nav__back" style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
       </div>
 
-      <section className="games-hero" style={{position:"relative",minHeight:"58vh",paddingTop:88,display:"grid",gridTemplateColumns:"1fr 1.1fr",borderBottom:`1px solid ${BORDER}`}}>
-        <div style={{padding:"80px 56px 48px",display:"flex",flexDirection:"column",justifyContent:"center",position:"relative",zIndex:2}}>
+      <div className="games-tabs page-pad-x">
+        {TABS.map(([id,label])=>(
+          <button key={id} data-h type="button" onClick={()=>setTab(id)} className={`games-tabs__btn${tab===id?" is-active":""}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="games-body">
+      <section className="games-hero">
+        <div className="page-pad-x">
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:5,color:GOLD,marginBottom:20,textTransform:"uppercase"}}>Game Room · VR Lounge</div>
           <h1 style={{fontFamily:'var(--font-heading)',fontSize:"clamp(44px,5.5vw,80px)",fontWeight:300,color:TEXT,lineHeight:1.05,margin:"0 0 20px"}}>
             Even designers<br/><em style={{color:GOLD}}>need to play.</em>
@@ -898,7 +912,7 @@ export default function Games() {
             <TrailerPreview key={featured.trailerId} videoId={featured.trailerId} active opacity={0.62} />
           )}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(90deg, rgba(7,7,12,0.92) 0%, rgba(7,7,12,0.2) 45%, rgba(7,7,12,0.75) 100%)"}} />
-          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:40,textAlign:"left"}}>
+          <div className="featured-trailer-copy" style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"40px var(--page-gutter)",textAlign:"left"}}>
             <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:12,textTransform:"uppercase"}}>Now featuring</div>
             <div style={{fontFamily:'var(--font-heading)',fontSize:"clamp(28px,3vw,44px)",fontWeight:300,color:TEXT,marginBottom:8}}>{featured?.short}</div>
             <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:20}}>{featured?.genre} · {featured?.year}</div>
@@ -910,21 +924,10 @@ export default function Games() {
         </button>
       </section>
 
-      <div className="games-tabs" style={{position:"sticky",top:73,zIndex:60,display:"flex",gap:0,padding:"0 56px",background:"rgba(7,7,12,0.96)",backdropFilter:"blur(16px)",borderBottom:`1px solid ${BORDER}`}}>
-        {TABS.map(([id,label])=>(
-          <button key={id} data-h type="button" onClick={()=>setTab(id)} style={{
-            fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,
-            color:tab===id?TEXT:DIM,background:"none",border:"none",
-            borderBottom:`2px solid ${tab===id?GOLD:"transparent"}`,
-            padding:"20px 28px 20px 0",marginRight:16,cursor:"none",textTransform:"uppercase",transition:"all 0.2s",
-          }}>{label}</button>
-        ))}
-      </div>
-
       {tab==="browser"&&(
-        <div style={{padding:"48px 56px"}}>
+        <div className="page-pad-x" style={{ paddingTop: 48, paddingBottom: 48 }}>
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:DIM,marginBottom:24,textTransform:"uppercase"}}>In-browser arcade</div>
-          <div className="game-grid-vr" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:1,background:BORDER,border:`1px solid ${BORDER}`}}>
+          <div className="game-grid-vr" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:1,background:BORDER,border:`1px solid ${BORDER}`}}>
             {GAMES.map(g=>(
               <div key={g.id} style={{background:BG}}>
                 <GameCard game={g} onClick={()=>openGame(g.id)} />
@@ -937,16 +940,17 @@ export default function Games() {
       {tab==="console"&&<ConsoleGames onTrailer={openTrailer} />}
 
       {/* FOOTER */}
-      <div style={{padding:"40px 56px",borderTop:`1px solid ${BORDER}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <div className="page-pad-x" style={{ paddingTop: 40, paddingBottom: 40, borderTop:`1px solid ${BORDER}`, display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap: 16 }}>
         <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>AKINLOLU ELIJAH · GAME ROOM</div>
         <a data-h href="/" style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=GOLD} onMouseLeave={e=>e.target.style.color=DIM}>Back to portfolio →</a>
+      </div>
       </div>
 
       {/* GAME OVERLAY */}
       {active&&GameComponent&&(
         <div style={{position:"fixed",inset:0,background:"rgba(7,7,12,0.97)",zIndex:200,display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
           <CloseButton onClick={closeGame} />
-          <div style={{width:"100%",padding:"18px 40px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${BORDER}`,position:"sticky",top:0,background:BG,zIndex:10,flexShrink:0}}>
+          <div className="page-pad-x" style={{width:"100%",paddingTop:18,paddingBottom:18,display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${BORDER}`,position:"sticky",top:0,background:BG,zIndex:10,flexShrink:0,gap:16,flexWrap:"wrap"}}>
             <div style={{display:"flex",alignItems:"baseline",gap:20}}>
               <div style={{fontFamily:'var(--font-body)',fontSize:24,fontWeight:300,color:TEXT}}>{game.name}</div>
               <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{game.tag}</div>
@@ -971,12 +975,84 @@ export default function Games() {
 
       <style>{`
         @keyframes musicPulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .game-room { perspective: 1400px; }
+        .game-room {
+          --games-nav-height: 58px;
+          --games-tabs-height: 57px;
+          --games-chrome-height: calc(var(--games-nav-height) + var(--games-tabs-height));
+        }
+        .games-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 100;
+          height: var(--games-nav-height);
+          padding-top: 0;
+          padding-bottom: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: rgba(7,7,12,0.94);
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid ${BORDER};
+        }
+        .games-tabs {
+          position: fixed;
+          top: var(--games-nav-height);
+          left: 0;
+          right: 0;
+          z-index: 99;
+          height: var(--games-tabs-height);
+          display: flex;
+          align-items: stretch;
+          gap: 0;
+          background: rgba(7,7,12,0.97);
+          backdrop-filter: blur(16px);
+          border-bottom: 1px solid ${BORDER};
+        }
+        .games-tabs__btn {
+          font-family: var(--font-body);
+          font-size: 12px;
+          letter-spacing: 3px;
+          color: ${DIM};
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          padding: 0 28px 0 0;
+          margin-right: 16px;
+          cursor: none;
+          text-transform: uppercase;
+          transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .games-tabs__btn.is-active {
+          color: ${TEXT};
+          border-bottom-color: ${GOLD};
+        }
+        .games-body {
+          padding-top: var(--games-chrome-height);
+        }
+        .games-hero {
+          position: relative;
+          min-height: 58vh;
+          display: grid;
+          grid-template-columns: 1fr 1.1fr;
+          border-bottom: 1px solid ${BORDER};
+        }
+        .games-hero > .page-pad-x:first-child {
+          padding-top: 48px;
+          padding-bottom: 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          position: relative;
+          z-index: 2;
+        }
+        .vr-scene { perspective: 1400px; }
         .vr-hud::before, .vr-hud::after, .vr-hud span::before, .vr-hud span::after {
           content: ""; position: fixed; width: 56px; height: 56px; border: 1px solid rgba(201,170,124,0.22); pointer-events: none; z-index: 90;
         }
-        .vr-hud::before { top: 88px; left: 28px; border-right: none; border-bottom: none; }
-        .vr-hud::after { top: 88px; right: 28px; border-left: none; border-bottom: none; }
+        .vr-hud::before { top: var(--games-chrome-height); left: var(--page-gutter); border-right: none; border-bottom: none; }
+        .vr-hud::after { top: var(--games-chrome-height); right: var(--page-gutter); border-left: none; border-bottom: none; }
         .vr-grid-floor {
           position: fixed; bottom: 0; left: 0; right: 0; height: 35vh; pointer-events: none; z-index: 0;
           background: linear-gradient(180deg, transparent, rgba(201,170,124,0.03));
@@ -984,10 +1060,48 @@ export default function Games() {
         }
         .featured-trailer { transition: filter 0.35s ease; }
         .featured-trailer:hover { filter: brightness(1.08); }
-        .arcade-card:hover { transform: translateY(-2px); }
+        .game-grid-vr,
+        .console-poster-grid {
+          overflow: visible;
+        }
+        .arcade-card,
+        .console-card {
+          transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.35s ease;
+          transform-origin: center center;
+          will-change: transform;
+        }
+        .arcade-card.is-hovered,
+        .console-card.is-hovered {
+          transform: translateY(-8px) scale(1.035);
+          z-index: 3;
+          box-shadow: 0 28px 56px rgba(0, 0, 0, 0.42);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .arcade-card:hover { transform: translateY(-8px) scale(1.035); }
+        }
+        @media (max-width: 900px) {
+          .game-grid-vr { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important; }
+          .console-poster-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
+        }
+        @media (max-width: 768px) {
+          .game-grid-vr { grid-template-columns: 1fr !important; }
+          .arcade-card.is-hovered,
+          .console-card.is-hovered {
+            transform: translateY(-4px) scale(1.02);
+          }
+        }
         @media (max-width: 900px) {
           .games-hero { grid-template-columns: 1fr !important; min-height: auto !important; }
+          .games-hero > .page-pad-x:first-child { padding-top: 32px; padding-bottom: 32px; }
           .featured-trailer { min-height: 280px !important; border-left: none !important; border-top: 1px solid ${BORDER}; }
+        }
+        @media (max-width: 768px) {
+          .game-room {
+            --games-nav-height: 54px;
+            --games-tabs-height: 52px;
+          }
+          .games-nav__back { display: none; }
+          .featured-trailer-copy { padding-top: 28px !important; padding-bottom: 28px !important; }
         }
       `}</style>
     </div>

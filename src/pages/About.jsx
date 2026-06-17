@@ -52,7 +52,7 @@ export default function About() {
 
       <SiteNav sticky />
 
-      <main className="about-main page-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 0 120px" }}>
+      <main className="about-main page-main page-shell" style={{ paddingTop: 100, paddingBottom: 120 }}>
         <ScrollReveal variant="fade-up">
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>

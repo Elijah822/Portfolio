@@ -97,7 +97,7 @@ export default function AccessibilityMenu() {
         style={{
           position: "fixed",
           bottom: 24,
-          left: 24,
+          left: "var(--page-gutter)",
           zIndex: 1200,
           display: "inline-flex",
           alignItems: "center",
@@ -127,7 +127,7 @@ export default function AccessibilityMenu() {
           style={{
             position: "fixed",
             bottom: 76,
-            left: 24,
+            left: "var(--page-gutter)",
             zIndex: 1200,
             width: "min(92vw, 340px)",
             background: "rgba(7,7,12,0.97)",
@@ -154,15 +154,15 @@ export default function AccessibilityMenu() {
                   key={level.id}
                   type="button"
                   data-h
-                  aria-pressed={textSize === level.id}
+                  aria-pressed={Number(textSize) === level.id}
                   onClick={() => setTextSize(level.id)}
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: 12,
                     letterSpacing: 1,
-                    color: textSize === level.id ? BG : TEXT,
-                    background: textSize === level.id ? GOLD : "rgba(255,255,255,0.04)",
-                    border: `1px solid ${textSize === level.id ? GOLD : BORDER}`,
+                    color: Number(textSize) === level.id ? BG : TEXT,
+                    background: Number(textSize) === level.id ? GOLD : "rgba(255,255,255,0.04)",
+                    border: `1px solid ${Number(textSize) === level.id ? GOLD : BORDER}`,
                     padding: "10px 8px",
                     cursor: "inherit",
                   }}
