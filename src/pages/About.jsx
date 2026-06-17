@@ -3,15 +3,9 @@ import SoundButton from "../components/SoundButton.jsx"
 import SocialLinks from "../components/SocialLinks.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
 import { CONTACT } from "../data/contact.js"
+import { IMPACT_STATS } from "../data/globalReach.js"
 import { PORTRAIT_URL } from "../data/aboutMeta.js"
 import { RESUME_URL } from "../data/projectMeta.js"
-
-const IMPACT_STATS = [
-  { value: "€40M+", label: "Impact delivered" },
-  { value: "18+", label: "Products across 4 continents & 8 countries" },
-  { value: "6+", label: "Years of craft" },
-  { value: "3", label: "Enterprise clients" },
-]
 
 const BG = "#07070c"
 const TEXT = "#e0dbd2"
@@ -40,7 +34,7 @@ const RESUME_HIGHLIGHTS = [
   },
   {
     title: "Impact",
-    items: ["€40M+ regulatory exposure avoided", "18+ products across 4 continents & 8 countries", "3 enterprise clients simultaneously"],
+    items: ["€40M+ regulatory exposure avoided", "18+ products shipped across 4 continents & 8 countries", "3 enterprise clients simultaneously"],
   },
 ]
 
@@ -70,8 +64,9 @@ export default function About() {
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>
             Akinlolu Elijah
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 2, color: GOLD, margin: "0 0 48px" }}>
-            Also known as {CONTACT.alias}
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 1.5, margin: "0 0 48px" }}>
+            Also known as{" "}
+            <span style={{ color: CONTACT.aliasHighlight, fontWeight: 500 }}>{CONTACT.alias}</span>
           </p>
         </ScrollReveal>
 
@@ -129,11 +124,16 @@ export default function About() {
                 </a>
               </ScrollReveal>
 
-              <ScrollReveal variant="fade-up" delay={260} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-                {IMPACT_STATS.map(({ value, label }, i) => (
-                  <ScrollReveal key={label} variant="scale-up" delay={280 + i * 70}>
+              <ScrollReveal variant="fade-up" delay={260} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
+                {IMPACT_STATS.map(({ value, label, countries }, i) => (
+                  <ScrollReveal key={label} variant="scale-up" delay={280 + i * 70} style={{ gridColumn: countries ? "1 / -1" : undefined }}>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 36, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{label}</div>
+                    {countries && (
+                      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: DIM, lineHeight: 1.75, marginTop: 8 }}>
+                        {countries.map(c => `${c.flag} ${c.name}`).join(" · ")}
+                      </div>
+                    )}
                   </ScrollReveal>
                 ))}
               </ScrollReveal>

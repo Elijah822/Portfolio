@@ -6,6 +6,7 @@ import SoundButton from "./components/SoundButton.jsx"
 import SocialLinks from "./components/SocialLinks.jsx"
 import ScrollReveal from "./components/ScrollReveal.jsx"
 import { CONTACT } from "./data/contact.js"
+import { IMPACT_STATS } from "./data/globalReach.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
   isAudioUnlocked,
@@ -177,44 +178,7 @@ export const INDUSTRIES = [
 
 export const ALL_PROJECTS = INDUSTRIES.flatMap(g => g.projects)
 
-export const ROLES = [
-  "Product Designer",
-  "Design Systems Architect",
-  "Regulatory UX Strategist",
-  "AI Integration Lead",
-  "Enterprise UX Lead",
-]
-
-export const IMPACT_STATS = [
-  { value: "€40M+", label: "Impact delivered" },
-  { value: "18+", label: "Products across 4 continents & 8 countries" },
-  { value: "6+", label: "Years of craft" },
-  { value: "3", label: "Enterprise clients" },
-]
-
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-const POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#!%"
-
-function useScramble(text, trigger, speed = 16) {
-  const [out, setOut] = useState("")
-  useEffect(() => {
-    if (!trigger) return
-    let f = 0
-    const total = text.length * speed
-    let raf
-    const tick = () => {
-      setOut(text.split("").map((c, i) => {
-        if (c === " ") return " "
-        return f > i * speed ? c : POOL[Math.floor(Math.random() * POOL.length)]
-      }).join(""))
-      if (f < total) { f++; raf = requestAnimationFrame(tick) } else setOut(text)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [trigger, text, speed])
-  return out
-}
-
 function StatusBadge({ status, label }) {
   const cfg = {
     live:     { dot: "#4ade80", color: "#4ade80", bg: "rgba(74,222,128,0.08)" },
@@ -458,11 +422,21 @@ function Nav({ scrollY }) {
 }
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
+function ImpactStat({ stat }) {
+  return (
+    <div style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 18, maxWidth: stat.countries ? 340 : undefined }}>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{stat.value}</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{stat.label}</div>
+      {stat.countries && (
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: DIM, lineHeight: 1.75, marginTop: 10 }}>
+          {stat.countries.map(c => `${c.flag} ${c.name}`).join(" · ")}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Hero({ ready }) {
-  const w1 = useScramble("PRODUCT", ready, 14)
-  const w2 = useScramble("DESIGNER", ready, 12)
-  const [roleIdx, setRoleIdx] = useState(0)
-  const [roleFade, setRoleFade] = useState(true)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const [reelIdx, setReelIdx] = useState(0)
   const heroReel = SHOWREEL[reelIdx]
@@ -470,18 +444,6 @@ function Hero({ ready }) {
   useEffect(() => {
     if (!ready) return
     const id = setInterval(() => setReelIdx(i => (i + 1) % SHOWREEL.length), 7000)
-    return () => clearInterval(id)
-  }, [ready])
-
-  useEffect(() => {
-    if (!ready) return
-    const id = setInterval(() => {
-      setRoleFade(false)
-      setTimeout(() => {
-        setRoleIdx(i => (i + 1) % ROLES.length)
-        setRoleFade(true)
-      }, 400)
-    }, 2800)
     return () => clearInterval(id)
   }, [ready])
 
@@ -516,40 +478,31 @@ function Hero({ ready }) {
       </div>
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "85vw" }}>
-        {/* Label */}
-        <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 12 }}>
-          [ AKINLOLU ELIJAH · PRODUCT DESIGNER ]
-        </div>
-        <div style={{ ...f(0.25), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: GOLD, marginBottom: 36 }}>
-          Also known as {CONTACT.alias}
-        </div>
-
-        {/* Huge headline */}
-        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 700', fontWeight: 700, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
-          <div style={{ fontSize: "clamp(68px,12vw,168px)", color: TEXT }}>{w1 || "PRODUCT"}</div>
-          <div style={{ fontSize: "clamp(68px,12vw,168px)", color: GOLD, fontVariationSettings: '"wght" 800', fontWeight: 800 }}>{w2 || "DESIGNER"}</div>
-        </div>
-
-        {/* Morphing role */}
-        <div style={{ ...f(1.0), marginTop: 28, height: 32, overflow: "hidden" }}>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,1.8vw,22px)", fontWeight: 500, color: DIM, opacity: roleFade ? 1 : 0, transform: roleFade ? "none" : "translateY(8px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}>
-            {ROLES[roleIdx]}
+        <div style={{ ...f(0.1) }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 18 }}>
+            Hello, it's me
+          </div>
+          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(44px,7.5vw,104px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 22, color: CONTACT.aliasHighlight, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+            {CONTACT.alias}
+          </div>
+          <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 500, lineHeight: 1.25, color: TEXT, maxWidth: 900 }}>
+            And I'm a{" "}
+            <span style={{ color: GOLD }}>Product Designer</span>
+            {", "}
+            <span style={{ color: GOLD }}>AI Engineer</span>
           </div>
         </div>
 
         {/* Bio */}
-        <p style={{ ...f(1.15), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "24px 0 0" }}>
+        <p style={{ ...f(1.0), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "28px 0 0" }}>
           I design products people understand — and businesses can scale. I build fast with{" "}
           <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
         </p>
 
         {/* Impact stats row */}
-        <div style={{ ...f(1.4), display: "flex", gap: 40, marginTop: 40, flexWrap: "wrap" }}>
-          {IMPACT_STATS.map(({ value, label }) => (
-            <div key={label} style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 16 }}>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 5, textTransform: "uppercase" }}>{label}</div>
-            </div>
+        <div style={{ ...f(1.3), display: "flex", gap: "48px 40px", marginTop: 44, flexWrap: "wrap", rowGap: 32 }}>
+          {IMPACT_STATS.map(stat => (
+            <ImpactStat key={stat.label} stat={stat} />
           ))}
         </div>
 

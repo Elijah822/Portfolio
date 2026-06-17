@@ -4,4 +4,5 @@ export const CONTACT = {
   twitter: "https://x.com/uxfixer",
   whatsapp: "https://wa.me/2348165345591",
   alias: "Dean~The UX Fixer",
+  aliasHighlight: "#b8a4e8",
 }
