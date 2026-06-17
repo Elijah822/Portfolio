@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
+import { GAMES_TRAILER_ID } from "./data/projectMeta.js"
+import { ytEmbedUrl, ytThumbnail } from "./lib/youtube.js"
 
 const BG     = "#07070c"
 const TEXT   = "#e0dbd2"
@@ -949,7 +951,8 @@ function GameCard({ game, onClick }) {
 export default function Games() {
   const [active,setActive]=useState(null)
   const [gameKey,setGameKey]=useState(0)
-  const [tab,setTab]=useState("browser") // "browser" | "ps4"
+  const [tab,setTab]=useState("browser")
+  const [trailerOpen, setTrailerOpen] = useState(false)
   const { playing, toggle, vol, changeVol } = useMusicPlayer()
 
   useEffect(()=>{
@@ -972,7 +975,8 @@ export default function Games() {
   const TABS=[["browser","Browser Games"],["ps4","PS4 Collection"]]
 
   return (
-    <div style={{minHeight:"100vh",background:BG,color:TEXT,cursor:"none"}}>
+    <div className="game-room" style={{minHeight:"100vh",background:BG,color:TEXT,cursor:"none",position:"relative"}}>
+      <div className="vr-hud" aria-hidden="true" />
       <Cursor />
 
       {/* NAV */}
@@ -1002,11 +1006,24 @@ export default function Games() {
 
       {/* HERO + TABS */}
       <div style={{paddingTop:120,paddingBottom:0,paddingLeft:56,paddingRight:56,borderBottom:`1px solid ${BORDER}`}}>
-        <div style={{paddingTop:24,paddingBottom:0}}>
-          <div style={{fontFamily:'"DM Mono",monospace',fontSize:9,letterSpacing:5,color:GOLD,marginBottom:20,textTransform:"uppercase"}}>Take a break</div>
-          <div style={{fontFamily:'"Cormorant Garamond",serif',fontSize:"clamp(44px,5vw,76px)",fontWeight:300,color:TEXT,lineHeight:1.1,marginBottom:32}}>
-            Even designers<br/>need to play.
+        <div style={{paddingTop:24,paddingBottom:32,display:"grid",gridTemplateColumns:"1fr min(38vw,420px)",gap:48,alignItems:"center"}}>
+          <div>
+            <div style={{fontFamily:'"DM Mono",monospace',fontSize:9,letterSpacing:5,color:GOLD,marginBottom:20,textTransform:"uppercase"}}>Take a break · VR Lounge</div>
+            <div style={{fontFamily:'"Cormorant Garamond",serif',fontSize:"clamp(44px,5vw,76px)",fontWeight:300,color:TEXT,lineHeight:1.1,marginBottom:20}}>
+              Even designers<br/>need to play.
+            </div>
+            <p style={{fontFamily:'"Cormorant Garamond",serif',fontStyle:"italic",fontSize:17,color:DIM,lineHeight:1.7,maxWidth:480}}>
+              Browser classics, PS4 favourites, ambient sound — pick a tab below or watch the trailer.
+            </p>
           </div>
+          <button data-h type="button" onClick={() => setTrailerOpen(true)} className="trailer-thumb" style={{position:"relative",border:`1px solid ${BORDER}`,background:"none",padding:0,cursor:"none",overflow:"hidden",aspectRatio:"16/9",width:"100%"}}>
+            <img src={ytThumbnail(GAMES_TRAILER_ID)} alt="Game room trailer" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.55,filter:"saturate(0.8)"}} />
+            <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, transparent, rgba(7,7,12,0.85))"}} />
+            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:10}}>
+              <div style={{width:52,height:52,borderRadius:"50%",border:`1px solid ${GOLD}`,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:18}}>▶</div>
+              <div style={{fontFamily:'"DM Mono",monospace',fontSize:9,letterSpacing:3,color:DIM,textTransform:"uppercase"}}>Watch trailer</div>
+            </div>
+          </button>
         </div>
 
         {/* Tab bar */}
@@ -1027,7 +1044,7 @@ export default function Games() {
 
       {/* TAB CONTENT */}
       {tab==="browser"&&(
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:1,background:BORDER}}>
+        <div className="game-grid-vr" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:1,background:BORDER,padding:"1px"}}>
           {GAMES.map(g=>(
             <div key={g.id} style={{background:BG}}>
               <GameCard game={g} onClick={()=>openGame(g.id)} />
@@ -1060,7 +1077,29 @@ export default function Games() {
         </div>
       )}
 
-      <style>{`@keyframes musicPulse{0%,100%{opacity:1}50%{opacity:0.4}}`}</style>
+      {trailerOpen && (
+        <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(7,7,12,0.96)",display:"flex",alignItems:"center",justifyContent:"center",padding:24}} onClick={() => setTrailerOpen(false)}>
+          <div style={{width:"min(92vw,960px)",aspectRatio:"16/9",border:`1px solid ${BORDER}`}} onClick={e => e.stopPropagation()}>
+            <iframe title="Game room trailer" src={ytEmbedUrl(GAMES_TRAILER_ID, { autoplay: true, mute: false, loop: false })} allow="autoplay; encrypted-media" style={{width:"100%",height:"100%",border:"none"}} />
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes musicPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        .game-room { perspective: 1200px; }
+        .game-grid-vr { transform: rotateX(2deg); transform-style: preserve-3d; }
+        .vr-hud::before, .vr-hud::after {
+          content: ""; position: fixed; width: 48px; height: 48px; border: 1px solid rgba(201,170,124,0.25); pointer-events: none; z-index: 90;
+        }
+        .vr-hud::before { top: 88px; left: 24px; border-right: none; border-bottom: none; }
+        .vr-hud::after { top: 88px; right: 24px; border-left: none; border-bottom: none; }
+        .trailer-thumb { transition: transform 0.35s ease, border-color 0.35s; }
+        .trailer-thumb:hover { transform: translateZ(12px) scale(1.02); border-color: rgba(201,170,124,0.35) !important; }
+        @media (max-width: 900px) {
+          .game-room [style*="grid-template-columns: 1fr min"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   )
 }

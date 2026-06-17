@@ -1,10 +1,9 @@
 let ctx = null
 let master = null
 let unlocked = false
-let ambientNodes = []
+let ambientOn = false
 let arpTimer = null
 let lastLoadTick = -1
-let ambientOn = false
 let pendingLoadPct = 0
 
 function getCtx() {
@@ -35,116 +34,60 @@ export function setPendingLoadPct(pct) {
 }
 
 function replayPendingLoadTicks() {
-  for (let p = 0; p <= pendingLoadPct; p += 4) playLoadTick(p)
-  if (pendingLoadPct % 4 !== 0) playLoadTick(pendingLoadPct)
+  lastLoadTick = -1
+  for (let p = 0; p <= pendingLoadPct; p += 4) playLoadTick(p, true)
+  if (pendingLoadPct % 4 !== 0) playLoadTick(pendingLoadPct, true)
 }
 
-export function playLoadTick(pct) {
+export function playLoadTick(pct, force = false) {
   if (!unlocked || !ctx || !master) return
   const step = Math.floor(pct / 4)
-  if (step <= lastLoadTick) return
+  if (!force && step <= lastLoadTick) return
   lastLoadTick = step
 
   const t = ctx.currentTime
   const osc = ctx.createOscillator()
   const g = ctx.createGain()
   osc.type = "sine"
-  osc.frequency.setValueAtTime(180 + pct * 5.5, t)
+  osc.frequency.setValueAtTime(200 + pct * 6, t)
   g.gain.setValueAtTime(0, t)
-  g.gain.linearRampToValueAtTime(0.035, t + 0.008)
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1)
+  g.gain.linearRampToValueAtTime(0.09, t + 0.01)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12)
   osc.connect(g)
   g.connect(master)
   osc.start(t)
-  osc.stop(t + 0.11)
+  osc.stop(t + 0.13)
 
   if (pct >= 100) {
     const o2 = ctx.createOscillator()
     const g2 = ctx.createGain()
     o2.type = "triangle"
-    o2.frequency.setValueAtTime(520, t + 0.05)
-    o2.frequency.exponentialRampToValueAtTime(880, t + 0.35)
-    g2.gain.setValueAtTime(0, t + 0.05)
-    g2.gain.linearRampToValueAtTime(0.05, t + 0.1)
-    g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.45)
+    o2.frequency.setValueAtTime(480, t + 0.06)
+    o2.frequency.exponentialRampToValueAtTime(920, t + 0.4)
+    g2.gain.setValueAtTime(0, t + 0.06)
+    g2.gain.linearRampToValueAtTime(0.12, t + 0.12)
+    g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.5)
     o2.connect(g2)
     g2.connect(master)
-    o2.start(t + 0.05)
-    o2.stop(t + 0.46)
+    o2.start(t + 0.06)
+    o2.stop(t + 0.51)
   }
 }
 
 export function startAmbientMusic() {
-  if (ambientOn || !ctx || !master) return
-  ambientOn = true
-
-  const rev = makeReverb(ctx)
-  const revG = ctx.createGain()
-  revG.gain.value = 0.35
-  rev.connect(revG)
-  revG.connect(master)
-
-  const PAD = [
-    [55, 0.09, "sine"],
-    [82.4, 0.07, "sine"],
-    [110, 0.05, "triangle"],
-    [164.8, 0.04, "sine"],
-    [220, 0.025, "triangle"],
-  ]
-  const oscs = PAD.map(([f, g, type]) => {
-    const o = ctx.createOscillator()
-    o.type = type
-    o.frequency.value = f + (Math.random() - 0.5) * 0.3
-    const og = ctx.createGain()
-    og.gain.value = g
-    o.connect(og)
-    og.connect(master)
-    og.connect(rev)
-    o.start()
-    return o
-  })
-
-  const lfo = ctx.createOscillator()
-  lfo.frequency.value = 0.05
-  lfo.type = "sine"
-  const lfoG = ctx.createGain()
-  lfoG.gain.value = 0.008
-  lfo.connect(lfoG)
-  lfoG.connect(master.gain)
-  lfo.start()
-
-  const scale = [261.6, 329.6, 392, 523.3, 392, 329.6]
-  let note = 0
-  arpTimer = setInterval(() => {
-    if (!ctx || !master) return
-    const t = ctx.currentTime
-    const o = ctx.createOscillator()
-    const g = ctx.createGain()
-    o.type = "sine"
-    o.frequency.value = scale[note % scale.length]
-    g.gain.setValueAtTime(0, t)
-    g.gain.linearRampToValueAtTime(0.018, t + 0.05)
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.8)
-    o.connect(g)
-    g.connect(rev)
-    o.start(t)
-    o.stop(t + 2.9)
-    note++
-  }, 2400)
-
-  ambientNodes = [...oscs, lfo]
+  import("./youtubePlayer.js").then(({ playAmbientTrack }) => playAmbientTrack())
 }
 
 export function stopAmbientMusic() {
+  import("./youtubePlayer.js").then(({ pauseAmbientTrack }) => pauseAmbientTrack())
   if (arpTimer) clearInterval(arpTimer)
   arpTimer = null
-  ambientNodes.forEach(n => { try { n.stop?.() } catch (_) {} })
-  ambientNodes = []
   ambientOn = false
 }
 
 export function setAmbientVolume(v) {
-  if (master) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.4)
+  import("./youtubePlayer.js").then(({ setAmbientTrackVolume }) => setAmbientTrackVolume(v))
+  if (master) master.gain.linearRampToValueAtTime(v * 0.3, ctx.currentTime + 0.4)
 }
 
 export function unlockAudio() {
@@ -153,7 +96,7 @@ export function unlockAudio() {
   if (!audioCtx) return false
   if (audioCtx.state === "suspended") audioCtx.resume()
   master = audioCtx.createGain()
-  master.gain.value = 0.09
+  master.gain.value = 0.15
   master.connect(audioCtx.destination)
   unlocked = true
   replayPendingLoadTicks()
@@ -165,11 +108,9 @@ export function setupAudioOnMouseMove(onUnlock) {
   const handler = () => {
     const fresh = unlockAudio()
     if (fresh) onUnlock?.()
-    window.removeEventListener("mousemove", handler)
-    window.removeEventListener("touchstart", handler)
   }
-  window.addEventListener("mousemove", handler, { passive: true })
-  window.addEventListener("touchstart", handler, { passive: true })
+  window.addEventListener("mousemove", handler, { passive: true, once: true })
+  window.addEventListener("touchstart", handler, { passive: true, once: true })
   return () => {
     window.removeEventListener("mousemove", handler)
     window.removeEventListener("touchstart", handler)

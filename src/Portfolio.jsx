@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
+import { getProjectMeta } from "./data/projectMeta.js"
 import {
   isAudioUnlocked,
   playLoadTick,
@@ -9,6 +11,7 @@ import {
   stopAmbientMusic,
   startAmbientMusic,
   teardownAudio,
+  unlockAudio,
 } from "./lib/portfolioAudio.js"
 
 // ── TOKENS ────────────────────────────────────────────────────────────────────
@@ -19,7 +22,7 @@ const GOLD  = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
-const INDUSTRIES = [
+export const INDUSTRIES = [
   {
     id: "fintech",
     label: "Retail, E-Commerce, FinTech & Compliance",
@@ -30,7 +33,7 @@ const INDUSTRIES = [
         cat: "FinTech · Design Systems · Regulatory UX · AI",
         year: "2024–25", status: "live", statusLabel: "Live",
         impact: "€40M+ impact", accent: "#c9aa7c",
-        url: null,
+        url: "https://www.toke.ai/",
         desc: "Lead Product Designer at Toke — a fintech platform serving major enterprise clients across payments, compliance, and AI-powered design infrastructure. Solely responsible for product design across three concurrent enterprise clients.",
         metrics: [
           { value: "€40M+", label: "Regulatory exposure avoided (KYC)" },
@@ -85,7 +88,7 @@ const INDUSTRIES = [
         cat: "HealthTech · Clinical Training",
         year: "2023–24", status: "live", statusLabel: "Live",
         impact: "35% simulation start rate ↑", accent: "#9b7ec8",
-        url: null,
+        url: "https://simpat.ai/",
         desc: "Redesigned a clinical training platform for medical students and doctors to practice AI-powered patient consultations — shifting from text-based interaction to voice-based simulation mirroring real OSCE exams.",
         metrics: [
           { value: "35%", label: "Simulation start rate increase" },
@@ -101,7 +104,7 @@ const INDUSTRIES = [
         cat: "EdTech · Accessibility · SaaS",
         year: "2023–24", status: "live", statusLabel: "Live",
         impact: "50% faster resource access", accent: "#f0c060",
-        url: null,
+        url: "https://theautismhelper.com/",
         desc: "Restructured a digital learning platform for schools supporting autistic students — simplifying navigation, fixing subscription reliability, and introducing school-wide team and access management.",
         metrics: [
           { value: "50%", label: "Faster resource access" },
@@ -205,9 +208,9 @@ const INDUSTRIES = [
   },
 ]
 
-const ALL_PROJECTS = INDUSTRIES.flatMap(g => g.projects)
+export const ALL_PROJECTS = INDUSTRIES.flatMap(g => g.projects)
 
-const ROLES = [
+export const ROLES = [
   "Product Designer",
   "Design Systems Architect",
   "Regulatory UX Strategist",
@@ -215,7 +218,7 @@ const ROLES = [
   "Enterprise UX Lead",
 ]
 
-const IMPACT_STATS = [
+export const IMPACT_STATS = [
   { value: "€40M+", label: "Impact delivered" },
   { value: "10+", label: "Products shipped" },
   { value: "6+", label: "Years of craft" },
@@ -478,7 +481,8 @@ function Loader({ onDone }) {
   const gap = CIRC - dash
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>
+    <div onMouseMove={() => { if (!isAudioUnlocked()) unlockAudio() }} onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }}
+      style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>
       <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 5, color: DIM, marginBottom: 48, textTransform: "uppercase" }}>Akinlolu Elijah</div>
 
       <div style={{ position: "relative", width: 160, height: 160, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -514,7 +518,11 @@ function Nav({ scrollY, soundOn, onToggleSound }) {
       <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300 }}>AE</span>
       <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
         {[["work", "Work"], ["about", "About"], ["contact", "Contact"]].map(([id, label]) => (
-          <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
+          id === "about" ? (
+            <Link key={id} to="/about" data-h style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</Link>
+          ) : (
+            <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
+          )
         ))}
         <a data-h href="/games" style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Game ✦</a>
         <button data-h onClick={onToggleSound} title={soundOn ? "Mute ambience" : "Move mouse to enable sound"} style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 2, color: soundOn ? GOLD : DIM, background: "none", border: `1px solid ${soundOn ? `${GOLD}44` : BORDER}`, padding: "6px 12px", cursor: "none", transition: "all 0.2s" }}>
@@ -564,7 +572,7 @@ function Hero({ ready }) {
   return (
     <section onMouseMove={handleMouse} style={{ position: "relative", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 56px", overflow: "hidden" }}>
       {heroReel && (
-        <div key={heroReel.url} className="hero-reel-bg">
+        <div key={heroReel.url} className="hero-reel-float">
           <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop />
         </div>
       )}
@@ -794,41 +802,49 @@ function ProjectDetail({ project, onClose }) {
 }
 
 // ── PROJECT CARD ──────────────────────────────────────────────────────────────
-function ProjectCard({ p, i, onOpen }) {
+function ProjectCard({ p, i }) {
+  const navigate = useNavigate()
   const [hov, setHov] = useState(false)
   const [ref, vis] = useReveal(0.05)
   const media = getProjectMedia(p.id)
+  const meta = getProjectMeta(p.id)
   return (
     <div ref={ref} data-h className="project-card"
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      onClick={() => onOpen(p)}
+      onClick={() => navigate(`/work/${p.id}`)}
       style={{
-        padding: "32px 36px",
-        background: hov ? `${p.accent}0a` : BG,
+        padding: 0,
+        background: BG,
         cursor: "none",
         opacity: vis ? 1 : 0,
-        transform: vis ? `translateY(${hov ? -4 : 0}px)` : "translateY(14px)",
-        transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease, background 0.3s`,
+        transform: vis ? "none" : "translateY(14px)",
+        transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease`,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        minHeight: media?.hero ? 300 : 240,
+        minHeight: media?.hero ? 340 : 260,
         position: "relative",
         overflow: "hidden",
       }}>
       {media?.hero && (
-        <div className="project-card-media" style={{ opacity: hov ? 1 : 0, transition: "opacity 0.45s ease" }}>
-          <MediaVideo src={media.hero.url} label={media.hero.label} autoPlay={hov} muted loop />
-          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 30%, ${BG} 95%)` }} />
+        <div className="project-card-thumb">
+          <img src={videoPoster(media.hero.url)} alt="" />
         </div>
       )}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 2 }} />
 
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 28 }}>
+      <div style={{ position: "relative", zIndex: 1, padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
           <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
           <StatusBadge status={p.status} label={p.statusLabel} />
         </div>
+
+        {meta && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 14, letterSpacing: 2 }}>{meta.flags.join(" ")}</span>
+            <span style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{meta.region}</span>
+          </div>
+        )}
 
         <h3 className="project-card-title" style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 400, color: hov ? TEXT : "rgba(224,219,210,0.72)", transition: "color 0.3s", lineHeight: 1.15, margin: "0 0 18px" }}>{p.title}</h3>
 
@@ -839,21 +855,19 @@ function ProjectCard({ p, i, onOpen }) {
         </div>
       </div>
 
-      <div style={{ marginTop: 28, position: "relative", zIndex: 1 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20, marginBottom: hov ? 16 : 0, transition: "margin 0.3s" }}>
+      <div style={{ marginTop: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20 }}>
           <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
           <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
         </div>
-        <div style={{ maxHeight: hov ? 88 : 0, overflow: "hidden", opacity: hov ? 1 : 0, transition: "max-height 0.4s ease, opacity 0.35s ease" }}>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 15, color: DIM, lineHeight: 1.7, margin: 0 }}>{p.desc}</p>
-        </div>
+      </div>
       </div>
     </div>
   )
 }
 
 // ── WORK ──────────────────────────────────────────────────────────────────────
-function Work({ onOpen }) {
+function Work() {
   const [hdr, hdrVis] = useReveal()
   return (
     <section id="work" style={{ paddingTop: 120, paddingBottom: 80 }}>
@@ -862,17 +876,17 @@ function Work({ onOpen }) {
         <h2 style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 300, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
-        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 17, color: DIM, margin: 0 }}>Click any project to explore the full case study.</p>
+        <p style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 17, color: DIM, margin: 0 }}>Click any project for the full case study.</p>
       </div>
 
       {INDUSTRIES.map((group, gi) => (
-        <IndustryGroup key={group.id} group={group} gi={gi} onOpen={onOpen} />
+        <IndustryGroup key={group.id} group={group} gi={gi} />
       ))}
     </section>
   )
 }
 
-function IndustryGroup({ group, gi, onOpen }) {
+function IndustryGroup({ group, gi }) {
   const [ref, vis] = useReveal(0.05)
   const projectOffset = INDUSTRIES.slice(0, gi).reduce((sum, g) => sum + g.projects.length, 0)
   const gridClass = group.projects.length === 1
@@ -889,7 +903,7 @@ function IndustryGroup({ group, gi, onOpen }) {
 
       <div className={gridClass}>
         {group.projects.map((p, i) => (
-          <ProjectCard key={p.id} p={p} i={projectOffset + i} onOpen={onOpen} />
+          <ProjectCard key={p.id} p={p} i={projectOffset + i} />
         ))}
       </div>
     </div>
@@ -969,11 +983,11 @@ export default function Portfolio() {
   const [loaded, setLoaded] = useState(false)
   const [ready, setReady] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-  const [activeProject, setActiveProject] = useState(null)
   const [soundOn, setSoundOn] = useState(false)
   const done = useCallback(() => { setLoaded(true); setTimeout(() => setReady(true), 100) }, [])
 
   useEffect(() => {
+    import("./lib/youtubePlayer.js").then(m => m.initAmbientPlayer())
     const cleanup = setupAudioOnMouseMove(() => setSoundOn(true))
     return () => { cleanup(); teardownAudio() }
   }, [])
@@ -984,7 +998,7 @@ export default function Portfolio() {
       setAmbientVolume(0)
       setSoundOn(false)
     } else if (isAudioUnlocked()) {
-      setAmbientVolume(0.09)
+      setAmbientVolume(0.22)
       startAmbientMusic()
       setSoundOn(true)
     }
@@ -995,11 +1009,6 @@ export default function Portfolio() {
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
-
-  useEffect(() => {
-    document.body.style.overflow = activeProject ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
-  }, [activeProject])
 
   useEffect(() => {
     const link = document.createElement("link")
@@ -1031,14 +1040,47 @@ export default function Portfolio() {
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
           animation: grain 0.5s steps(2) infinite;
         }
-        .hero-reel-bg {
-          position: absolute; inset: 0; z-index: 0; opacity: 0.22;
+        .hero-reel-float {
+          position: absolute;
+          right: 56px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: min(32vw, 360px);
+          aspect-ratio: 9 / 14;
+          z-index: 0;
+          opacity: 0.28;
+          border-radius: 4px;
+          overflow: hidden;
+          border: 1px solid ${BORDER};
           animation: heroReelFade 1.2s ease;
-          mask-image: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+          mask-image: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 70%, transparent 100%);
         }
-        .hero-reel-bg::after {
-          content: ""; position: absolute; inset: 0;
-          background: linear-gradient(135deg, ${BG}cc 0%, transparent 50%, ${BG}ee 100%);
+        .hero-reel-float::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, transparent 20%, ${BG}dd 100%);
+          pointer-events: none;
+        }
+        .project-card-thumb {
+          position: relative;
+          width: 100%;
+          height: 140px;
+          overflow: hidden;
+          opacity: 0.35;
+          filter: saturate(0.7);
+        }
+        .project-card-thumb img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .project-card-thumb::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, transparent 0%, ${BG} 100%);
         }
         .showreel-track-wrap {
           overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
@@ -1102,11 +1144,9 @@ export default function Portfolio() {
         <Nav scrollY={scrollY} soundOn={soundOn} onToggleSound={toggleSound} />
         <Hero ready={ready} />
         <Showreel />
-        <Work onOpen={setActiveProject} />
-        <About />
+        <Work />
         <Contact />
       </div>
-      {activeProject && <ProjectDetail project={activeProject} onClose={() => setActiveProject(null)} />}
     </div>
   )
 }
