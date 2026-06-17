@@ -424,14 +424,9 @@ function Nav({ scrollY }) {
 // ── HERO ──────────────────────────────────────────────────────────────────────
 function ImpactStat({ stat }) {
   return (
-    <div style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 18, maxWidth: stat.countries ? 340 : undefined }}>
+    <div style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 18 }}>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{stat.value}</div>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{stat.label}</div>
-      {stat.countries && (
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: DIM, lineHeight: 1.75, marginTop: 10 }}>
-          {stat.countries.map(c => `${c.flag} ${c.name}`).join(" · ")}
-        </div>
-      )}
     </div>
   )
 }
@@ -482,14 +477,14 @@ function Hero({ ready }) {
           <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 18 }}>
             Hello, it's me
           </div>
-          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(44px,7.5vw,104px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 22, color: CONTACT.aliasHighlight, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
-            {CONTACT.alias}
+          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(44px,7.5vw,104px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 16, color: TEXT, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+            {CONTACT.name}
           </div>
-          <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(26px,3.6vw,48px)", fontWeight: 500, lineHeight: 1.25, color: TEXT, maxWidth: 900 }}>
-            And I'm a{" "}
-            <span style={{ color: GOLD }}>Product Designer</span>
-            {", "}
-            <span style={{ color: GOLD }}>AI Engineer</span>
+          <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: "clamp(13px,1.2vw,15px)", fontWeight: 400, lineHeight: 1.6, color: DIM, maxWidth: 560 }}>
+            I'm a{" "}
+            <span style={{ color: GOLD }}>Fullstack product designer</span>
+            {" and "}
+            <span style={{ color: GOLD }}>AI engineer</span>
           </div>
         </div>
 
@@ -865,7 +860,7 @@ function Testimonials() {
           From founders and teams I've shipped with.
         </p>
       </ScrollReveal>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, maxWidth: 760 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
         {TESTIMONIALS.map((t, i) => (
           <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
             <article
@@ -912,7 +907,7 @@ function Testimonials() {
                     {t.name}{t.company ? `, ${t.company}` : ""}
                   </div>
                   <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: DIM }}>
-                    {t.role}{t.date ? ` · ${t.date}` : ""}
+                    {t.role}{t.country ? ` · ${t.country}` : ""}{t.date ? ` · ${t.date}` : ""}
                   </div>
                 </div>
               </div>

@@ -13,8 +13,7 @@ export const GLOBAL_COUNTRIES = [
 export const IMPACT_STATS = [
   { value: "€40M+", label: "Impact delivered" },
   { value: "18+", label: "Products shipped" },
-  { value: "4", label: "Continents" },
-  { value: "8", label: "Countries", countries: GLOBAL_COUNTRIES },
+  { value: "8", label: "Countries" },
   { value: "6+", label: "Years of craft" },
   { value: "3", label: "Enterprise clients" },
 ]

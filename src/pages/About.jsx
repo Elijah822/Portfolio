@@ -3,7 +3,7 @@ import SoundButton from "../components/SoundButton.jsx"
 import SocialLinks from "../components/SocialLinks.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
 import { CONTACT } from "../data/contact.js"
-import { IMPACT_STATS } from "../data/globalReach.js"
+import { GLOBAL_COUNTRIES, IMPACT_STATS } from "../data/globalReach.js"
 import { PORTRAIT_URL } from "../data/aboutMeta.js"
 import { RESUME_URL } from "../data/projectMeta.js"
 
@@ -34,7 +34,7 @@ const RESUME_HIGHLIGHTS = [
   },
   {
     title: "Impact",
-    items: ["€40M+ regulatory exposure avoided", "18+ products shipped across 4 continents & 8 countries", "3 enterprise clients simultaneously"],
+    items: ["€40M+ regulatory exposure avoided", "18+ products shipped across 8 countries", "3 enterprise clients simultaneously"],
   },
 ]
 
@@ -62,7 +62,7 @@ export default function About() {
         <ScrollReveal variant="fade-up">
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>
-            Akinlolu Elijah
+            {CONTACT.name}
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 1.5, margin: "0 0 48px" }}>
             Also known as{" "}
@@ -72,6 +72,17 @@ export default function About() {
 
         <div className="about-grid">
           <div>
+            <ScrollReveal as="section" variant="fade-up" delay={60} style={{ marginBottom: 64 }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Countries worked with</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                {GLOBAL_COUNTRIES.map(c => (
+                  <span key={c.name} style={{ fontFamily: "var(--font-body)", fontSize: 13, color: TEXT, padding: "8px 14px", border: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.02)" }}>
+                    {c.flag} {c.name}
+                  </span>
+                ))}
+              </div>
+            </ScrollReveal>
+
             <ScrollReveal as="section" variant="fade-up" delay={80} style={{ marginBottom: 64 }}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Origin</div>
               <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(20px,2.4vw,28px)", fontWeight: 400, lineHeight: 1.65, margin: "0 0 20px" }}>
@@ -125,15 +136,10 @@ export default function About() {
               </ScrollReveal>
 
               <ScrollReveal variant="fade-up" delay={260} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px 20px" }}>
-                {IMPACT_STATS.map(({ value, label, countries }, i) => (
-                  <ScrollReveal key={label} variant="scale-up" delay={280 + i * 70} style={{ gridColumn: countries ? "1 / -1" : undefined }}>
+                {IMPACT_STATS.map(({ value, label }, i) => (
+                  <ScrollReveal key={label} variant="scale-up" delay={280 + i * 70}>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 36, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{label}</div>
-                    {countries && (
-                      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: DIM, lineHeight: 1.75, marginTop: 8 }}>
-                        {countries.map(c => `${c.flag} ${c.name}`).join(" · ")}
-                      </div>
-                    )}
                   </ScrollReveal>
                 ))}
               </ScrollReveal>

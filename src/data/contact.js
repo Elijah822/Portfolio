@@ -3,6 +3,7 @@ export const CONTACT = {
   linkedin: "https://www.linkedin.com/in/akinlolu-elijah/",
   twitter: "https://x.com/uxfixer",
   whatsapp: "https://wa.me/2348165345591",
+  name: "Akinlolu Elijah",
   alias: "Dean~The UX Fixer",
   aliasHighlight: "#b8a4e8",
 }
