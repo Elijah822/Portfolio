@@ -474,13 +474,13 @@ function Hero({ ready }) {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "85vw" }}>
         <div style={{ ...f(0.1) }}>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 18 }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 20, letterSpacing: 0.5 }}>
             Hello, it's me
           </div>
-          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(44px,7.5vw,104px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 16, color: TEXT, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(52px,8.5vw,118px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 20, color: TEXT, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
             {CONTACT.name}
           </div>
-          <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: "clamp(13px,1.2vw,15px)", fontWeight: 400, lineHeight: 1.6, color: DIM, maxWidth: 560 }}>
+          <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(20px,2.4vw,30px)", fontWeight: 500, lineHeight: 1.35, color: TEXT, maxWidth: 720, marginBottom: 4 }}>
             I'm a{" "}
             <span style={{ color: GOLD }}>Fullstack product designer</span>
             {" and "}
@@ -489,7 +489,7 @@ function Hero({ ready }) {
         </div>
 
         {/* Bio */}
-        <p style={{ ...f(1.0), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "28px 0 0" }}>
+        <p style={{ ...f(1.0), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "32px 0 0" }}>
           I design products people understand — and businesses can scale. I build fast with{" "}
           <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
         </p>
