@@ -28,7 +28,16 @@ function releaseKey(key) {
   window.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles: true, cancelable: true }))
 }
 
-function DpadButton({ label, keyName, onPress, onRelease, className = "" }) {
+function DpadChevron({ dir }) {
+  const rotate = { up: 0, right: 90, down: 180, left: -90 }[dir] ?? 0
+  return (
+    <svg className="game-dpad__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ transform: `rotate(${rotate}deg)` }}>
+      <path d="M6 15l6-6 6 6" />
+    </svg>
+  )
+}
+
+function DpadButton({ label, keyName, onPress, onRelease, className = "", children }) {
   const down = () => {
     onPress?.(keyName)
     pressKey(keyName)
@@ -40,14 +49,14 @@ function DpadButton({ label, keyName, onPress, onRelease, className = "" }) {
   return (
     <button
       type="button"
-      className={`game-dpad__btn ${className}`.trim()}
+      className={`game-dpad__zone ${className}`.trim()}
       aria-label={label}
       onPointerDown={e => { e.preventDefault(); down() }}
       onPointerUp={up}
       onPointerLeave={up}
       onPointerCancel={up}
     >
-      {label}
+      {children}
     </button>
   )
 }
@@ -55,20 +64,27 @@ function DpadButton({ label, keyName, onPress, onRelease, className = "" }) {
 function MobileGamePad({ showSpace }) {
   return (
     <div className="game-dpad" aria-label="Game controls">
-      <div className="game-dpad__grid">
-        <span className="game-dpad__empty" />
-        <DpadButton label="↑" keyName="ArrowUp" className="game-dpad__btn--up" />
-        <span className="game-dpad__empty" />
-        <DpadButton label="←" keyName="ArrowLeft" className="game-dpad__btn--left" />
-        {showSpace ? (
-          <DpadButton label="␣" keyName=" " className="game-dpad__btn--space" />
-        ) : (
-          <span className="game-dpad__empty game-dpad__empty--center" />
+      <div className="game-dpad__cluster">
+        <div className="game-dpad__cross">
+          <div className="game-dpad__plate" aria-hidden="true" />
+          <DpadButton label="Up" keyName="ArrowUp" className="game-dpad__zone--up">
+            <DpadChevron dir="up" />
+          </DpadButton>
+          <DpadButton label="Down" keyName="ArrowDown" className="game-dpad__zone--down">
+            <DpadChevron dir="down" />
+          </DpadButton>
+          <DpadButton label="Left" keyName="ArrowLeft" className="game-dpad__zone--left">
+            <DpadChevron dir="left" />
+          </DpadButton>
+          <DpadButton label="Right" keyName="ArrowRight" className="game-dpad__zone--right">
+            <DpadChevron dir="right" />
+          </DpadButton>
+        </div>
+        {showSpace && (
+          <DpadButton label="Space" keyName=" " className="game-dpad__zone--action">
+            <span className="game-dpad__action-label">Space</span>
+          </DpadButton>
         )}
-        <DpadButton label="→" keyName="ArrowRight" className="game-dpad__btn--right" />
-        <span className="game-dpad__empty" />
-        <DpadButton label="↓" keyName="ArrowDown" className="game-dpad__btn--down" />
-        <span className="game-dpad__empty" />
       </div>
     </div>
   )
@@ -954,14 +970,6 @@ export default function Games() {
         <Link to="/" data-h className="games-nav__back" style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
       </div>
 
-      <div className="games-tabs page-pad-x">
-        {TABS.map(([id,label])=>(
-          <button key={id} data-h type="button" onClick={()=>setTab(id)} className={`games-tabs__btn${tab===id?" is-active":""}`}>
-            {label}
-          </button>
-        ))}
-      </div>
-
       <div className="games-body">
       <section className="games-hero">
         <div className="page-pad-x">
@@ -990,6 +998,14 @@ export default function Games() {
           </div>
         </button>
       </section>
+
+      <div className="games-tabs page-pad-x">
+        {TABS.map(([id,label])=>(
+          <button key={id} data-h type="button" onClick={()=>setTab(id)} className={`games-tabs__btn${tab===id?" is-active":""}`}>
+            {label}
+          </button>
+        ))}
+      </div>
 
       {tab==="browser"&&(
         <div className="page-pad-x" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -1272,59 +1288,115 @@ export default function Games() {
         .game-dpad {
           display: flex;
           justify-content: center;
-          padding-top: 8px;
+          padding-top: 12px;
         }
-        .game-dpad__grid {
-          display: grid;
-          grid-template-columns: repeat(3, 62px);
-          grid-template-rows: repeat(3, 62px);
-          gap: 1px;
-          padding: 1px;
-          border-radius: 18px;
-          overflow: hidden;
-          background: ${BORDER};
-          border: 1px solid ${BORDER};
+        .game-dpad__cluster {
+          display: flex;
+          align-items: center;
+          gap: 20px;
         }
-        .game-dpad__empty {
-          background: rgba(7,7,12,0.98);
+        .game-dpad__cross {
+          position: relative;
+          width: 196px;
+          height: 196px;
+          flex-shrink: 0;
         }
-        .game-dpad__empty--center {
-          background: rgba(255,255,255,0.03);
+        .game-dpad__plate {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 72px;
+          height: 196px;
+          margin-left: -36px;
+          margin-top: -98px;
+          border-radius: 36px;
+          background: rgba(255,255,255,0.08);
+          pointer-events: none;
         }
-        .game-dpad__btn {
-          width: 100%;
-          height: 100%;
+        .game-dpad__plate::before {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 196px;
+          height: 72px;
+          margin-left: -98px;
+          margin-top: -36px;
+          border-radius: 36px;
+          background: rgba(255,255,255,0.08);
+        }
+        .game-dpad__zone {
+          position: absolute;
           border: none;
-          border-radius: 0;
-          background: rgba(255,255,255,0.05);
+          background: transparent;
           color: ${TEXT};
-          font-family: var(--font-body);
-          font-size: 18px;
-          line-height: 1;
           display: flex;
           align-items: center;
           justify-content: center;
           touch-action: manipulation;
           user-select: none;
+          padding: 0;
+          z-index: 1;
         }
-        .game-dpad__btn:active,
-        .game-dpad__btn:focus-visible {
+        .game-dpad__zone:active,
+        .game-dpad__zone:focus-visible {
+          background: rgba(201,170,124,0.2);
+        }
+        .game-dpad__zone--up {
+          top: 0;
+          left: 50%;
+          width: 72px;
+          height: 62px;
+          margin-left: -36px;
+          border-radius: 36px 36px 12px 12px;
+        }
+        .game-dpad__zone--down {
+          bottom: 0;
+          left: 50%;
+          width: 72px;
+          height: 62px;
+          margin-left: -36px;
+          border-radius: 12px 12px 36px 36px;
+        }
+        .game-dpad__zone--left {
+          left: 0;
+          top: 50%;
+          width: 62px;
+          height: 72px;
+          margin-top: -36px;
+          border-radius: 36px 12px 12px 36px;
+        }
+        .game-dpad__zone--right {
+          right: 0;
+          top: 50%;
+          width: 62px;
+          height: 72px;
+          margin-top: -36px;
+          border-radius: 12px 36px 36px 12px;
+        }
+        .game-dpad__icon {
+          display: block;
+          opacity: 0.9;
+        }
+        .game-dpad__zone--action {
+          position: relative;
+          width: 88px;
+          height: 88px;
+          border-radius: 44px;
+          background: rgba(255,255,255,0.08);
+          flex-shrink: 0;
+        }
+        .game-dpad__zone--action:active,
+        .game-dpad__zone--action:focus-visible {
           background: rgba(201,170,124,0.22);
+          border-radius: 44px;
         }
-        .game-dpad__btn--up {
-          border-radius: 16px 16px 0 0;
-        }
-        .game-dpad__btn--down {
-          border-radius: 0 0 16px 16px;
-        }
-        .game-dpad__btn--left {
-          border-radius: 16px 0 0 16px;
-        }
-        .game-dpad__btn--right {
-          border-radius: 0 16px 16px 0;
-        }
-        .game-dpad__btn--space {
-          font-size: 22px;
+        .game-dpad__action-label {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: ${DIM};
         }
         .game-overlay__note {
           font-family: var(--font-body);
@@ -1402,6 +1474,17 @@ export default function Games() {
             --games-tabs-height: 52px;
           }
           .games-nav__back { display: none; }
+          .games-body {
+            padding-top: var(--games-nav-height);
+          }
+          .games-tabs {
+            position: sticky;
+            top: var(--games-nav-height);
+          }
+          .vr-hud::before,
+          .vr-hud::after {
+            top: var(--games-nav-height);
+          }
           .featured-trailer-copy { padding-top: 28px !important; padding-bottom: 28px !important; }
         }
       `}</style>
