@@ -18,6 +18,12 @@ html[data-text-size="2"] {
   font-size: 124%;
 }
 
+html[data-reduce-motion="true"] [data-revealed="false"] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 html[data-high-contrast="true"] {
   filter: contrast(1.1) saturate(1.08);
 }

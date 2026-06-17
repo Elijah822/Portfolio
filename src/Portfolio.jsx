@@ -4,6 +4,7 @@ import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
 import { getProjectMeta } from "./data/projectMeta.js"
 import SoundButton from "./components/SoundButton.jsx"
 import SocialLinks from "./components/SocialLinks.jsx"
+import ScrollReveal from "./components/ScrollReveal.jsx"
 import { CONTACT } from "./data/contact.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
@@ -214,17 +215,6 @@ function useScramble(text, trigger, speed = 16) {
   return out
 }
 
-function useReveal(threshold = 0.1) {
-  const ref = useRef(null)
-  const [vis, setVis] = useState(false)
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true) }, { threshold })
-    if (ref.current) obs.observe(ref.current)
-    return () => obs.disconnect()
-  }, [threshold])
-  return [ref, vis]
-}
-
 function StatusBadge({ status, label }) {
   const cfg = {
     live:     { dot: "#4ade80", color: "#4ade80", bg: "rgba(74,222,128,0.08)" },
@@ -361,10 +351,9 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
 }
 
 function Showreel() {
-  const [ref, vis] = useReveal(0.15)
   const doubled = [...SHOWREEL, ...SHOWREEL]
   return (
-    <section ref={ref} style={{ padding: "72px 0 80px", opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.9s" }}>
+    <ScrollReveal as="section" variant="fade-up" threshold={0.08} style={{ padding: "72px 0 80px" }}>
       <div style={{ padding: "0 56px", marginBottom: 48, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 40, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
@@ -382,7 +371,7 @@ function Showreel() {
           ))}
         </div>
       </div>
-    </section>
+    </ScrollReveal>
   )
 }
 
@@ -795,42 +784,60 @@ function ProjectCardVideo({ src, playing }) {
   )
 }
 
+// ── PROJECT CARD TEXTURE ───────────────────────────────────────────────────────
+function ProjectCardTexture({ variant, accent, dimmed }) {
+  return (
+    <div
+      className={`project-card-texture project-card-texture--${variant}`}
+      aria-hidden="true"
+      style={{ opacity: dimmed ? 0.4 : 1, transition: "opacity 0.4s ease" }}
+    >
+      <div
+        className="project-card-texture-glow"
+        style={{ background: `radial-gradient(ellipse 80% 60% at 22% 12%, ${accent}30 0%, transparent 58%), radial-gradient(ellipse 65% 50% at 88% 88%, rgba(96, 165, 250, 0.12) 0%, transparent 52%)` }}
+      />
+      {variant === "noise" ? (
+        <svg className="project-card-noise-layer" preserveAspectRatio="none" aria-hidden="true">
+          <rect width="100%" height="100%" filter="url(#card-noise)" />
+        </svg>
+      ) : (
+        <div className="project-card-mosaic-layer" />
+      )}
+    </div>
+  )
+}
+
 // ── PROJECT CARD ──────────────────────────────────────────────────────────────
 function ProjectCard({ p, i }) {
   const navigate = useNavigate()
   const [hov, setHov] = useState(false)
-  const [ref, vis] = useReveal(0.05)
   const media = getProjectMedia(p.id)
   const meta = getProjectMeta(p.id)
   const videoSrc = media?.hero?.url ?? null
+  const texture = i % 2 === 0 ? "noise" : "mosaic"
   return (
-    <div ref={ref} data-h className="project-card"
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <ScrollReveal
+      as="div"
+      data-h
+      className="project-card"
+      variant="scale-up"
+      threshold={0.06}
+      delay={Math.min(i * 70, 420)}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       onClick={() => navigate(`/work/${p.id}`)}
       style={{
         padding: 0,
         background: BG,
         cursor: "none",
-        opacity: vis ? 1 : 0,
-        transform: vis ? "none" : "translateY(14px)",
-        transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease`,
         display: "flex",
         flexDirection: "column",
         minHeight: 400,
         position: "relative",
         overflow: "hidden",
-      }}>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          background: `radial-gradient(ellipse at 30% 0%, ${p.accent}18 0%, transparent 55%), linear-gradient(180deg, rgba(255,255,255,0.03) 0%, ${BG} 100%)`,
-          opacity: hov ? 0.35 : 1,
-          transition: "opacity 0.4s ease",
-        }}
-      />
+      }}
+    >
+      <ProjectCardTexture variant={texture} accent={p.accent} dimmed={hov && !!videoSrc} />
       {videoSrc && <ProjectCardVideo src={videoSrc} playing={hov} />}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
 
@@ -888,22 +895,21 @@ function ProjectCard({ p, i }) {
         </div>
       </div>
       </div>
-    </div>
+    </ScrollReveal>
   )
 }
 
 // ── WORK ──────────────────────────────────────────────────────────────────────
 function Work() {
-  const [hdr, hdrVis] = useReveal()
   return (
     <section id="work" style={{ paddingTop: 120, paddingBottom: 80 }}>
-      <div ref={hdr} style={{ padding: "0 56px", marginBottom: 80, opacity: hdrVis ? 1 : 0, transform: hdrVis ? "none" : "translateY(20px)", transition: "all 0.8s" }}>
+      <ScrollReveal variant="fade-up" style={{ padding: "0 56px", marginBottom: 80 }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 — Selected Work ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, margin: 0, lineHeight: 1.7 }}>Click any project for the full case study.</p>
-      </div>
+      </ScrollReveal>
 
       {INDUSTRIES.map((group, gi) => (
         <IndustryGroup key={group.id} group={group} gi={gi} />
@@ -913,7 +919,6 @@ function Work() {
 }
 
 function IndustryGroup({ group, gi }) {
-  const [ref, vis] = useReveal(0.05)
   const projectOffset = INDUSTRIES.slice(0, gi).reduce((sum, g) => sum + g.projects.length, 0)
   const gridClass = group.projects.length === 1
     ? "project-grid project-grid--single"
@@ -922,10 +927,10 @@ function IndustryGroup({ group, gi }) {
       : "project-grid"
   return (
     <div style={{ padding: "0 56px", marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
-      <div ref={ref} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 32, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
+      <ScrollReveal variant="slide-left" delay={gi * 80} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 32 }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
         <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
-      </div>
+      </ScrollReveal>
 
       <div className={gridClass}>
         {group.projects.map((p, i) => (
@@ -938,21 +943,21 @@ function IndustryGroup({ group, gi }) {
 
 // ── TESTIMONIALS ──────────────────────────────────────────────────────────────
 function Testimonials() {
-  const [ref, vis] = useReveal()
   return (
-    <section id="testimonials" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — Testimonials ]</div>
-      <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
+    <section id="testimonials" style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
+      <ScrollReveal variant="fade-up">
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — Testimonials ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           What clients say
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 17, color: DIM, lineHeight: 1.7, margin: "0 0 48px", maxWidth: 560 }}>
           From founders and teams I've shipped with.
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, maxWidth: 760 }}>
-          {TESTIMONIALS.map(t => (
+      </ScrollReveal>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, maxWidth: 760 }}>
+        {TESTIMONIALS.map((t, i) => (
+          <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
             <article
-              key={t.id}
               style={{
                 background: "rgba(255,255,255,0.02)",
                 border: `1px solid ${BORDER}`,
@@ -1001,8 +1006,8 @@ function Testimonials() {
                 </div>
               </div>
             </article>
-          ))}
-        </div>
+          </ScrollReveal>
+        ))}
       </div>
     </section>
   )
@@ -1010,11 +1015,12 @@ function Testimonials() {
 
 // ── CONTACT ───────────────────────────────────────────────────────────────────
 function Contact() {
-  const [ref, vis] = useReveal()
   return (
-    <section id="contact" ref={ref} style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
-      <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
+    <section id="contact" style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
+      <ScrollReveal variant="fade-up">
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
+      </ScrollReveal>
+      <ScrollReveal variant="fade-up" delay={80}>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
         </p>
@@ -1022,11 +1028,11 @@ function Contact() {
           {CONTACT.email}
         </a>
         <SocialLinks style={{ marginTop: 44 }} />
-      </div>
-      <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
+      </ScrollReveal>
+      <ScrollReveal variant="fade" delay={160} style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
         <span>© 2025 Akinlolu Elijah · also known as {CONTACT.alias}</span>
         <SocialLinks />
-      </div>
+      </ScrollReveal>
     </section>
   )
 }
@@ -1148,6 +1154,55 @@ export default function Portfolio() {
         .project-card-tags {
           row-gap: 8px;
         }
+        .project-card {
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.06);
+        }
+        .project-card-texture {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background: ${BG};
+        }
+        .project-card-texture-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+        .project-card-noise-layer {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0.32;
+          mix-blend-mode: soft-light;
+          pointer-events: none;
+        }
+        .project-card-mosaic-layer {
+          position: absolute;
+          inset: 0;
+          opacity: 0.5;
+          background-image: radial-gradient(rgba(255,255,255,0.16) 0.65px, transparent 0.65px);
+          background-size: 5px 5px;
+          mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 20%, transparent 78%);
+          pointer-events: none;
+        }
+        .project-card-texture--mosaic::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 30% 25%, rgba(96, 165, 250, 0.1), transparent 42%),
+            radial-gradient(circle at 75% 70%, rgba(59, 130, 246, 0.08), transparent 40%);
+          pointer-events: none;
+        }
+        @media (min-width: 900px) {
+          .project-grid .project-card {
+            border-radius: 0;
+            border: none;
+          }
+        }
         @media (min-width: 900px) {
           .project-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -1169,6 +1224,13 @@ export default function Portfolio() {
           }
         }
       `}</style>
+
+      <svg aria-hidden="true" width="0" height="0" style={{ position: "absolute" }}>
+        <filter id="card-noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+      </svg>
 
       {!loaded && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>

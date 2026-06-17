@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import SoundButton from "../components/SoundButton.jsx"
+import ScrollReveal from "../components/ScrollReveal.jsx"
 import { ALL_PROJECTS } from "../data/projects.js"
 import { getCaseStudy } from "../data/caseStudies.js"
 import { getProjectMeta } from "../data/projectMeta.js"
@@ -12,12 +13,12 @@ const DIM = "#a39e98"
 const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
-function Section({ label, children }) {
+function Section({ label, children, delay = 0 }) {
   return (
-    <div style={{ marginBottom: 48 }}>
+    <ScrollReveal variant="fade-up" delay={delay} style={{ marginBottom: 48 }}>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>{label}</div>
       {children}
-    </div>
+    </ScrollReveal>
   )
 }
 
@@ -30,11 +31,11 @@ function Prose({ children }) {
 function ProjectMetrics({ metrics, accent }) {
   return (
     <div className="project-metrics">
-      {metrics.map(({ value, label }) => (
-        <div key={label} className="project-metric">
+      {metrics.map(({ value, label }, i) => (
+        <ScrollReveal key={label} as="div" variant="scale-up" delay={i * 80} className="project-metric">
           <div className="project-metric-value" style={{ color: accent }}>{value}</div>
           <div className="project-metric-label">{label}</div>
-        </div>
+        </ScrollReveal>
       ))}
     </div>
   )
@@ -128,26 +129,28 @@ export default function ProjectPage() {
       </nav>
 
       <main style={{ maxWidth: 900, margin: "0 auto", padding: "80px 56px 120px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
-          <StatusBadge status={project.status} label={project.statusLabel} />
-          {meta && (
-            <span style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, display: "flex", alignItems: "center", gap: 8 }}>
-              {meta.flags.join(" ")} {meta.region}
-            </span>
-          )}
-        </div>
+        <ScrollReveal variant="fade-up">
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
+            <StatusBadge status={project.status} label={project.statusLabel} />
+            {meta && (
+              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, display: "flex", alignItems: "center", gap: 8 }}>
+                {meta.flags.join(" ")} {meta.region}
+              </span>
+            )}
+          </div>
 
-        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 500, lineHeight: 1.15, margin: "0 0 16px" }}>{project.title}</h1>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, marginBottom: 40 }}>
-          {(study?.role || project.role)} · {project.year}
-          {study?.productType && ` · ${study.productType}`}
-        </div>
+          <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 500, lineHeight: 1.15, margin: "0 0 16px" }}>{project.title}</h1>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, marginBottom: 40 }}>
+            {(study?.role || project.role)} · {project.year}
+            {study?.productType && ` · ${study.productType}`}
+          </div>
+        </ScrollReveal>
 
         {media?.hero && media.hero.showOnProjectPage !== false && (
-          <div style={{ marginBottom: 56, borderRadius: 2, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16/9", background: "#0a0a10" }}>
+          <ScrollReveal variant="scale-up" delay={100} style={{ marginBottom: 56, borderRadius: 2, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16/9", background: "#0a0a10" }}>
             <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
+          </ScrollReveal>
         )}
 
         <ProjectMetrics metrics={project.metrics} accent={project.accent} />
@@ -236,7 +239,7 @@ export default function ProjectPage() {
           <Section label="Conclusion"><Prose>{study.conclusion}</Prose></Section>
         )}
 
-        <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginTop: 48, paddingTop: 32, borderTop: `1px solid ${BORDER}` }}>
+        <ScrollReveal variant="fade-up" delay={120} style={{ display: "flex", gap: 32, flexWrap: "wrap", marginTop: 48, paddingTop: 32, borderTop: `1px solid ${BORDER}` }}>
           {siteUrl && (
             <a href={siteUrl} target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}44`, paddingBottom: 4 }}>
               Visit live site ↗
@@ -247,7 +250,7 @@ export default function ProjectPage() {
               Full case study doc ↗
             </a>
           )}
-        </div>
+        </ScrollReveal>
       </main>
     </div>
   )

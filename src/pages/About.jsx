@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import SoundButton from "../components/SoundButton.jsx"
 import SocialLinks from "../components/SocialLinks.jsx"
+import ScrollReveal from "../components/ScrollReveal.jsx"
 import { CONTACT } from "../data/contact.js"
 import { PORTRAIT_URL } from "../data/aboutMeta.js"
 import { RESUME_URL } from "../data/projectMeta.js"
@@ -64,17 +65,19 @@ export default function About() {
       </nav>
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
-        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>
-          Akinlolu Elijah
-        </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 2, color: GOLD, margin: "0 0 48px" }}>
-          Also known as {CONTACT.alias}
-        </p>
+        <ScrollReveal variant="fade-up">
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
+          <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>
+            Akinlolu Elijah
+          </h1>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 2, color: GOLD, margin: "0 0 48px" }}>
+            Also known as {CONTACT.alias}
+          </p>
+        </ScrollReveal>
 
         <div className="about-grid">
           <div>
-            <section style={{ marginBottom: 64 }}>
+            <ScrollReveal as="section" variant="fade-up" delay={80} style={{ marginBottom: 64 }}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Origin</div>
               <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(20px,2.4vw,28px)", fontWeight: 400, lineHeight: 1.65, margin: "0 0 20px" }}>
                 Product designer from Lagos, Nigeria — designing products people understand and businesses can grow with.
@@ -82,36 +85,36 @@ export default function About() {
               <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.9, margin: 0 }}>
                 Nigeria gave me resourcefulness. Experience across the UK, US, and Europe gave me rigour and access. I work where user needs, business goals, and regulatory reality collide — currently as Senior Product Designer at Toke, building e-commerce and retail experiences alongside AI-powered design infrastructure for enterprise clients.
               </p>
-            </section>
+            </ScrollReveal>
 
-            <section style={{ marginBottom: 64 }}>
+            <ScrollReveal as="section" variant="fade-up" delay={120} style={{ marginBottom: 64 }}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 28, textTransform: "uppercase" }}>Experience</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 {EXPERIENCE.map((job, i) => (
-                  <div key={i} style={{ padding: "24px 0", borderTop: i === 0 ? `1px solid ${BORDER}` : "none", borderBottom: `1px solid ${BORDER}` }}>
+                  <ScrollReveal key={i} variant="slide-left" delay={i * 60} style={{ padding: "24px 0", borderTop: i === 0 ? `1px solid ${BORDER}` : "none", borderBottom: `1px solid ${BORDER}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 8 }}>
                       <div style={{ fontFamily: "var(--font-body)", fontSize: 22, color: TEXT }}>{job.role}</div>
                       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>{job.period}</div>
                     </div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: GOLD }}>{job.company} · {job.place}</div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
-            </section>
+            </ScrollReveal>
 
-            <section>
+            <ScrollReveal as="section" variant="fade-up" delay={100}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Get in touch</div>
               <a href={`mailto:${CONTACT.email}`} style={{ fontFamily: "var(--font-body)", fontSize: 28, color: TEXT, textDecoration: "none", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6 }}>{CONTACT.email}</a>
               <SocialLinks style={{ marginTop: 24 }} />
-            </section>
+            </ScrollReveal>
           </div>
 
           <aside>
             <div style={{ position: "sticky", top: 40 }}>
-              <div className="about-portrait">
+              <ScrollReveal variant="scale-up" delay={140} className="about-portrait">
                 <img src={PORTRAIT_URL} alt="Akinlolu Elijah" />
-              </div>
-              <div style={{ padding: "32px 28px", border: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
+              </ScrollReveal>
+              <ScrollReveal variant="scale-up" delay={200} style={{ padding: "32px 28px", border: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
                 <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Resume</div>
                 {RESUME_HIGHLIGHTS.map(block => (
                   <div key={block.title} style={{ marginBottom: 24 }}>
@@ -124,16 +127,16 @@ export default function About() {
                 <a href={RESUME_URL} download style={{ display: "inline-block", marginTop: 8, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}55`, paddingBottom: 4 }}>
                   Download full resume ↗
                 </a>
-              </div>
+              </ScrollReveal>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-                {IMPACT_STATS.map(({ value, label }) => (
-                  <div key={label}>
+              <ScrollReveal variant="fade-up" delay={260} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                {IMPACT_STATS.map(({ value, label }, i) => (
+                  <ScrollReveal key={label} variant="scale-up" delay={280 + i * 70}>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 36, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{label}</div>
-                  </div>
+                  </ScrollReveal>
                 ))}
-              </div>
+              </ScrollReveal>
             </div>
           </aside>
         </div>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import SoundButton from "../components/SoundButton.jsx"
+import ScrollReveal from "../components/ScrollReveal.jsx"
 import { EXPLORATIONS } from "../data/explorations.js"
 
 const BG = "#07070c"
@@ -49,17 +50,19 @@ export default function Exploration() {
       </nav>
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>Exploration</div>
-        <h1 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>
-          Ideas I'm building<br /><em style={{ color: GOLD }}>and proving.</em>
-        </h1>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 620, margin: "0 0 72px" }}>
-          Personal products, design foresight, and experiments at the edge of AI — where riding the wave means shipping faster and thinking deeper.
-        </p>
+        <ScrollReveal variant="fade-up">
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>Exploration</div>
+          <h1 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>
+            Ideas I'm building<br /><em style={{ color: GOLD }}>and proving.</em>
+          </h1>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 620, margin: "0 0 72px" }}>
+            Personal products, design foresight, and experiments at the edge of AI — where riding the wave means shipping faster and thinking deeper.
+          </p>
+        </ScrollReveal>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 1, background: BORDER, border: `1px solid ${BORDER}` }}>
           {EXPLORATIONS.map((item, idx) => (
-            <article key={item.id} className="explore-card" style={{ background: BG, padding: "48px 40px", borderLeft: `3px solid ${item.accent}` }}>
+            <ScrollReveal key={item.id} as="article" variant="scale-up" delay={idx * 100} className="explore-card" style={{ background: BG, padding: "48px 40px", borderLeft: `3px solid ${item.accent}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16, marginBottom: 20 }}>
                 <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: item.accent, textTransform: "uppercase" }}>
                   {String(idx + 1).padStart(2, "0")} · {item.tag}
@@ -80,23 +83,23 @@ export default function Exploration() {
               </p>
 
               <div className="explore-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, background: BORDER, border: `1px solid ${BORDER}`, marginBottom: 32 }}>
-                {item.highlights.map(h => (
-                  <div key={h.label} style={{ background: BG, padding: "20px 24px" }}>
+                {item.highlights.map((h, hi) => (
+                  <ScrollReveal key={h.label} variant="fade-up" delay={hi * 70} style={{ background: BG, padding: "20px 24px" }}>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 24, fontWeight: 300, color: item.accent, lineHeight: 1 }}>{h.value}</div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 10, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{h.label}</div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
-                {item.streams.map(s => (
-                  <div key={s.title} style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 20 }}>
+                {item.streams.map((s, si) => (
+                  <ScrollReveal key={s.title} variant="slide-left" delay={si * 80} style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 20 }}>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 10, textTransform: "uppercase" }}>{s.title}</div>
                     <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 400, color: DIM, lineHeight: 1.75, margin: 0 }}>{s.desc}</p>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
-            </article>
+            </ScrollReveal>
           ))}
         </div>
       </main>
