@@ -494,6 +494,10 @@ function Hero({ ready }) {
           </div>
           <div className="hero-stats-mobile">
             <div className="hero-stats-mobile__row">
+              <ImpactStat stat={IMPACT_STATS[0]} />
+              <ImpactStat stat={IMPACT_STATS[1]} />
+            </div>
+            <div className="hero-stats-mobile__row">
               <ImpactStat stat={IMPACT_STATS[2]} />
               <ImpactStat stat={IMPACT_STATS[3]} />
             </div>
