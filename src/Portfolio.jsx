@@ -2,9 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
 import { getProjectMeta } from "./data/projectMeta.js"
-import { projectThumbnail } from "./lib/siteThumbnail.js"
 import SoundButton from "./components/SoundButton.jsx"
-import { PORTRAIT_URL } from "./data/aboutMeta.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
   isAudioUnlocked,
@@ -755,6 +753,42 @@ function ProjectDetail({ project, onClose }) {
   )
 }
 
+function ProjectCardVideo({ src, playing }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    if (playing) {
+      v.play().catch(() => {})
+    } else {
+      v.pause()
+      try { v.currentTime = 0 } catch (_) {}
+    }
+  }, [playing, src])
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={videoPoster(src)}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        opacity: playing ? 0.62 : 0,
+        transition: "opacity 0.45s ease",
+        filter: "saturate(0.9)",
+      }}
+    />
+  )
+}
+
 // ── PROJECT CARD ──────────────────────────────────────────────────────────────
 function ProjectCard({ p, i }) {
   const navigate = useNavigate()
@@ -762,7 +796,7 @@ function ProjectCard({ p, i }) {
   const [ref, vis] = useReveal(0.05)
   const media = getProjectMedia(p.id)
   const meta = getProjectMeta(p.id)
-  const thumb = projectThumbnail(meta) || (!meta?.noThumbnail && media?.hero ? videoPoster(media.hero.url) : null)
+  const videoSrc = media?.hero?.url ?? null
   return (
     <div ref={ref} data-h className="project-card"
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
@@ -776,15 +810,22 @@ function ProjectCard({ p, i }) {
         transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease`,
         display: "flex",
         flexDirection: "column",
-        minHeight: thumb ? 340 : 260,
+        minHeight: 400,
         position: "relative",
         overflow: "hidden",
       }}>
-      {thumb && (
-        <div className="project-card-thumb">
-          <img src={thumb} alt="" />
-        </div>
-      )}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          background: `radial-gradient(ellipse at 30% 0%, ${p.accent}18 0%, transparent 55%), linear-gradient(180deg, rgba(255,255,255,0.03) 0%, ${BG} 100%)`,
+          opacity: hov ? 0.35 : 1,
+          transition: "opacity 0.4s ease",
+        }}
+      />
+      {videoSrc && <ProjectCardVideo src={videoSrc} playing={hov} />}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
 
       <div
@@ -875,7 +916,7 @@ function IndustryGroup({ group, gi }) {
       : "project-grid"
   return (
     <div style={{ padding: "0 56px", marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
-      <div ref={ref} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 8, borderTop: gi === 0 ? "none" : `1px solid ${BORDER}`, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
+      <div ref={ref} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 32, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
         <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
       </div>
@@ -889,86 +930,68 @@ function IndustryGroup({ group, gi }) {
   )
 }
 
-// ── ABOUT ─────────────────────────────────────────────────────────────────────
-function About() {
-  const [ref, vis] = useReveal()
-  return (
-    <section id="about" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — About ]</div>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 280px", gap: "64px 80px", marginBottom: 64, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
-        <div>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(22px,2.6vw,34px)", fontWeight: 400, color: TEXT, lineHeight: 1.55, margin: "0 0 24px" }}>
-            I'm a product designer who believes great design is invisible — until it isn't, and then it changes everything.
-          </p>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.95, margin: "0 0 20px" }}>
-            Over 6 years, I've worked across consumer apps, enterprise platforms, fintech, healthcare, and AI-native products. I design where user needs, business goals, and regulatory reality collide — currently at Toke, designing the future of financial product experiences.
-          </p>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: DIM, lineHeight: 1.85, margin: 0 }}>
-            18+ products shipped across 4 continents and 8 countries — from Lagos to London, Bucharest to California.
-          </p>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <div style={{ overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "4/5", background: "rgba(255,255,255,0.03)" }}>
-            <img src={PORTRAIT_URL} alt="Akinlolu Elijah" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-            {IMPACT_STATS.map(({ value, label }) => (
-              <div key={label}>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 36, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase", lineHeight: 1.5 }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div style={{ paddingTop: 36, borderTop: `1px solid ${BORDER}`, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 36, opacity: vis ? 1 : 0, transition: "all 0.85s 0.2s" }}>
-        {[
-          ["Design", "Figma · Systems · Prototyping · Motion"],
-          ["Research", "User Research · Usability · Data Synthesis"],
-          ["AI & Tools", "Claude MCP · ChatGPT · AI-native UX"],
-          ["Strategy", "Regulatory UX · Compliance · Enterprise"],
-        ].map(([cat, skills]) => (
-          <div key={cat}>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 12, textTransform: "uppercase" }}>{cat}</div>
-            <div style={{ fontFamily: "var(--font-body)", fontSize: 15, color: DIM, lineHeight: 2 }}>{skills}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 // ── TESTIMONIALS ──────────────────────────────────────────────────────────────
 function Testimonials() {
   const [ref, vis] = useReveal()
   return (
     <section id="testimonials" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Testimonials ]</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — Testimonials ]</div>
       <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           What clients say
         </h2>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 17, color: DIM, lineHeight: 1.7, margin: "0 0 48px", maxWidth: 560 }}>
-          Snapshots from teams I've worked with — add client thumbnails and quotes anytime.
+          From founders and teams I've shipped with.
         </p>
-        <div className="testimonial-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 1, background: BORDER, border: `1px solid ${BORDER}` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, maxWidth: 760 }}>
           {TESTIMONIALS.map(t => (
-            <article key={t.id} style={{ background: BG, padding: 0, display: "flex", flexDirection: "column", minHeight: 360 }}>
-              <div style={{ height: 180, borderBottom: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.03)", overflow: "hidden", position: "relative" }}>
-                {t.thumbnail ? (
-                  <img src={t.thumbnail} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <div style={{ inset: 0, position: "absolute", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, textTransform: "uppercase" }}>
-                    Client snapshot
-                  </div>
-                )}
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: t.accent }} />
-              </div>
-              <div style={{ padding: "28px 28px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: TEXT, lineHeight: 1.8, margin: "0 0 24px", flex: 1 }}>"{t.quote}"</p>
+            <article
+              key={t.id}
+              style={{
+                background: "rgba(255,255,255,0.02)",
+                border: `1px solid ${BORDER}`,
+                padding: "32px 32px 28px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 28,
+                minHeight: 280,
+              }}
+            >
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px, 1.6vw, 18px)", color: TEXT, lineHeight: 1.8, margin: 0, flex: 1 }}>
+                "{t.quote}"
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    border: `1px solid ${BORDER}`,
+                    background: `linear-gradient(135deg, ${t.accent}44, rgba(255,255,255,0.06))`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: t.accent,
+                  }}
+                >
+                  {t.avatar ? (
+                    <img src={t.avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    t.name.split(" ").map(n => n[0]).join("").slice(0, 2)
+                  )}
+                </div>
                 <div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 16, color: TEXT, marginBottom: 6 }}>{t.name}</div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{t.role}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 600, color: TEXT, marginBottom: 4 }}>
+                    {t.name}{t.company ? `, ${t.company}` : ""}
+                  </div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: DIM }}>
+                    {t.role}{t.date ? ` · ${t.date}` : ""}
+                  </div>
                 </div>
               </div>
             </article>
@@ -984,7 +1007,7 @@ function Contact() {
   const [ref, vis] = useReveal()
   return (
     <section id="contact" ref={ref} style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 04 — Contact ]</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
       <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
@@ -1085,25 +1108,8 @@ export default function Portfolio() {
           background: linear-gradient(90deg, ${BG} 0%, transparent 35%, ${BG}88 100%);
           pointer-events: none;
         }
-        .project-card-thumb {
-          position: relative;
-          width: 100%;
-          height: 160px;
-          overflow: hidden;
-          opacity: 0.82;
-          filter: saturate(0.92);
-        }
-        .project-card-thumb img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .project-card-thumb::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, transparent 0%, ${BG}aa 100%);
+        .project-card-media {
+          position: absolute; inset: 0; z-index: 0;
         }
         .showreel-track-wrap {
           overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
@@ -1122,9 +1128,6 @@ export default function Portfolio() {
           font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
           color: ${TEXT}; text-transform: uppercase;
           background: linear-gradient(transparent, rgba(7,7,12,0.92));
-        }
-        .project-card-media {
-          position: absolute; inset: 0; z-index: 0;
         }
         .project-grid {
           display: grid;
@@ -1153,10 +1156,10 @@ export default function Portfolio() {
             grid-template-columns: 1fr;
           }
           .project-grid--single .project-card {
-            min-height: 220px;
+            min-height: 360px;
           }
           .project-card {
-            min-height: 260px;
+            min-height: 420px;
           }
         }
       `}</style>
@@ -1167,7 +1170,6 @@ export default function Portfolio() {
         <Hero ready={ready} />
         <Showreel />
         <Work />
-        <About />
         <Testimonials />
         <Contact />
       </div>

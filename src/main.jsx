@@ -1,9 +1,11 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { AccessibilityProvider } from "./context/AccessibilityContext.jsx"
 import { AmbientAudioProvider } from "./context/AmbientAudioContext.jsx"
-import CustomCursor from "./components/CustomCursor.jsx"
+import AppShell from "./components/AppShell.jsx"
 import { loadFonts } from "./tokens/typography.js"
+import { applyA11yPrefs, loadA11yPrefs } from "./lib/accessibilityState.js"
 import "@fontsource-variable/bricolage-grotesque/wght.css"
 import "./styles/global.css"
 import Portfolio from "./Portfolio.jsx"
@@ -13,20 +15,24 @@ import Exploration from "./pages/Exploration.jsx"
 import ProjectPage from "./pages/ProjectPage.jsx"
 
 loadFonts()
+applyA11yPrefs(loadA11yPrefs())
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AmbientAudioProvider>
-      <CustomCursor />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Portfolio />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/exploration" element={<Exploration />} />
-          <Route path="/work/:id" element={<ProjectPage />} />
-          <Route path="/games" element={<Games />} />
-        </Routes>
-      </BrowserRouter>
-    </AmbientAudioProvider>
+    <AccessibilityProvider>
+      <AppShell>
+        <AmbientAudioProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Portfolio />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/exploration" element={<Exploration />} />
+              <Route path="/work/:id" element={<ProjectPage />} />
+              <Route path="/games" element={<Games />} />
+            </Routes>
+          </BrowserRouter>
+        </AmbientAudioProvider>
+      </AppShell>
+    </AccessibilityProvider>
   </StrictMode>
 )
