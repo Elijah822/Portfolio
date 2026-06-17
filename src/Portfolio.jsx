@@ -651,29 +651,53 @@ function ProjectDetail({ project, onClose }) {
   )
 }
 
-// ── PROJECT ROW ───────────────────────────────────────────────────────────────
-function ProjectRow({ p, i, onOpen }) {
+// ── PROJECT CARD ──────────────────────────────────────────────────────────────
+function ProjectCard({ p, i, onOpen }) {
   const [hov, setHov] = useState(false)
   const [ref, vis] = useReveal(0.05)
   return (
-    <div ref={ref} data-h
+    <div ref={ref} data-h className="project-card"
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       onClick={() => onOpen(p)}
-      style={{ display: "grid", gridTemplateColumns: "56px 1fr 200px", gap: 32, alignItems: "start", padding: "26px 56px", borderBottom: `1px solid ${hov ? "rgba(201,170,124,0.18)" : BORDER}`, background: hov ? "rgba(201,170,124,0.025)" : "transparent", cursor: "none", opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(14px)", transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease, background 0.3s, border-color 0.3s` }}>
-      <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 44, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : BORDER, transition: "color 0.3s", paddingTop: 4 }}>{p.id}</div>
+      style={{
+        padding: "32px 36px",
+        background: hov ? `${p.accent}0a` : BG,
+        cursor: "none",
+        opacity: vis ? 1 : 0,
+        transform: vis ? "none" : "translateY(14px)",
+        transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease, background 0.3s`,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: 240,
+        position: "relative",
+        overflow: "hidden",
+      }}>
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left" }} />
+
       <div>
-        <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(19px,2.5vw,30px)", fontWeight: 400, color: hov ? TEXT : "rgba(224,219,210,0.55)", transition: "color 0.3s", lineHeight: 1.2, marginBottom: 10 }}>{p.title}</div>
-        <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 10 }}>
-          {p.cat.split(" · ").map(t => <span key={t} style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, padding: "3px 9px", border: `1px solid ${BORDER}`, textTransform: "uppercase" }}>{t}</span>)}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 28 }}>
+          <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
+          <StatusBadge status={p.status} label={p.statusLabel} />
         </div>
-        <div style={{ maxHeight: hov ? 80 : 0, overflow: "hidden", opacity: hov ? 1 : 0, transition: "max-height 0.4s ease, opacity 0.35s ease" }}>
-          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 15, color: DIM, lineHeight: 1.75, margin: "4px 0 0" }}>{p.desc}</p>
+
+        <h3 className="project-card-title" style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 400, color: hov ? TEXT : "rgba(224,219,210,0.72)", transition: "color 0.3s", lineHeight: 1.15, margin: "0 0 18px" }}>{p.title}</h3>
+
+        <div className="project-card-tags" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {p.cat.split(" · ").map(t => (
+            <span key={t} style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${hov ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
+          ))}
         </div>
       </div>
-      <div style={{ textAlign: "right", paddingTop: 6 }}>
-        <div style={{ marginBottom: 8 }}><StatusBadge status={p.status} label={p.statusLabel} /></div>
-        <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 15, color: p.accent, opacity: hov ? 1 : 0, transition: "opacity 0.3s", marginBottom: 8 }}>{p.impact}</div>
-        <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM }}>{p.year}</div>
+
+      <div style={{ marginTop: 28 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20, marginBottom: hov ? 16 : 0, transition: "margin 0.3s" }}>
+          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
+          <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
+        </div>
+        <div style={{ maxHeight: hov ? 88 : 0, overflow: "hidden", opacity: hov ? 1 : 0, transition: "max-height 0.4s ease, opacity 0.35s ease" }}>
+          <p style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 15, color: DIM, lineHeight: 1.7, margin: 0 }}>{p.desc}</p>
+        </div>
       </div>
     </div>
   )
@@ -702,21 +726,23 @@ function Work({ onOpen }) {
 function IndustryGroup({ group, gi, onOpen }) {
   const [ref, vis] = useReveal(0.05)
   const projectOffset = INDUSTRIES.slice(0, gi).reduce((sum, g) => sum + g.projects.length, 0)
+  const gridClass = group.projects.length === 1
+    ? "project-grid project-grid--single"
+    : group.projects.length >= 3
+      ? "project-grid project-grid--wide"
+      : "project-grid"
   return (
-    <div style={{ marginBottom: 0 }}>
-      {/* Industry divider */}
-      <div ref={ref} style={{ padding: "32px 56px 28px", display: "grid", gridTemplateColumns: "260px 1fr", alignItems: "center", gap: 40, borderTop: `1px solid ${BORDER}`, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
-        <div>
-          <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 3, color: GOLD, marginBottom: 6, textTransform: "uppercase" }}>{group.sub}</div>
-          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, fontWeight: 400, color: "rgba(224,219,210,0.45)" }}>{group.label}</div>
-        </div>
-        <div style={{ height: 1, background: BORDER }} />
+    <div style={{ padding: "0 56px", marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
+      <div ref={ref} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 8, borderTop: gi === 0 ? "none" : `1px solid ${BORDER}`, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
+        <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
+        <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
       </div>
 
-      {/* Projects */}
-      {group.projects.map((p, i) => (
-        <ProjectRow key={p.id} p={p} i={projectOffset + i} onOpen={onOpen} />
-      ))}
+      <div className={gridClass}>
+        {group.projects.map((p, i) => (
+          <ProjectCard key={p.id} p={p} i={projectOffset + i} onOpen={onOpen} />
+        ))}
+      </div>
     </div>
   )
 }
@@ -827,6 +853,39 @@ export default function Portfolio() {
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-25%); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .project-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .project-card-title {
+          word-break: keep-all;
+          overflow-wrap: normal;
+          hyphens: none;
+        }
+        .project-card-tags {
+          row-gap: 8px;
+        }
+        @media (min-width: 900px) {
+          .project-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: ${BORDER};
+            border: 1px solid ${BORDER};
+          }
+          .project-grid--wide {
+            grid-template-columns: repeat(3, 1fr);
+          }
+          .project-grid--single {
+            grid-template-columns: 1fr;
+          }
+          .project-grid--single .project-card {
+            min-height: 220px;
+          }
+          .project-card {
+            min-height: 260px;
+          }
+        }
       `}</style>
 
       {!loaded && <Loader onDone={done} />}
