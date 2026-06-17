@@ -8,6 +8,17 @@ const DIM = "#a39e98"
 const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
+function A11yIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="4.5" r="2" />
+      <path d="M12 7v5" />
+      <path d="M7.5 11h9" />
+      <path d="M9.5 21l2.5-6 2.5 6" />
+    </svg>
+  )
+}
+
 function Toggle({ label, description, checked, onChange }) {
   return (
     <label
@@ -88,6 +99,9 @@ export default function AccessibilityMenu() {
           bottom: 24,
           left: 24,
           zIndex: 1200,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
           fontFamily: "var(--font-body)",
           fontSize: 12,
           letterSpacing: 2,
@@ -101,6 +115,7 @@ export default function AccessibilityMenu() {
           boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
         }}
       >
+        <A11yIcon />
         A11y
       </button>
 

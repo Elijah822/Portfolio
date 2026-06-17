@@ -10,6 +10,14 @@ html {
   --a11y-text-scale: 1;
 }
 
+html[data-text-size="1"] {
+  font-size: 112.5%;
+}
+
+html[data-text-size="2"] {
+  font-size: 124%;
+}
+
 html[data-high-contrast="true"] {
   filter: contrast(1.1) saturate(1.08);
 }

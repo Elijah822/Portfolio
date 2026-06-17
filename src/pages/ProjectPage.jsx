@@ -27,6 +27,19 @@ function Prose({ children }) {
   )
 }
 
+function ProjectMetrics({ metrics, accent }) {
+  return (
+    <div className="project-metrics">
+      {metrics.map(({ value, label }) => (
+        <div key={label} className="project-metric">
+          <div className="project-metric-value" style={{ color: accent }}>{value}</div>
+          <div className="project-metric-label">{label}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function StatusBadge({ status, label }) {
   const cfg = {
     live: { color: "#4ade80", bg: "rgba(74,222,128,0.08)" },
@@ -71,6 +84,39 @@ export default function ProjectPage() {
 
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
+      <style>{`
+        .project-metrics {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 56px;
+        }
+        .project-metric {
+          padding: 24px 28px;
+          border: 1px solid ${BORDER};
+          background: rgba(255,255,255,0.015);
+        }
+        .project-metric-value {
+          font-family: var(--font-body);
+          font-size: 40px;
+          font-weight: 300;
+          line-height: 1;
+          margin-bottom: 10px;
+        }
+        .project-metric-label {
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 1.5;
+          color: ${DIM};
+          max-width: 28ch;
+        }
+        @media (min-width: 640px) {
+          .project-metrics {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      `}</style>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(7,7,12,0.94)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${BORDER}` }}>
         <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
@@ -98,20 +144,13 @@ export default function ProjectPage() {
           {study?.productType && ` · ${study.productType}`}
         </div>
 
-        {media?.hero && (
+        {media?.hero && media.hero.showOnProjectPage !== false && (
           <div style={{ marginBottom: 56, borderRadius: 2, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16/9", background: "#0a0a10" }}>
             <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 24, marginBottom: 56, paddingBottom: 40, borderBottom: `1px solid ${BORDER}` }}>
-          {project.metrics.map(({ value, label }) => (
-            <div key={label}>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 32, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, textTransform: "uppercase", marginTop: 6 }}>{label}</div>
-            </div>
-          ))}
-        </div>
+        <ProjectMetrics metrics={project.metrics} accent={project.accent} />
 
         <Section label="Overview"><Prose>{overview}</Prose></Section>
 

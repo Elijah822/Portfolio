@@ -35,7 +35,6 @@ export function getTextScale(textSize) {
 
 export function applyA11yPrefs(prefs) {
   const root = document.documentElement
-  const appRoot = document.getElementById("root")
 
   root.dataset.textSize = String(prefs.textSize)
   root.dataset.reduceMotion = prefs.reduceMotion ? "true" : "false"
@@ -44,5 +43,4 @@ export function applyA11yPrefs(prefs) {
 
   const scale = getTextScale(prefs.textSize)
   root.style.setProperty("--a11y-text-scale", String(scale))
-  if (appRoot) appRoot.style.zoom = String(scale)
 }

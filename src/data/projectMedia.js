@@ -6,6 +6,7 @@ export const PROJECT_MEDIA = {
       type: "video",
       url: `${CLOUD}/v1781690565/RiskEase_1_cban6j.mp4`,
       label: "RiskEase — Compliance Platform",
+      showOnProjectPage: false,
     },
   },
   "02": {

@@ -1,0 +1,7 @@
+export const CONTACT = {
+  email: "akinloluelijah822@gmail.com",
+  linkedin: "https://www.linkedin.com/in/akinlolu-elijah/",
+  twitter: "https://x.com/uxfixer",
+  whatsapp: "https://wa.me/2348165345591",
+  alias: "Dean~The UX Fixer",
+}

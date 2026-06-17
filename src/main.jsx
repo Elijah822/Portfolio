@@ -4,8 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AccessibilityProvider } from "./context/AccessibilityContext.jsx"
 import { AmbientAudioProvider } from "./context/AmbientAudioContext.jsx"
 import AppShell from "./components/AppShell.jsx"
+import ScrollToTop from "./components/ScrollToTop.jsx"
 import { loadFonts } from "./tokens/typography.js"
 import { applyA11yPrefs, loadA11yPrefs } from "./lib/accessibilityState.js"
+import { initScrollRestoration } from "./lib/scrollToTop.js"
 import "@fontsource-variable/bricolage-grotesque/wght.css"
 import "./styles/global.css"
 import Portfolio from "./Portfolio.jsx"
@@ -15,6 +17,7 @@ import Exploration from "./pages/Exploration.jsx"
 import ProjectPage from "./pages/ProjectPage.jsx"
 
 loadFonts()
+initScrollRestoration()
 applyA11yPrefs(loadA11yPrefs())
 
 createRoot(document.getElementById("root")).render(
@@ -23,6 +26,7 @@ createRoot(document.getElementById("root")).render(
       <AppShell>
         <AmbientAudioProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Portfolio />} />
               <Route path="/about" element={<About />} />

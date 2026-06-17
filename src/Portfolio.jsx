@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
 import { getProjectMeta } from "./data/projectMeta.js"
 import SoundButton from "./components/SoundButton.jsx"
+import SocialLinks from "./components/SocialLinks.jsx"
+import { CONTACT } from "./data/contact.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
   isAudioUnlocked,
@@ -12,6 +14,7 @@ import {
   unlockAudio,
 } from "./lib/portfolioAudio.js"
 import { hasIntroLoaderCompleted, markIntroLoaderCompleted } from "./lib/loaderState.js"
+import { enforceScrollPosition } from "./lib/scrollToTop.js"
 
 // ── TOKENS ────────────────────────────────────────────────────────────────────
 const BG    = "#07070c"
@@ -525,8 +528,11 @@ function Hero({ ready }) {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "85vw" }}>
         {/* Label */}
-        <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 36 }}>
+        <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 12 }}>
           [ AKINLOLU ELIJAH · PRODUCT DESIGNER ]
+        </div>
+        <div style={{ ...f(0.25), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: GOLD, marginBottom: 36 }}>
+          Also known as {CONTACT.alias}
         </div>
 
         {/* Huge headline */}
@@ -544,8 +550,8 @@ function Hero({ ready }) {
 
         {/* Bio */}
         <p style={{ ...f(1.15), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "24px 0 0" }}>
-          I design products people understand and businesses can grow with — riding the AI wave to move faster, think sharper, and ship more. Currently building my own products with{" "}
-          <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning design decisions into working software without the old handoff tax.
+          I design products people understand — and businesses can scale. I build fast with{" "}
+          <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
         </p>
 
         {/* Impact stats row */}
@@ -1012,18 +1018,14 @@ function Contact() {
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
         </p>
-        <a data-h href="mailto:akinloluelijah822@gmail.com" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s" }} onMouseEnter={e => { e.target.style.color = GOLD; e.target.style.borderColor = GOLD }} onMouseLeave={e => { e.target.style.color = TEXT; e.target.style.borderColor = BORDER }}>
-          akinloluelijah822@gmail.com
+        <a data-h href={`mailto:${CONTACT.email}`} style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s" }} onMouseEnter={e => { e.target.style.color = GOLD; e.target.style.borderColor = GOLD }} onMouseLeave={e => { e.target.style.color = TEXT; e.target.style.borderColor = BORDER }}>
+          {CONTACT.email}
         </a>
-        <div style={{ display: "flex", gap: 32, marginTop: 44 }}>
-          <a data-h href="https://www.linkedin.com/in/akinlolu-elijah/" target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>
-            LinkedIn ↗
-          </a>
-        </div>
+        <SocialLinks style={{ marginTop: 44 }} />
       </div>
-      <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
-        <span>© 2025 Akinlolu Elijah</span>
-        <span>Product Designer · Lagos, Nigeria</span>
+      <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
+        <span>© 2025 Akinlolu Elijah · also known as {CONTACT.alias}</span>
+        <SocialLinks />
       </div>
     </section>
   )
@@ -1038,8 +1040,12 @@ export default function Portfolio() {
   const done = useCallback(() => {
     markIntroLoaderCompleted()
     resetLoadTicks()
+    enforceScrollPosition()
     setLoaded(true)
-    setTimeout(() => setReady(true), 100)
+    setTimeout(() => {
+      enforceScrollPosition()
+      setReady(true)
+    }, 100)
   }, [])
 
   useEffect(() => {

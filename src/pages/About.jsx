@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom"
 import SoundButton from "../components/SoundButton.jsx"
+import SocialLinks from "../components/SocialLinks.jsx"
+import { CONTACT } from "../data/contact.js"
 import { PORTRAIT_URL } from "../data/aboutMeta.js"
 import { RESUME_URL } from "../data/projectMeta.js"
 
@@ -63,9 +65,12 @@ export default function About() {
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
-        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 48px" }}>
+        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>
           Akinlolu Elijah
         </h1>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, letterSpacing: 2, color: GOLD, margin: "0 0 48px" }}>
+          Also known as {CONTACT.alias}
+        </p>
 
         <div className="about-grid">
           <div>
@@ -96,10 +101,8 @@ export default function About() {
 
             <section>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Get in touch</div>
-              <a href="mailto:akinloluelijah822@gmail.com" style={{ fontFamily: "var(--font-body)", fontSize: 28, color: TEXT, textDecoration: "none", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6 }}>akinloluelijah822@gmail.com</a>
-              <div style={{ marginTop: 24, display: "flex", gap: 28 }}>
-                <a href="https://www.linkedin.com/in/akinlolu-elijah/" target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase" }}>LinkedIn ↗</a>
-              </div>
+              <a href={`mailto:${CONTACT.email}`} style={{ fontFamily: "var(--font-body)", fontSize: 28, color: TEXT, textDecoration: "none", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6 }}>{CONTACT.email}</a>
+              <SocialLinks style={{ marginTop: 24 }} />
             </section>
           </div>
 
