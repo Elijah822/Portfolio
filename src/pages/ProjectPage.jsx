@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import SoundButton from "../components/SoundButton.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
+import SiteNav from "../components/SiteNav.jsx"
 import { ALL_PROJECTS } from "../data/projects.js"
 import { getCaseStudy } from "../data/caseStudies.js"
 import { getProjectMeta } from "../data/projectMeta.js"
@@ -165,18 +165,18 @@ export default function ProjectPage() {
           margin: 0;
           padding-left: 4px;
         }
+        @media (max-width: 768px) {
+          .project-main { padding-top: 72px !important; padding-bottom: 80px !important; }
+        }
       `}</style>
-      <nav style={{ position: "sticky", top: 0, zIndex: 50, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(7,7,12,0.94)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${BORDER}` }}>
-        <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <SoundButton />
-          <button data-h onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", textTransform: "uppercase" }}>
-            ← All work
-          </button>
-        </div>
-      </nav>
+      <SiteNav sticky />
+      <div className="page-pad-x" style={{ padding: "12px 0 0", display: "flex", justifyContent: "flex-end" }}>
+        <button data-h type="button" onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", textTransform: "uppercase" }}>
+          ← All work
+        </button>
+      </div>
 
-      <main style={{ maxWidth: 900, margin: "0 auto", padding: "80px 56px 120px" }}>
+      <main className="project-main page-main" style={{ maxWidth: 900, margin: "0 auto", padding: "24px 0 120px" }}>
         <ScrollReveal variant="fade-up">
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>

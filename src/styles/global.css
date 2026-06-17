@@ -6,9 +6,43 @@
   box-sizing: border-box;
 }
 
-html {
+:root {
+  --page-gutter: 56px;
   --a11y-text-scale: 1;
 }
+
+@media (max-width: 768px) {
+  :root {
+    --page-gutter: 16px;
+  }
+}
+
+.page-pad-x {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+.page-main {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+@media (hover: none), (pointer: coarse) {
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active * {
+    cursor: auto !important;
+  }
+
+  .project-card-hover-layer {
+    display: none !important;
+  }
+
+  .showreel-track:hover {
+    animation-play-state: running !important;
+  }
+}
+
 
 html[data-text-size="1"] {
   font-size: 112.5%;

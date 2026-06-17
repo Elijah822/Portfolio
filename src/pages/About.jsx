@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom"
-import SoundButton from "../components/SoundButton.jsx"
 import SocialLinks from "../components/SocialLinks.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
+import SiteNav from "../components/SiteNav.jsx"
 import { CONTACT } from "../data/contact.js"
 import { GLOBAL_COUNTRIES, IMPACT_STATS } from "../data/globalReach.js"
 import { PORTRAIT_URL } from "../data/aboutMeta.js"
@@ -46,19 +45,14 @@ export default function About() {
         .about-portrait { overflow: hidden; border: 1px solid ${BORDER}; aspect-ratio: 4/5; margin-bottom: 24px; }
         .about-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
         @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
+        @media (max-width: 768px) {
+          .about-main { padding-top: 80px !important; padding-bottom: 80px !important; }
+        }
       `}</style>
 
-      <nav style={{ padding: "24px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${BORDER}` }}>
-        <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          <Link to="/" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase" }}>Work</Link>
-          <Link to="/exploration" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase" }}>Explore</Link>
-          <Link to="/games" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase" }}>Game</Link>
-          <SoundButton />
-        </div>
-      </nav>
+      <SiteNav sticky />
 
-      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
+      <main className="about-main page-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 0 120px" }}>
         <ScrollReveal variant="fade-up">
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>About</div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 500, lineHeight: 1.05, margin: "0 0 12px" }}>

@@ -2,9 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
 import { getProjectMeta } from "./data/projectMeta.js"
-import SoundButton from "./components/SoundButton.jsx"
 import SocialLinks from "./components/SocialLinks.jsx"
 import ScrollReveal from "./components/ScrollReveal.jsx"
+import SiteNav from "./components/SiteNav.jsx"
+import { useFinePointer } from "./hooks/useMediaQuery.js"
 import { CONTACT } from "./data/contact.js"
 import { IMPACT_STATS } from "./data/globalReach.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
@@ -317,8 +318,8 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
 function Showreel() {
   const doubled = [...SHOWREEL, ...SHOWREEL]
   return (
-    <ScrollReveal as="section" variant="fade-up" threshold={0.08} style={{ padding: "72px 0 80px" }}>
-      <div style={{ padding: "0 56px", marginBottom: 48, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 40, flexWrap: "wrap" }}>
+    <ScrollReveal as="section" variant="fade-up" threshold={0.08} className="showreel-section" style={{ padding: "72px 0 80px" }}>
+      <div className="page-pad-x" style={{ marginBottom: 48, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 40, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
           <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(24px,3vw,36px)", fontWeight: 400, color: TEXT }}>Design in <em>motion</em></div>
@@ -396,31 +397,6 @@ function Loader({ onDone }) {
   )
 }
 
-// ── NAV ───────────────────────────────────────────────────────────────────────
-function Nav({ scrollY }) {
-  const max = Math.max(1, (typeof document !== "undefined" ? document.documentElement.scrollHeight : 1) - (typeof window !== "undefined" ? window.innerHeight : 1))
-  const pct = Math.min((scrollY / max) * 100, 100)
-  const scrolled = scrollY > 60
-  const go = id => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
-  return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: scrolled ? "rgba(7,7,12,0.9)" : "transparent", backdropFilter: scrolled ? "blur(20px)" : "none", borderBottom: `1px solid ${scrolled ? BORDER : "transparent"}`, transition: "all 0.3s" }}>
-      <span style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300 }}>AE</span>
-      <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-        {[["work", "Work"], ["about", "About"], ["exploration", "Explore"], ["contact", "Contact"]].map(([id, label]) => (
-          id === "about" || id === "exploration" ? (
-            <Link key={id} to={id === "about" ? "/about" : "/exploration"} data-h style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</Link>
-          ) : (
-            <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
-          )
-        ))}
-        <a data-h href="/games" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Game ✦</a>
-        <SoundButton />
-      </div>
-      <div style={{ position: "absolute", bottom: 0, left: 0, height: 1, background: GOLD, width: `${pct}%`, transition: "width 0.1s linear" }} />
-    </nav>
-  )
-}
-
 // ── HERO ──────────────────────────────────────────────────────────────────────
 function ImpactStat({ stat }) {
   return (
@@ -432,52 +408,42 @@ function ImpactStat({ stat }) {
 }
 
 function Hero({ ready }) {
+  const finePointer = useFinePointer()
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
-  const [reelIdx, setReelIdx] = useState(0)
-  const heroReel = SHOWREEL[reelIdx]
-
-  useEffect(() => {
-    if (!ready) return
-    const id = setInterval(() => setReelIdx(i => (i + 1) % SHOWREEL.length), 7000)
-    return () => clearInterval(id)
-  }, [ready])
 
   const handleMouse = useCallback(e => {
-    const cx = window.innerWidth / 2, cy = window.innerHeight / 2
+    if (!finePointer) return
+    const cx = window.innerWidth / 2
+    const cy = window.innerHeight / 2
     setMouse({ x: (e.clientX - cx) / cx, y: (e.clientY - cy) / cy })
-  }, [])
+  }, [finePointer])
 
   const f = delay => ({ opacity: ready ? 1 : 0, transition: `opacity 0.9s ${delay}s ease` })
+  const titleTilt = finePointer
+    ? { transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }
+    : {}
 
   return (
-    <section onMouseMove={handleMouse} style={{ position: "relative", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 56px", overflow: "hidden" }}>
-      {heroReel && (
-        <div key={heroReel.url} className="hero-reel-float">
-          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop />
-        </div>
-      )}
-
-      {/* Ghost initials — parallax background */}
-      <div style={{
+    <section className="hero-section" onMouseMove={handleMouse} style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
+      <div className="hero-ghost" style={{
         position: "absolute", right: "-2vw", bottom: "-8vw",
         fontFamily: "var(--font-heading)", fontSize: "34vw",
         fontWeight: 300, color: "rgba(255,255,255,0.018)",
         lineHeight: 1, userSelect: "none", pointerEvents: "none",
-        transform: `translate(${mouse.x * -18}px, ${mouse.y * -12}px)`,
+        transform: finePointer ? `translate(${mouse.x * -18}px, ${mouse.y * -12}px)` : undefined,
         transition: "transform 0.6s ease",
       }}>AE</div>
 
-      {/* Year label — right column */}
-      <div style={{ ...f(1.8), position: "absolute", right: 56, top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
+      <div className="hero-side-label" style={{ ...f(1.8), position: "absolute", right: "var(--page-gutter)", top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
         LAGOS · NIGERIA · 2025
       </div>
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "85vw" }}>
+      <div className="hero-inner" style={{ position: "relative", zIndex: 1, maxWidth: "100%" }}>
         <div style={{ ...f(0.1) }}>
           <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 20, letterSpacing: 0.5 }}>
             Hello, it's me
           </div>
-          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(52px,8.5vw,118px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 20, color: TEXT, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(52px,8.5vw,118px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 20, color: TEXT, ...titleTilt }}>
             {CONTACT.name}
           </div>
           <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(20px,2.4vw,30px)", fontWeight: 500, lineHeight: 1.35, color: TEXT, maxWidth: 720, marginBottom: 4 }}>
@@ -497,7 +463,7 @@ function Hero({ ready }) {
         </p>
 
         {/* Impact stats */}
-        <div style={{ ...f(1.3), display: "flex", flexDirection: "column", gap: 32, marginTop: 44 }}>
+        <div style={{ ...f(1.3), display: "flex", flexDirection: "column", gap: 32, marginTop: 44 }} className="hero-stats-row">
           <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
             {IMPACT_STATS.slice(0, 3).map(stat => (
               <ImpactStat key={stat.label} stat={stat} />
@@ -511,13 +477,12 @@ function Hero({ ready }) {
         </div>
 
         {/* CTA + scroll cue */}
-        <div style={{ ...f(1.9), marginTop: 44, display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
-          <button data-h onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", cursor: "none", textTransform: "uppercase", transition: "all 0.3s" }}
-            onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }}
-            onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = TEXT }}
+        <div style={{ ...f(1.9), marginTop: 44, display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }} className="hero-cta">
+          <button data-h type="button" onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
+            className="hero-cta-btn"
+            style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", textTransform: "uppercase", transition: "all 0.3s" }}
           >View Work →</button>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div className="hero-scroll-cue" style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div style={{ height: 1, width: 40, background: `linear-gradient(to right, transparent, ${DIM})` }} />
             <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
           </div>
@@ -542,7 +507,7 @@ const TICKER_ITEMS = [
 function HeroTicker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
   return (
-    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 52, borderTop: `1px solid ${BORDER}`, overflow: "hidden", display: "flex", alignItems: "center" }}>
+    <div className="hero-ticker" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 52, borderTop: `1px solid ${BORDER}`, overflow: "hidden", display: "flex", alignItems: "center" }}>
       <div className="hero-ticker-track">
         {items.map((label, i) => (
           <span key={`${label}-${i}`} className="hero-ticker-item">{label}</span>
@@ -728,9 +693,11 @@ function ProjectCardTexture({ variant, accent }) {
 // ── PROJECT CARD ──────────────────────────────────────────────────────────────
 function ProjectCard({ p, i }) {
   const navigate = useNavigate()
+  const finePointer = useFinePointer()
   const [hov, setHov] = useState(false)
   const meta = getProjectMeta(p.id)
   const texture = i % 2 === 0 ? "noise" : "mosaic"
+  const active = finePointer && hov
   return (
     <ScrollReveal
       as="div"
@@ -739,13 +706,12 @@ function ProjectCard({ p, i }) {
       variant="scale-up"
       threshold={0.06}
       delay={Math.min(i * 70, 420)}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
+      onMouseEnter={finePointer ? () => setHov(true) : undefined}
+      onMouseLeave={finePointer ? () => setHov(false) : undefined}
       onClick={() => navigate(`/work/${p.id}`)}
       style={{
         padding: 0,
         background: BG,
-        cursor: "none",
         display: "flex",
         flexDirection: "column",
         minHeight: 400,
@@ -754,9 +720,10 @@ function ProjectCard({ p, i }) {
       }}
     >
       <ProjectCardTexture variant={texture} accent={p.accent} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: active ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
 
       <div
+        className="project-card-hover-layer"
         style={{
           position: "absolute",
           inset: 0,
@@ -766,8 +733,8 @@ function ProjectCard({ p, i }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          opacity: hov ? 1 : 0,
-          transform: hov ? "translateY(0)" : "translateY(10px)",
+          opacity: active ? 1 : 0,
+          transform: active ? "translateY(0)" : "translateY(10px)",
           transition: "opacity 0.35s ease, transform 0.35s ease",
           pointerEvents: "none",
         }}
@@ -783,7 +750,7 @@ function ProjectCard({ p, i }) {
       <div style={{ position: "relative", zIndex: 1, padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
-          <span style={{ fontFamily: "var(--font-heading)", fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
+          <span style={{ fontFamily: "var(--font-heading)", fontSize: 52, fontWeight: 300, lineHeight: 1, color: active ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
           <StatusBadge status={p.status} label={p.statusLabel} />
         </div>
 
@@ -794,12 +761,17 @@ function ProjectCard({ p, i }) {
           </div>
         )}
 
-        <h3 className="project-card-title" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 500, color: hov ? TEXT : "rgba(224,219,210,0.85)", transition: "color 0.3s", lineHeight: 1.2, margin: "0 0 18px" }}>{p.title}</h3>
+        <h3 className="project-card-title" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 500, color: active ? TEXT : "rgba(224,219,210,0.85)", transition: "color 0.3s", lineHeight: 1.2, margin: "0 0 18px" }}>{p.title}</h3>
 
         <div className="project-card-tags" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {p.cat.split(" · ").map(t => (
-            <span key={t} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${hov ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
+            <span key={t} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${active ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
           ))}
+        </div>
+
+        <div className="project-card-mobile-detail">
+          <p className="project-card-mobile-desc">{p.desc}</p>
+          <div className="project-card-mobile-cta" style={{ color: p.accent }}>View case study →</div>
         </div>
       </div>
 
@@ -817,8 +789,8 @@ function ProjectCard({ p, i }) {
 // ── WORK ──────────────────────────────────────────────────────────────────────
 function Work() {
   return (
-    <section id="work" style={{ paddingTop: 120, paddingBottom: 80 }}>
-      <ScrollReveal variant="fade-up" style={{ padding: "0 56px", marginBottom: 80 }}>
+    <section id="work" className="work-section" style={{ paddingTop: 120, paddingBottom: 80 }}>
+      <ScrollReveal variant="fade-up" className="page-pad-x" style={{ marginBottom: 80 }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 — Selected Work ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
@@ -841,7 +813,7 @@ function IndustryGroup({ group, gi }) {
       ? "project-grid project-grid--wide"
       : "project-grid"
   return (
-    <div style={{ padding: "0 56px", marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
+    <div className="page-pad-x" style={{ marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
       <ScrollReveal variant="slide-left" delay={gi * 80} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 32 }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
         <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
@@ -859,7 +831,7 @@ function IndustryGroup({ group, gi }) {
 // ── TESTIMONIALS ──────────────────────────────────────────────────────────────
 function Testimonials() {
   return (
-    <section id="testimonials" style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
+    <section id="testimonials" className="testimonials-section page-pad-x" style={{ padding: "120px 0", borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — Testimonials ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
@@ -869,7 +841,7 @@ function Testimonials() {
           From founders and teams I've shipped with.
         </p>
       </ScrollReveal>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+      <div className="testimonials-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
         {TESTIMONIALS.map((t, i) => (
           <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
             <article
@@ -931,7 +903,7 @@ function Testimonials() {
 // ── CONTACT ───────────────────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
+    <section id="contact" className="contact-section page-pad-x" style={{ padding: "120px 0 80px", borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
       </ScrollReveal>
@@ -939,7 +911,7 @@ function Contact() {
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
         </p>
-        <a data-h href={`mailto:${CONTACT.email}`} style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s" }} onMouseEnter={e => { e.target.style.color = GOLD; e.target.style.borderColor = GOLD }} onMouseLeave={e => { e.target.style.color = TEXT; e.target.style.borderColor = BORDER }}>
+        <a data-h href={`mailto:${CONTACT.email}`} className="contact-email" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s", wordBreak: "break-all" }}>
           {CONTACT.email}
         </a>
         <SocialLinks style={{ marginTop: 44 }} />
@@ -980,7 +952,7 @@ export default function Portfolio() {
   }, [])
 
   return (
-    <div style={{ background: BG, minHeight: "100vh", cursor: "none", color: TEXT, position: "relative" }}>
+    <div className="portfolio-root" style={{ background: BG, minHeight: "100vh", color: TEXT, position: "relative" }}>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::selection { background: ${GOLD}; color: ${BG}; }
@@ -1012,28 +984,21 @@ export default function Portfolio() {
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes musicPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
         @keyframes showreelScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes heroReelFade { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes heroReelFade { from { opacity: 0; } to { opacity: 1; } }
-        .hero-reel-float {
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          height: 100%;
-          width: min(44vw, 520px);
-          z-index: 0;
-          opacity: 0.32;
-          overflow: hidden;
-          border-left: 1px solid ${BORDER};
-          animation: heroReelFade 1.2s ease;
-          mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.9) 100%);
+        @media (hover: hover) and (pointer: fine) {
+          .portfolio-root { cursor: none; }
+          .hero-cta-btn:hover { border-color: ${GOLD} !important; color: ${GOLD} !important; }
+          .contact-email:hover { color: ${GOLD} !important; border-color: ${GOLD} !important; }
         }
-        .hero-reel-float::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, ${BG} 0%, transparent 35%, ${BG}88 100%);
-          pointer-events: none;
+        .hero-section {
+          min-height: 100vh;
+          padding: 100px var(--page-gutter) 88px;
+        }
+        .hero-inner {
+          max-width: 85vw;
+        }
+        .showreel-section {
+          padding-top: 48px !important;
+          padding-bottom: 56px !important;
         }
         .showreel-track-wrap {
           overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
@@ -1065,6 +1030,9 @@ export default function Portfolio() {
         }
         .project-card-tags {
           row-gap: 8px;
+        }
+        .project-card-mobile-detail {
+          display: none;
         }
         .project-card {
           border-radius: 20px;
@@ -1135,6 +1103,81 @@ export default function Portfolio() {
             min-height: 420px;
           }
         }
+        @media (max-width: 768px) {
+          .hero-section {
+            min-height: auto;
+            padding-top: 88px;
+            padding-bottom: 72px;
+          }
+          .hero-inner {
+            max-width: 100%;
+          }
+          .hero-ghost,
+          .hero-side-label {
+            display: none;
+          }
+          .hero-stats-row {
+            gap: 24px !important;
+          }
+          .hero-stats-row > div {
+            gap: 28px 24px !important;
+          }
+          .hero-scroll-cue {
+            display: none;
+          }
+          .work-section {
+            padding-top: 80px !important;
+            padding-bottom: 56px !important;
+          }
+          .testimonials-section {
+            padding-top: 80px !important;
+          }
+          .contact-section {
+            padding-top: 80px !important;
+          }
+          .testimonials-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .testimonials-grid article {
+            min-height: auto !important;
+            padding: 24px !important;
+          }
+          .project-card {
+            min-height: auto !important;
+          }
+          .project-card > div:last-child {
+            padding: 20px 16px !important;
+          }
+          .project-card-mobile-detail {
+            display: block;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid ${BORDER};
+          }
+          .project-card-mobile-desc {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 400;
+            color: ${DIM};
+            line-height: 1.75;
+            margin: 0 0 14px;
+          }
+          .project-card-mobile-cta {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+          }
+          .showreel-item {
+            width: min(78vw, 300px) !important;
+          }
+          .hero-ticker-item {
+            padding: 0 24px;
+          }
+          .hero-ticker {
+            display: none;
+          }
+        }
       `}</style>
 
       <svg aria-hidden="true" width="0" height="0" style={{ position: "absolute" }}>
@@ -1146,7 +1189,7 @@ export default function Portfolio() {
 
       {!loaded && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>
-        <Nav scrollY={scrollY} />
+        <SiteNav scrollY={scrollY} home />
         <Hero ready={ready} />
         <Showreel />
         <Work />

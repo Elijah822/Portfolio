@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom"
-import SoundButton from "../components/SoundButton.jsx"
+import SiteNav from "../components/SiteNav.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
 import { EXPLORATIONS } from "../data/explorations.js"
 
@@ -35,21 +34,19 @@ export default function Exploration() {
     <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
       <style>{`
         .explore-card { transition: border-color 0.25s ease, transform 0.25s ease; }
-        .explore-card:hover { transform: translateY(-2px); }
+        @media (hover: hover) and (pointer: fine) {
+          .explore-card:hover { transform: translateY(-2px); }
+        }
         @media (max-width: 900px) { .explore-metrics { grid-template-columns: 1fr 1fr !important; } }
+        @media (max-width: 768px) {
+          .explore-main { padding-top: 80px !important; padding-bottom: 80px !important; }
+          .explore-card { padding: 28px 16px !important; }
+        }
       `}</style>
 
-      <nav style={{ padding: "24px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${BORDER}`, position: "sticky", top: 0, background: "rgba(7,7,12,0.94)", backdropFilter: "blur(20px)", zIndex: 50 }}>
-        <Link to="/" data-h style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none", cursor: "none" }}>AE</Link>
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          <Link to="/" data-h style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", cursor: "none" }}>Work</Link>
-          <Link to="/about" data-h style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", cursor: "none" }}>About</Link>
-          <Link to="/games" data-h style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", cursor: "none" }}>Game</Link>
-          <SoundButton />
-        </div>
-      </nav>
+      <SiteNav sticky />
 
-      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
+      <main className="explore-main page-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 0 120px" }}>
         <ScrollReveal variant="fade-up">
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>Exploration</div>
           <h1 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>
