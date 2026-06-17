@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import {
-  isAudioUnlocked,
+  isAudioPrefOn,
   onAudioUnlock,
   setAmbientVolume,
   setupAudioOnMouseMove,
@@ -8,12 +8,12 @@ import {
   stopAmbientMusic,
   unlockAudio,
 } from "../lib/portfolioAudio.js"
-import { initAmbientPlayer } from "../lib/youtubePlayer.js"
+import { initAmbientPlayer, queueAmbientPlay } from "../lib/youtubePlayer.js"
 
 const AmbientAudioContext = createContext(null)
 
 export function AmbientAudioProvider({ children }) {
-  const [soundOn, setSoundOn] = useState(() => isAudioUnlocked())
+  const [soundOn, setSoundOn] = useState(() => isAudioPrefOn())
 
   const enableSound = useCallback(() => {
     setSoundOn(true)
@@ -27,13 +27,20 @@ export function AmbientAudioProvider({ children }) {
     const offUnlock = onAudioUnlock(enableSound)
     const cleanupGesture = setupAudioOnMouseMove(enableSound)
 
-    if (isAudioUnlocked()) enableSound()
+    if (isAudioPrefOn()) enableSound()
 
     return () => {
       offUnlock()
       cleanupGesture()
     }
   }, [enableSound])
+
+  useEffect(() => {
+    if (!soundOn) return undefined
+    queueAmbientPlay()
+    const id = setInterval(() => queueAmbientPlay(), 1500)
+    return () => clearInterval(id)
+  }, [soundOn])
 
   const toggleSound = useCallback(() => {
     if (soundOn) {

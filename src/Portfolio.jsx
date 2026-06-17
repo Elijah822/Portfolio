@@ -4,6 +4,8 @@ import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
 import { getProjectMeta } from "./data/projectMeta.js"
 import { projectThumbnail } from "./lib/siteThumbnail.js"
 import SoundButton from "./components/SoundButton.jsx"
+import { PORTRAIT_URL } from "./data/aboutMeta.js"
+import { TESTIMONIALS } from "./data/testimonials.js"
 import {
   isAudioUnlocked,
   playLoadTick,
@@ -183,7 +185,7 @@ export const ROLES = [
 
 export const IMPACT_STATS = [
   { value: "€40M+", label: "Impact delivered" },
-  { value: "10+", label: "Products shipped" },
+  { value: "18+", label: "Products across 4 continents & 8 countries" },
   { value: "6+", label: "Years of craft" },
   { value: "3", label: "Enterprise clients" },
 ]
@@ -530,9 +532,9 @@ function Hero({ ready }) {
         </div>
 
         {/* Huge headline */}
-        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontWeight: 300, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 700', fontWeight: 700, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
           <div style={{ fontSize: "clamp(68px,12vw,168px)", color: TEXT }}>{w1 || "PRODUCT"}</div>
-          <div style={{ fontSize: "clamp(68px,12vw,168px)", color: GOLD, fontWeight: 500 }}>{w2 || "DESIGNER"}</div>
+          <div style={{ fontSize: "clamp(68px,12vw,168px)", color: GOLD, fontVariationSettings: '"wght" 800', fontWeight: 800 }}>{w2 || "DESIGNER"}</div>
         </div>
 
         {/* Morphing role */}
@@ -783,7 +785,31 @@ function ProjectCard({ p, i }) {
           <img src={thumb} alt="" />
         </div>
       )}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 2 }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
+
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 3,
+          background: "linear-gradient(180deg, rgba(7,7,12,0.55) 0%, rgba(7,7,12,0.96) 72%)",
+          padding: "28px 32px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          opacity: hov ? 1 : 0,
+          transform: hov ? "translateY(0)" : "translateY(10px)",
+          transition: "opacity 0.35s ease, transform 0.35s ease",
+          pointerEvents: "none",
+        }}
+      >
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: "rgba(224,219,210,0.88)", lineHeight: 1.75, margin: "0 0 16px" }}>
+          {p.desc}
+        </p>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: p.accent, textTransform: "uppercase" }}>
+          View case study →
+        </div>
+      </div>
 
       <div style={{ position: "relative", zIndex: 1, padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div>
@@ -869,22 +895,30 @@ function About() {
   return (
     <section id="about" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — About ]</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "64px 80px", marginBottom: 64, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 280px", gap: "64px 80px", marginBottom: 64, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
         <div>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(22px,2.6vw,34px)", fontWeight: 400, color: TEXT, lineHeight: 1.55, margin: "0 0 24px" }}>
             I'm a product designer who believes great design is invisible — until it isn't, and then it changes everything.
           </p>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.95, margin: 0 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.95, margin: "0 0 20px" }}>
             Over 6 years, I've worked across consumer apps, enterprise platforms, fintech, healthcare, and AI-native products. I design where user needs, business goals, and regulatory reality collide — currently at Toke, designing the future of financial product experiences.
           </p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: DIM, lineHeight: 1.85, margin: 0 }}>
+            18+ products shipped across 4 continents and 8 countries — from Lagos to London, Bucharest to California.
+          </p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignContent: "start" }}>
-          {IMPACT_STATS.map(({ value, label }) => (
-            <div key={label}>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 48, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, marginTop: 8, textTransform: "uppercase" }}>{label}</div>
-            </div>
-          ))}
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div style={{ overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "4/5", background: "rgba(255,255,255,0.03)" }}>
+            <img src={PORTRAIT_URL} alt="Akinlolu Elijah" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            {IMPACT_STATS.map(({ value, label }) => (
+              <div key={label}>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 36, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase", lineHeight: 1.5 }}>{label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <div style={{ paddingTop: 36, borderTop: `1px solid ${BORDER}`, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 36, opacity: vis ? 1 : 0, transition: "all 0.85s 0.2s" }}>
@@ -904,12 +938,53 @@ function About() {
   )
 }
 
+// ── TESTIMONIALS ──────────────────────────────────────────────────────────────
+function Testimonials() {
+  const [ref, vis] = useReveal()
+  return (
+    <section id="testimonials" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Testimonials ]</div>
+      <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
+        <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
+          What clients say
+        </h2>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, color: DIM, lineHeight: 1.7, margin: "0 0 48px", maxWidth: 560 }}>
+          Snapshots from teams I've worked with — add client thumbnails and quotes anytime.
+        </p>
+        <div className="testimonial-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 1, background: BORDER, border: `1px solid ${BORDER}` }}>
+          {TESTIMONIALS.map(t => (
+            <article key={t.id} style={{ background: BG, padding: 0, display: "flex", flexDirection: "column", minHeight: 360 }}>
+              <div style={{ height: 180, borderBottom: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.03)", overflow: "hidden", position: "relative" }}>
+                {t.thumbnail ? (
+                  <img src={t.thumbnail} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <div style={{ inset: 0, position: "absolute", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, textTransform: "uppercase" }}>
+                    Client snapshot
+                  </div>
+                )}
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: t.accent }} />
+              </div>
+              <div style={{ padding: "28px 28px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: 15, color: TEXT, lineHeight: 1.8, margin: "0 0 24px", flex: 1 }}>"{t.quote}"</p>
+                <div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 16, color: TEXT, marginBottom: 6 }}>{t.name}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{t.role}</div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── CONTACT ───────────────────────────────────────────────────────────────────
 function Contact() {
   const [ref, vis] = useReveal()
   return (
     <section id="contact" ref={ref} style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 04 — Contact ]</div>
       <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
@@ -1092,6 +1167,8 @@ export default function Portfolio() {
         <Hero ready={ready} />
         <Showreel />
         <Work />
+        <About />
+        <Testimonials />
         <Contact />
       </div>
     </div>

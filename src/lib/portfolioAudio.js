@@ -13,6 +13,21 @@ let arpTimer = null
 let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
+const AUDIO_PREF_KEY = "portfolio-audio-on"
+
+export function isAudioPrefOn() {
+  try {
+    return sessionStorage.getItem(AUDIO_PREF_KEY) === "1"
+  } catch (_) {
+    return false
+  }
+}
+
+function setAudioPref(on) {
+  try {
+    sessionStorage.setItem(AUDIO_PREF_KEY, on ? "1" : "0")
+  } catch (_) {}
+}
 
 function getCtx() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -87,6 +102,7 @@ export function playLoadTick(pct, force = false) {
 }
 
 export async function startAmbientMusic() {
+  setAudioPref(true)
   queueAmbientPlay()
   try {
     await initAmbientPlayer()
@@ -102,6 +118,7 @@ function tryPlayAmbient() {
 }
 
 export function stopAmbientMusic() {
+  setAudioPref(false)
   pauseAmbientTrack()
   if (arpTimer) clearInterval(arpTimer)
   arpTimer = null
@@ -114,30 +131,35 @@ export function setAmbientVolume(v) {
 }
 
 export function unlockAudio() {
-  if (unlocked) return false
+  const wasUnlocked = unlocked
   const audioCtx = getCtx()
   if (!audioCtx) return false
   if (audioCtx.state === "suspended") audioCtx.resume()
-  master = audioCtx.createGain()
-  master.gain.value = 0.15
-  master.connect(audioCtx.destination)
-  unlocked = true
+  if (!master) {
+    master = audioCtx.createGain()
+    master.gain.value = 0.15
+    master.connect(audioCtx.destination)
+  }
+  if (!wasUnlocked) {
+    unlocked = true
+    if (pendingLoadPct > 0) replayPendingLoadTicks()
+    notifyUnlock()
+  }
 
-  if (pendingLoadPct > 0) replayPendingLoadTicks()
-
-  // Play synchronously in the user-gesture stack when possible.
   tryPlayAmbient()
   initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
-
-  notifyUnlock()
-  return true
+  return !wasUnlocked
 }
 
 export function setupAudioOnMouseMove(onUnlock) {
+  let notified = false
   const handler = () => {
-    if (unlocked) return
-    const fresh = unlockAudio()
-    if (fresh) onUnlock?.()
+    unlockAudio()
+    tryPlayAmbient()
+    if (!notified) {
+      notified = true
+      onUnlock?.()
+    }
   }
 
   const opts = { passive: true, capture: true }

@@ -12,6 +12,10 @@ export function ytEmbedUrl(videoId, { autoplay = false, mute = true, loop = true
     rel: "0",
     modestbranding: "1",
     playsinline: "1",
+    enablejsapi: "1",
   })
-  return `https://www.youtube-nocookie.com/embed/${videoId}?${params}`
+  if (typeof window !== "undefined") {
+    params.set("origin", window.location.origin)
+  }
+  return `https://www.youtube.com/embed/${videoId}?${params}`
 }

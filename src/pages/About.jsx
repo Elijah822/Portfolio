@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom"
 import SoundButton from "../components/SoundButton.jsx"
+import { PORTRAIT_URL } from "../data/aboutMeta.js"
 import { RESUME_URL } from "../data/projectMeta.js"
 
 const IMPACT_STATS = [
   { value: "€40M+", label: "Impact delivered" },
-  { value: "10+", label: "Products shipped" },
+  { value: "18+", label: "Products across 4 continents & 8 countries" },
   { value: "6+", label: "Years of craft" },
   { value: "3", label: "Enterprise clients" },
 ]
@@ -36,7 +37,7 @@ const RESUME_HIGHLIGHTS = [
   },
   {
     title: "Impact",
-    items: ["€40M+ regulatory exposure avoided", "10+ products shipped · 6+ years of craft", "3 enterprise clients simultaneously"],
+    items: ["€40M+ regulatory exposure avoided", "18+ products across 4 continents & 8 countries", "3 enterprise clients simultaneously"],
   },
 ]
 
@@ -44,7 +45,9 @@ export default function About() {
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
       <style>{`
-        .about-grid { display: grid; grid-template-columns: 1fr 320px; gap: 80px; }
+        .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 80px; }
+        .about-portrait { overflow: hidden; border: 1px solid ${BORDER}; aspect-ratio: 4/5; margin-bottom: 24px; }
+        .about-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
         @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
       `}</style>
 
@@ -102,6 +105,9 @@ export default function About() {
 
           <aside>
             <div style={{ position: "sticky", top: 40 }}>
+              <div className="about-portrait">
+                <img src={PORTRAIT_URL} alt="Akinlolu Elijah" />
+              </div>
               <div style={{ padding: "32px 28px", border: `1px solid ${BORDER}`, background: "rgba(255,255,255,0.02)", marginBottom: 24 }}>
                 <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Resume</div>
                 {RESUME_HIGHLIGHTS.map(block => (

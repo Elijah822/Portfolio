@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Link } from "react-router-dom"
 import SoundButton from "./components/SoundButton.jsx"
+import CloseButton from "./components/CloseButton.jsx"
 import { ytEmbedUrl, ytThumbnail } from "./lib/youtube.js"
 
 const BG     = "#07070c"
@@ -31,15 +32,15 @@ const GAMES = [
 
 // ── CONSOLE GAME DATA (PS · Xbox) ─────────────────────────────────────────────
 const CONSOLE_GAMES = [
-  { id:1,  short:"GTA IV",        title:"Grand Theft Auto IV",           year:"2008", genre:"Open World · Crime",   note:"The most honest Rockstar ever got. Niko's story hit different.", grad:"linear-gradient(150deg,#060e1a 0%,#0d1f38 60%,#1e3554 100%)", accent:"#5a8fbf", trailerId:"dYLbBLpP1KA" },
-  { id:2,  short:"GTA V",         title:"Grand Theft Auto V",            year:"2013", genre:"Open World · Crime",   note:"Three protagonists. One perfectly broken city. Still unmatched.", grad:"linear-gradient(150deg,#080e00 0%,#162600 60%,#c9a800 100%)", accent:"#d4a800", trailerId:"QkkoHAzjnUs" },
+  { id:1,  short:"GTA IV",        title:"Grand Theft Auto IV",           year:"2008", genre:"Open World · Crime",   note:"The most honest Rockstar ever got. Niko's story hit different.", grad:"linear-gradient(150deg,#060e1a 0%,#0d1f38 60%,#1e3554 100%)", accent:"#5a8fbf", trailerId:"M80K51DosFo" },
+  { id:2,  short:"GTA V",         title:"Grand Theft Auto V",            year:"2013", genre:"Open World · Crime",   note:"Three protagonists. One perfectly broken city. Still unmatched.", grad:"linear-gradient(150deg,#080e00 0%,#162600 60%,#c9a800 100%)", accent:"#d4a800", trailerId:"RLoBX9skQoY" },
   { id:3,  short:"FIFA 23",       title:"FIFA 23",                       year:"2022", genre:"Football · Sports",    note:"The last FIFA before the rebrand. End of a 30-year era.", grad:"linear-gradient(150deg,#001228 0%,#002a52 60%,#0055a5 100%)", accent:"#00adef", trailerId:"o3V-GvvZBRE" },
-  { id:4,  short:"FC 25",         title:"EA Sports FC 25",               year:"2024", genre:"Football · Sports",    note:"Rush mode was the best thing to happen to the game in years.", grad:"linear-gradient(150deg,#001208 0%,#003820 60%,#00a650 100%)", accent:"#00c960", trailerId:"9qziD9UNqGk" },
-  { id:5,  short:"FC 26",         title:"EA Sports FC 26",               year:"2025", genre:"Football · Sports",    note:"The latest in the collection. The Beautiful Game, undefeated.", grad:"linear-gradient(150deg,#150300 0%,#341000 60%,#cc4800 100%)", accent:"#ff6b1a", trailerId:"9qziD9UNqGk" },
-  { id:6,  short:"Spider-Man",    title:"Marvel's Spider-Man",           year:"2018", genre:"Action Adventure",     note:"Web-swinging through Manhattan at golden hour. A masterclass.", grad:"linear-gradient(150deg,#120000 0%,#2e0404 60%,#c41e1e 100%)", accent:"#e83535", trailerId:"q4Yt9Src5og" },
-  { id:7,  short:"Ghost of Tsushima", title:"Ghost of Tsushima",        year:"2020", genre:"Action RPG · Samurai", note:"A haiku in game form. The wind mechanic alone deserves an award.", grad:"linear-gradient(150deg,#0d0600 0%,#251400 50%,#c49a3c 80%,#8b1a1a 100%)", accent:"#c49a3c", trailerId:"iqxt9_RnyYc" },
-  { id:8,  short:"A Way Out",     title:"A Way Out",                     year:"2018", genre:"Co-op · Drama",        note:"The best co-op I've played. That ending — nothing prepares you.", grad:"linear-gradient(150deg,#00102a 0%,#001a10 50%,#2a3a5c 100%)", accent:"#7ca8e0", trailerId:"96i8eQI0spE" },
-  { id:9,  short:"Black Ops 7",   title:"Call of Duty: Black Ops 7",     year:"2025", genre:"FPS · Tactical",       note:"The grind is real. The chaos is real. Still can't stop.", grad:"linear-gradient(150deg,#040804 0%,#0a1408 60%,#1e3210 100%)", accent:"#4a7a20", trailerId:"Xb8Vqp7fnwM" },
+  { id:4,  short:"FC 25",         title:"EA Sports FC 25",               year:"2024", genre:"Football · Sports",    note:"Rush mode was the best thing to happen to the game in years.", grad:"linear-gradient(150deg,#001208 0%,#003820 60%,#00a650 100%)", accent:"#00c960", trailerId:"Xh5f5P7_77U" },
+  { id:5,  short:"FC 26",         title:"EA Sports FC 26",               year:"2025", genre:"Football · Sports",    note:"The latest in the collection. The Beautiful Game, undefeated.", grad:"linear-gradient(150deg,#150300 0%,#341000 60%,#cc4800 100%)", accent:"#ff6b1a", trailerId:"Xh5f5P7_77U" },
+  { id:6,  short:"Spider-Man",    title:"Marvel's Spider-Man",           year:"2018", genre:"Action Adventure",     note:"Web-swinging through Manhattan at golden hour. A masterclass.", grad:"linear-gradient(150deg,#120000 0%,#2e0404 60%,#c41e1e 100%)", accent:"#e83535", trailerId:"9fboG9X_itk" },
+  { id:7,  short:"Ghost of Tsushima", title:"Ghost of Tsushima",        year:"2020", genre:"Action RPG · Samurai", note:"A haiku in game form. The wind mechanic alone deserves an award.", grad:"linear-gradient(150deg,#0d0600 0%,#251400 50%,#c49a3c 80%,#8b1a1a 100%)", accent:"#c49a3c", trailerId:"7zPrsmrXnWE" },
+  { id:8,  short:"A Way Out",     title:"A Way Out",                     year:"2018", genre:"Co-op · Drama",        note:"The best co-op I've played. That ending — nothing prepares you.", grad:"linear-gradient(150deg,#00102a 0%,#001a10 50%,#2a3a5c 100%)", accent:"#7ca8e0", trailerId:"D0U0kl9q3oE" },
+  { id:9,  short:"Black Ops 7",   title:"Call of Duty: Black Ops 7",     year:"2025", genre:"FPS · Tactical",       note:"The grind is real. The chaos is real. Still can't stop.", grad:"linear-gradient(150deg,#040804 0%,#0a1408 60%,#1e3210 100%)", accent:"#4a7a20", trailerId:"i6GkFzczZAE" },
   { id:10, short:"Beach Buggy",   title:"Beach Buggy Racing",            year:"2014", genre:"Racing · Kart",        note:"Deceptively competitive. Don't let the beach fool you.", grad:"linear-gradient(150deg,#120800 0%,#2e1800 60%,#e8880a 100%)", accent:"#ff9f1c", trailerId:"ONpzj0n7Ez4" },
   { id:11, short:"Beach Buggy 2", title:"Beach Buggy Racing 2",          year:"2018", genre:"Racing · Kart",        note:"More tracks. More chaos. More damage. The sequel that earned it.", grad:"linear-gradient(150deg,#150010 0%,#380030 60%,#c83c80 100%)", accent:"#e05090", trailerId:"SLW1sZPcvnU" },
   { id:12, short:"???",           title:"Next Session",                  year:"—",    genre:"Unknown",              note:"Controller is charged. Game TBD. Stay tuned.", grad:"linear-gradient(150deg,#0a0a0a 0%,#141414 100%)", accent:"#c9aa7c", locked:true },
@@ -47,27 +48,24 @@ const CONSOLE_GAMES = [
 
 const FEATURED_TRAILERS = CONSOLE_GAMES.filter(g => g.trailerId && !g.locked)
 
-function TrailerPreview({ videoId, alwaysPlay = false, opacity = 0.55 }) {
-  const [play, setPlay] = useState(alwaysPlay)
-  useEffect(() => { setPlay(alwaysPlay) }, [alwaysPlay])
+function TrailerPreview({ videoId, active = false, opacity = 0.55 }) {
   if (!videoId) return null
   return (
-    <div
-      onMouseEnter={() => !alwaysPlay && setPlay(true)}
-      onMouseLeave={() => !alwaysPlay && setPlay(false)}
-      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
-    >
-      {play ? (
-        <iframe
-          title=""
-          src={ytEmbedUrl(videoId, { autoplay: true, mute: true, loop: true })}
-          allow="autoplay; encrypted-media"
-          style={{ position: "absolute", top: "50%", left: "50%", width: "300%", height: "300%", transform: "translate(-50%,-50%)", border: "none", pointerEvents: "none" }}
-        />
-      ) : (
-        <img src={ytThumbnail(videoId)} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity, filter: "saturate(0.85)" }} />
-      )}
-    </div>
+    <img
+      src={ytThumbnail(videoId, "hqdefault")}
+      alt=""
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        opacity: active ? Math.min(opacity + 0.12, 0.85) : opacity,
+        filter: "saturate(0.9)",
+        transform: active ? "scale(1.06)" : "scale(1)",
+        transition: "opacity 0.35s ease, transform 0.45s ease",
+      }}
+    />
   )
 }
 
@@ -79,7 +77,7 @@ function ConsoleGameCard({ g, onTrailer }) {
       onClick={() => !g.locked && g.trailerId && onTrailer?.(g)}
       style={{ position:"relative", width:"100%", paddingBottom:"145%", overflow:"hidden", cursor:"none", userSelect:"none" }}>
       {g.trailerId ? (
-        <TrailerPreview videoId={g.trailerId} alwaysPlay={hov} opacity={hov ? 0.72 : 0.55} />
+        <TrailerPreview videoId={g.trailerId} active={hov} opacity={hov ? 0.72 : 0.55} />
       ) : (
         <div style={{ position:"absolute", inset:0, background:g.grad, transition:"transform 0.4s ease", transform:hov?"scale(1.03)":"scale(1)" }} />
       )}
@@ -897,7 +895,7 @@ export default function Games() {
 
         <button data-h type="button" onClick={() => openTrailer(featured)} className="featured-trailer" style={{position:"relative",border:"none",borderLeft:`1px solid ${BORDER}`,background:BG,padding:0,cursor:"none",overflow:"hidden",minHeight:420}}>
           {featured?.trailerId && (
-            <TrailerPreview key={featured.trailerId} videoId={featured.trailerId} alwaysPlay opacity={0.62} />
+            <TrailerPreview key={featured.trailerId} videoId={featured.trailerId} active opacity={0.62} />
           )}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(90deg, rgba(7,7,12,0.92) 0%, rgba(7,7,12,0.2) 45%, rgba(7,7,12,0.75) 100%)"}} />
           <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:40,textAlign:"left"}}>
@@ -947,6 +945,7 @@ export default function Games() {
       {/* GAME OVERLAY */}
       {active&&GameComponent&&(
         <div style={{position:"fixed",inset:0,background:"rgba(7,7,12,0.97)",zIndex:200,display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
+          <CloseButton onClick={closeGame} />
           <div style={{width:"100%",padding:"18px 40px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${BORDER}`,position:"sticky",top:0,background:BG,zIndex:10,flexShrink:0}}>
             <div style={{display:"flex",alignItems:"baseline",gap:20}}>
               <div style={{fontFamily:'var(--font-body)',fontSize:24,fontWeight:300,color:TEXT}}>{game.name}</div>
@@ -961,11 +960,11 @@ export default function Games() {
       )}
 
       {trailerOpen && trailerGame?.trailerId && (
-        <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(7,7,12,0.96)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24}} onClick={() => { setTrailerOpen(false); setActiveTrailer(null) }}>
-          <button data-h type="button" onClick={() => { setTrailerOpen(false); setActiveTrailer(null) }} style={{position:"absolute",top:24,right:32,fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:DIM,background:"none",border:`1px solid ${BORDER}`,padding:"8px 20px",cursor:"none"}}>CLOSE ×</button>
+        <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(7,7,12,0.96)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24}}>
+          <CloseButton onClick={() => { setTrailerOpen(false); setActiveTrailer(null) }} />
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:16,textTransform:"uppercase"}}>{trailerGame.short} · Official trailer</div>
-          <div style={{width:"min(92vw,960px)",aspectRatio:"16/9",border:`1px solid ${BORDER}`}} onClick={e => e.stopPropagation()}>
-            <iframe title={`${trailerGame.short} trailer`} src={ytEmbedUrl(trailerGame.trailerId, { autoplay: true, mute: false, loop: false })} allow="autoplay; encrypted-media" style={{width:"100%",height:"100%",border:"none"}} />
+          <div style={{width:"min(92vw,960px)",aspectRatio:"16/9",border:`1px solid ${BORDER}`,background:BG}}>
+            <iframe title={`${trailerGame.short} trailer`} src={ytEmbedUrl(trailerGame.trailerId, { autoplay: true, mute: false, loop: false })} allow="autoplay; encrypted-media; fullscreen" style={{width:"100%",height:"100%",border:"none"}} />
           </div>
         </div>
       )}
