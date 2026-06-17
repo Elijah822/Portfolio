@@ -410,6 +410,14 @@ function ImpactStat({ stat }) {
 function Hero({ ready }) {
   const finePointer = useFinePointer()
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const [reelIdx, setReelIdx] = useState(0)
+  const heroReel = SHOWREEL[reelIdx]
+
+  useEffect(() => {
+    if (!ready) return
+    const id = setInterval(() => setReelIdx(i => (i + 1) % SHOWREEL.length), 7000)
+    return () => clearInterval(id)
+  }, [ready])
 
   const handleMouse = useCallback(e => {
     if (!finePointer) return
@@ -425,6 +433,12 @@ function Hero({ ready }) {
 
   return (
     <section className="hero-section" onMouseMove={handleMouse} style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
+      {heroReel && (
+        <div key={heroReel.url} className="hero-reel-float">
+          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop />
+        </div>
+      )}
+
       <div className="hero-ghost" style={{
         position: "absolute", right: "-2vw", bottom: "-8vw",
         fontFamily: "var(--font-heading)", fontSize: "34vw",
@@ -463,16 +477,29 @@ function Hero({ ready }) {
         </p>
 
         {/* Impact stats */}
-        <div style={{ ...f(1.3), display: "flex", flexDirection: "column", gap: 32, marginTop: 44 }} className="hero-stats-row">
-          <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
-            {IMPACT_STATS.slice(0, 3).map(stat => (
-              <ImpactStat key={stat.label} stat={stat} />
-            ))}
+        <div style={{ ...f(1.3), marginTop: 44 }} className="hero-stats-row">
+          <div className="hero-stats-desktop">
+            <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+              <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
+                {IMPACT_STATS.slice(0, 3).map(stat => (
+                  <ImpactStat key={stat.label} stat={stat} />
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
+                {IMPACT_STATS.slice(3).map(stat => (
+                  <ImpactStat key={stat.label} stat={stat} />
+                ))}
+              </div>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
-            {IMPACT_STATS.slice(3).map(stat => (
-              <ImpactStat key={stat.label} stat={stat} />
-            ))}
+          <div className="hero-stats-mobile">
+            <div className="hero-stats-mobile__row">
+              <ImpactStat stat={IMPACT_STATS[2]} />
+              <ImpactStat stat={IMPACT_STATS[3]} />
+            </div>
+            <div className="hero-stats-mobile__row hero-stats-mobile__row--single">
+              <ImpactStat stat={IMPACT_STATS[4]} />
+            </div>
           </div>
         </div>
 
@@ -777,7 +804,7 @@ function ProjectCard({ p, i }) {
 
       <div style={{ marginTop: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20 }}>
-          <div className="project-card-impact" style={{ fontFamily: "var(--font-body)", fontSize: 21, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
+          <div className="project-card-impact" style={{ fontFamily: "var(--font-body)", fontSize: 19, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
         </div>
       </div>
@@ -874,35 +901,45 @@ function Testimonials() {
         </p>
       </ScrollReveal>
 
-      <ScrollReveal variant="fade-up" delay={100}>
-        <div className="testimonial-carousel">
-          <button type="button" className="testimonial-carousel__arrow" onClick={goPrev} aria-label="Previous testimonial">
-            ←
-          </button>
+      <div className="testimonials-desktop">
+        <div className="testimonials-grid">
+          {TESTIMONIALS.map((t, i) => (
+            <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
+              <TestimonialCard t={t} />
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
 
+      <ScrollReveal variant="fade-up" delay={100} className="testimonials-mobile">
+        <div className="testimonial-carousel testimonial-carousel--mobile">
           <div className="testimonial-carousel__viewport">
             <div key={current.id} className="testimonial-carousel__slide">
               <TestimonialCard t={current} />
             </div>
           </div>
 
-          <button type="button" className="testimonial-carousel__arrow" onClick={goNext} aria-label="Next testimonial">
-            →
-          </button>
-        </div>
-
-        <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
-          {TESTIMONIALS.map((t, i) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={i === idx}
-              aria-label={`Testimonial ${i + 1} of ${total}`}
-              className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
-              onClick={() => setIdx(i)}
-            />
-          ))}
+          <div className="testimonial-carousel__controls">
+            <button type="button" className="testimonial-carousel__nav" onClick={goPrev} aria-label="Previous testimonial">
+              Prev
+            </button>
+            <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
+              {TESTIMONIALS.map((t, i) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === idx}
+                  aria-label={`Testimonial ${i + 1} of ${total}`}
+                  className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
+                  onClick={() => setIdx(i)}
+                />
+              ))}
+            </div>
+            <button type="button" className="testimonial-carousel__nav" onClick={goNext} aria-label="Next testimonial">
+              Next
+            </button>
+          </div>
         </div>
       </ScrollReveal>
     </section>
@@ -993,6 +1030,74 @@ export default function Portfolio() {
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @keyframes musicPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
         @keyframes showreelScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes heroReelFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes testimonialFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .hero-reel-float {
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          height: 100%;
+          width: min(44vw, 520px);
+          z-index: 0;
+          opacity: 0.32;
+          overflow: hidden;
+          border-left: 1px solid ${BORDER};
+          animation: heroReelFade 1.2s ease;
+          mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.9) 100%);
+        }
+        .hero-reel-float::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, ${BG} 0%, transparent 35%, ${BG}88 100%);
+          pointer-events: none;
+        }
+        .hero-stats-mobile {
+          display: none;
+        }
+        .testimonials-mobile {
+          display: none;
+        }
+        .testimonials-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+          max-width: 720px;
+        }
+        .testimonial-carousel--mobile {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          max-width: none;
+        }
+        .testimonial-carousel--mobile .testimonial-carousel__viewport {
+          width: 100%;
+        }
+        .testimonial-carousel__controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 20px;
+          margin-top: 24px;
+        }
+        .testimonial-carousel__nav {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: ${DIM};
+          background: none;
+          border: none;
+          padding: 8px 4px;
+          flex-shrink: 0;
+          transition: color 0.2s ease;
+        }
+        .testimonial-carousel--mobile .testimonial-carousel__dots {
+          margin-top: 0;
+          max-width: none;
+          flex-wrap: wrap;
+        }
         @media (hover: hover) and (pointer: fine) {
           .portfolio-root { cursor: none; }
           .hero-cta-btn:hover { border-color: ${GOLD} !important; color: ${GOLD} !important; }
@@ -1043,22 +1148,8 @@ export default function Portfolio() {
         .project-card-mobile-detail {
           display: none;
         }
-        .testimonial-carousel {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          max-width: 820px;
-        }
-        .testimonial-carousel__viewport {
-          flex: 1;
-          min-width: 0;
-        }
         .testimonial-carousel__slide {
           animation: testimonialFade 0.45s ease;
-        }
-        @keyframes testimonialFade {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: none; }
         }
         .testimonial-card {
           background: rgba(255,255,255,0.02);
@@ -1113,29 +1204,15 @@ export default function Portfolio() {
           font-size: 13px;
           color: ${DIM};
         }
-        .testimonial-carousel__arrow {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          border: 1px solid ${BORDER};
-          background: rgba(255,255,255,0.03);
-          color: ${TEXT};
-          font-family: var(--font-body);
-          font-size: 18px;
-          line-height: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        .testimonial-carousel__dot.is-active {
+          background: ${GOLD};
+          transform: scale(1.2);
         }
         .testimonial-carousel__dots {
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 10px;
-          margin-top: 28px;
-          max-width: 820px;
         }
         .testimonial-carousel__dot {
           width: 8px;
@@ -1146,15 +1223,9 @@ export default function Portfolio() {
           background: rgba(255,255,255,0.18);
           transition: transform 0.25s ease, background 0.25s ease;
         }
-        .testimonial-carousel__dot.is-active {
-          background: ${GOLD};
-          transform: scale(1.2);
-        }
         @media (hover: hover) and (pointer: fine) {
-          .testimonial-carousel__arrow:hover {
-            border-color: ${GOLD};
+          .testimonial-carousel__nav:hover {
             color: ${GOLD};
-            background: rgba(201,170,124,0.08);
           }
           .testimonial-carousel__dot:hover {
             background: rgba(201,170,124,0.45);
@@ -1242,11 +1313,21 @@ export default function Portfolio() {
           .hero-side-label {
             display: none;
           }
-          .hero-stats-row {
-            gap: 24px !important;
+          .hero-reel-float {
+            display: none !important;
           }
-          .hero-stats-row > div {
-            gap: 28px 24px !important;
+          .hero-stats-desktop {
+            display: none !important;
+          }
+          .hero-stats-mobile {
+            display: flex !important;
+            flex-direction: column;
+            gap: 28px;
+          }
+          .hero-stats-mobile__row {
+            display: flex;
+            gap: 28px 32px;
+            flex-wrap: wrap;
           }
           .hero-scroll-cue {
             display: none;
@@ -1255,23 +1336,21 @@ export default function Portfolio() {
             padding-top: 80px !important;
             padding-bottom: 56px !important;
           }
+          .testimonials-desktop {
+            display: none !important;
+          }
+          .testimonials-mobile {
+            display: block !important;
+          }
           .testimonials-section {
             padding-top: 80px !important;
           }
-          .contact-section {
-            padding-top: 80px !important;
-          }
-          .testimonial-carousel {
-            gap: 10px;
-          }
-          .testimonial-carousel__arrow {
-            width: 40px;
-            height: 40px;
-            font-size: 16px;
-          }
-          .testimonial-card {
+          .testimonial-carousel--mobile .testimonial-card {
             min-height: auto !important;
             padding: 24px 20px 22px !important;
+          }
+          .contact-section {
+            padding-top: 80px !important;
           }
           .project-card {
             min-height: auto !important;

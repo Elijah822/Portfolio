@@ -830,9 +830,11 @@ function GameCard({ game, onClick }) {
       <div style={{padding:"26px 28px"}}>
         <div style={{fontFamily:'var(--font-body)',fontSize:32,fontWeight:300,color:game.locked?DIM:TEXT,marginBottom:10,transition:"color 0.2s"}}>{game.name}</div>
         <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:12}}>{game.tag}</div>
-        <div style={{fontFamily:'var(--font-body)',fontSize:15,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.6}}>{game.desc}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:15,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.6,marginBottom:14}}>{game.desc}</div>
+        {!game.locked && (
+          <div className="arcade-card-play" style={{ fontFamily:'var(--font-body)', fontSize:11, letterSpacing:2, color:game.color, textTransform:"uppercase" }}>Play →</div>
+        )}
       </div>
-      {!game.locked&&hov&&<div style={{position:"absolute",bottom:16,right:20,fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:game.color}}>PLAY →</div>}
       {game.locked&&<div style={{position:"absolute",top:14,right:16,fontFamily:'var(--font-body)',fontSize:8,letterSpacing:3,color:DIM}}>SOON</div>}
     </div>
   )
