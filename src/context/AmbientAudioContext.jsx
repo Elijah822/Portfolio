@@ -6,6 +6,7 @@ import {
   setupAudioOnMouseMove,
   startAmbientMusic,
   stopAmbientMusic,
+  unlockAudio,
 } from "../lib/portfolioAudio.js"
 import { initAmbientPlayer } from "../lib/youtubePlayer.js"
 
@@ -39,7 +40,8 @@ export function AmbientAudioProvider({ children }) {
       stopAmbientMusic()
       setAmbientVolume(0)
       setSoundOn(false)
-    } else if (isAudioUnlocked()) {
+    } else {
+      unlockAudio()
       enableSound()
     }
   }, [soundOn, enableSound])

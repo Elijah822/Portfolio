@@ -2,8 +2,9 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AmbientAudioProvider } from "./context/AmbientAudioContext.jsx"
+import CustomCursor from "./components/CustomCursor.jsx"
 import { loadFonts } from "./tokens/typography.js"
-import "@fontsource-variable/bricolage-grotesque"
+import "@fontsource-variable/bricolage-grotesque/wght.css"
 import "./styles/global.css"
 import Portfolio from "./Portfolio.jsx"
 import Games from "./Games.jsx"
@@ -16,6 +17,7 @@ loadFonts()
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AmbientAudioProvider>
+      <CustomCursor />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Portfolio />} />

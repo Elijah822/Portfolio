@@ -1,7 +1,12 @@
-/* Graphie — place licensed .woff2 files in public/fonts/graphie/ */
+/* Graphie — drop your licensed files into public/fonts/graphie/ */
+
 @font-face {
   font-family: "Graphie";
-  src: url("/fonts/graphie/Graphie-Book.woff2") format("woff2");
+  src:
+    url("/fonts/graphie/Graphie-Book.woff2") format("woff2"),
+    url("/fonts/graphie/Graphie-Book.woff") format("woff"),
+    url("/fonts/graphie/Graphie-Book.otf") format("opentype"),
+    url("/fonts/graphie/Graphie-Book.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,7 +14,11 @@
 
 @font-face {
   font-family: "Graphie";
-  src: url("/fonts/graphie/Graphie-BookItalic.woff2") format("woff2");
+  src:
+    url("/fonts/graphie/Graphie-BookItalic.woff2") format("woff2"),
+    url("/fonts/graphie/Graphie-BookItalic.woff") format("woff"),
+    url("/fonts/graphie/Graphie-BookItalic.otf") format("opentype"),
+    url("/fonts/graphie/Graphie-BookItalic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -17,7 +26,11 @@
 
 @font-face {
   font-family: "Graphie";
-  src: url("/fonts/graphie/Graphie-SemiBold.woff2") format("woff2");
+  src:
+    url("/fonts/graphie/Graphie-SemiBold.woff2") format("woff2"),
+    url("/fonts/graphie/Graphie-SemiBold.woff") format("woff"),
+    url("/fonts/graphie/Graphie-SemiBold.otf") format("opentype"),
+    url("/fonts/graphie/Graphie-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;

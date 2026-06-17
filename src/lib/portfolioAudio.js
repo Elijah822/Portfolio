@@ -141,7 +141,7 @@ export function setupAudioOnMouseMove(onUnlock) {
   }
 
   const opts = { passive: true, capture: true }
-  const events = ["pointermove", "mousemove", "touchstart", "click", "keydown"]
+  const events = ["pointermove", "mousemove", "touchstart", "keydown"]
 
   events.forEach(evt => document.addEventListener(evt, handler, opts))
 

@@ -38,6 +38,7 @@ function ensureApi() {
 function tryPlay() {
   if (!player?.playVideo) return false
   try {
+    player.unMute?.()
     player.playVideo()
     return true
   } catch (_) {
@@ -83,6 +84,7 @@ export async function initAmbientPlayer() {
       },
       events: {
         onReady: e => {
+          try { e.target.unMute() } catch (_) {}
           e.target.setVolume(22)
           if (wantPlay) tryPlay()
           resolve(player)

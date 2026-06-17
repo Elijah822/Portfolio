@@ -75,7 +75,7 @@ export default function ProjectPage() {
         <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
           <SoundButton />
-          <button onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "pointer", textTransform: "uppercase" }}>
+          <button data-h onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", textTransform: "uppercase" }}>
             ← All work
           </button>
         </div>

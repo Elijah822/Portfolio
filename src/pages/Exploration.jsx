@@ -31,7 +31,7 @@ function StatusBadge({ status, label }) {
 
 export default function Exploration() {
   return (
-    <div style={{ background: BG, minHeight: "100vh", color: TEXT, cursor: "none" }}>
+    <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
       <style>{`
         .explore-card { transition: border-color 0.25s ease, transform 0.25s ease; }
         .explore-card:hover { transform: translateY(-2px); }
@@ -50,7 +50,7 @@ export default function Exploration() {
 
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "100px 56px 120px" }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>Exploration</div>
-        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>
+        <h1 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontSize: "clamp(42px,6vw,72px)", fontWeight: 300, lineHeight: 1.05, margin: "0 0 20px" }}>
           Ideas I'm building<br /><em style={{ color: GOLD }}>and proving.</em>
         </h1>
         <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 620, margin: "0 0 72px" }}>
@@ -67,7 +67,7 @@ export default function Exploration() {
                 <StatusBadge status={item.status} label={item.statusLabel} />
               </div>
 
-              <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(28px,4vw,44px)", fontWeight: 300, color: TEXT, margin: "0 0 12px", lineHeight: 1.15 }}>
+              <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 400', fontSize: "clamp(28px,4vw,44px)", fontWeight: 400, color: TEXT, margin: "0 0 12px", lineHeight: 1.15 }}>
                 {item.title}
               </h2>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginBottom: 24, textTransform: "uppercase" }}>{item.year}</div>

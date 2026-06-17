@@ -6,6 +6,12 @@
   box-sizing: border-box;
 }
 
+html.custom-cursor-active,
+html.custom-cursor-active body,
+html.custom-cursor-active * {
+  cursor: none !important;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -20,4 +26,10 @@ h3,
 h4,
 .type-heading {
   font-family: var(--font-heading);
+  font-variation-settings: "wght" 400;
+  font-synthesis: none;
+}
+
+h1 {
+  font-variation-settings: "wght" 300;
 }

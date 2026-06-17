@@ -135,35 +135,6 @@ function ConsoleGames({ onTrailer }) {
   )
 }
 
-// ── CURSOR ────────────────────────────────────────────────────────────────────
-function Cursor() {
-  const dot = useRef(null), ring = useRef(null)
-  useEffect(() => {
-    let mx=0,my=0,dx=0,dy=0,rx=0,ry=0,raf,big=false
-    const onMove = e => { mx=e.clientX; my=e.clientY }
-    const onOver = e => { if(e.target.closest("a,button,[data-h]")) big=true }
-    const onOut  = e => { if(e.target.closest("a,button,[data-h]")) big=false }
-    window.addEventListener("mousemove",onMove)
-    document.addEventListener("mouseover",onOver)
-    document.addEventListener("mouseout",onOut)
-    const tick = () => {
-      dx+=(mx-dx)*0.3; dy+=(my-dy)*0.3
-      rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1
-      if(dot.current)  dot.current.style.transform  = `translate(${dx-4}px,${dy-4}px) scale(${big?2.5:1})`
-      if(ring.current) ring.current.style.transform = `translate(${rx-20}px,${ry-20}px) scale(${big?1.6:1})`
-      raf=requestAnimationFrame(tick)
-    }
-    tick()
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("mousemove",onMove); document.removeEventListener("mouseover",onOver); document.removeEventListener("mouseout",onOut) }
-  },[])
-  return (
-    <>
-      <div ref={dot}  style={{position:"fixed",top:0,left:0,width:8,height:8,borderRadius:"50%",background:GOLD,pointerEvents:"none",zIndex:9999,transition:"transform 0.15s ease"}} />
-      <div ref={ring} style={{position:"fixed",top:0,left:0,width:40,height:40,borderRadius:"50%",border:`1px solid ${GOLD}`,pointerEvents:"none",zIndex:9998,opacity:0.35,transition:"transform 0.08s linear"}} />
-    </>
-  )
-}
-
 // ── SNAKE ─────────────────────────────────────────────────────────────────────
 function SnakeGame({ onRestart }) {
   const cvs = useRef(null)
@@ -500,7 +471,7 @@ function MemoryGame({ onRestart }) {
       <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>MOVES — {moves}</div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,80px)",gap:8}}>
         {cards.map(c=>(
-          <div key={c.id} data-h onClick={()=>flip(c.id)} style={{width:80,height:80,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:26,background:c.flipped||c.matched?"rgba(201,170,124,0.1)":"rgba(255,255,255,0.04)",border:`1px solid ${c.matched?GOLD+"44":c.flipped?"rgba(255,255,255,0.15)":BORDER}`,color:c.matched?GOLD:TEXT,transition:"all 0.2s",transform:c.flipped||c.matched?"scale(1)":"scale(0.96)"}}>
+          <div key={c.id} data-h onClick={()=>flip(c.id)} style={{width:80,height:80,display:"flex",alignItems:"center",justifyContent:"center",cursor:"none",fontSize:26,background:c.flipped||c.matched?"rgba(201,170,124,0.1)":"rgba(255,255,255,0.04)",border:`1px solid ${c.matched?GOLD+"44":c.flipped?"rgba(255,255,255,0.15)":BORDER}`,color:c.matched?GOLD:TEXT,transition:"all 0.2s",transform:c.flipped||c.matched?"scale(1)":"scale(0.96)"}}>
             {c.flipped||c.matched?c.sym:""}
           </div>
         ))}
@@ -600,7 +571,7 @@ function ReactionGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:24}}>
       <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>ROUND {Math.min(times.length+1,5)} OF 5</div>
-      <div onClick={click} data-h style={{width:320,height:280,background:bg,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"background 0.1s",userSelect:"none"}}>
+      <div onClick={click} data-h style={{width:320,height:280,background:bg,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"none",transition:"background 0.1s",userSelect:"none"}}>
         <div style={{fontFamily:'var(--font-body)',fontSize:26,color:phase==="ready"?"#b8e0b8":DIM,textAlign:"center",lineHeight:1.6}}>
           {phase==="idle"&&(times.length===0?"Click to start":"Click for next round")}
           {phase==="waiting"&&"Wait for green..."}
@@ -820,7 +791,7 @@ function StroopGame({ onRestart }) {
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:DIM}}>CLICK THE COLOR OF THE TEXT</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
             {opts.map((c,i)=>(
-              <button key={i} data-h onClick={()=>pick(c)} style={{width:150,height:52,background:c.hex,border:"none",cursor:"pointer",fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:BG,opacity:fb&&c!==card.answer?0.35:1,transition:"all 0.2s"}}>
+              <button key={i} data-h onClick={()=>pick(c)} style={{width:150,height:52,background:c.hex,border:"none",cursor:"none",fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:BG,opacity:fb&&c!==card.answer?0.35:1,transition:"all 0.2s"}}>
                 {c.name}
               </button>
             ))}
@@ -875,11 +846,6 @@ export default function Games() {
 
   const featured = FEATURED_TRAILERS[featuredIdx] ?? FEATURED_TRAILERS[0]
 
-  useEffect(()=>{
-    document.body.style.cursor="none"
-    return()=>{ document.body.style.cursor="" }
-  },[])
-
   useEffect(() => {
     const id = setInterval(() => setFeaturedIdx(i => (i + 1) % FEATURED_TRAILERS.length), 8000)
     return () => clearInterval(id)
@@ -911,7 +877,6 @@ export default function Games() {
     <div className="game-room" style={{minHeight:"100vh",background:BG,color:TEXT,cursor:"none",position:"relative"}}>
       <div className="vr-hud" aria-hidden="true" />
       <div className="vr-grid-floor" aria-hidden="true" />
-      <Cursor />
 
       <div style={{position:"fixed",top:0,left:0,right:0,padding:"18px 56px",display:"flex",justifyContent:"space-between",alignItems:"center",zIndex:100,background:"rgba(7,7,12,0.94)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${BORDER}`}}>
         <Link to="/" style={{fontFamily:'var(--font-body)',fontSize:22,color:TEXT,letterSpacing:3,fontWeight:300,textDecoration:"none",cursor:"none"}}>AE</Link>
@@ -1007,7 +972,6 @@ export default function Games() {
 
       <style>{`
         @keyframes musicPulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .game-room, .game-room * { cursor: none !important; }
         .game-room { perspective: 1400px; }
         .vr-hud::before, .vr-hud::after, .vr-hud span::before, .vr-hud span::after {
           content: ""; position: fixed; width: 56px; height: 56px; border: 1px solid rgba(201,170,124,0.22); pointer-events: none; z-index: 90;

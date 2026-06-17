@@ -307,36 +307,6 @@ function Stars() {
   return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 }
 
-// ── CURSOR ────────────────────────────────────────────────────────────────────
-function Cursor() {
-  const dot = useRef(null)
-  const ring = useRef(null)
-  useEffect(() => {
-    let mx = 0, my = 0, dx = 0, dy = 0, rx = 0, ry = 0, raf, big = false
-    const onMove = e => { mx = e.clientX; my = e.clientY }
-    const onOver = e => { if (e.target.closest("a,button,[data-h]")) big = true }
-    const onOut = e => { if (e.target.closest("a,button,[data-h]")) big = false }
-    window.addEventListener("mousemove", onMove)
-    document.addEventListener("mouseover", onOver)
-    document.addEventListener("mouseout", onOut)
-    const tick = () => {
-      dx += (mx - dx) * 0.3; dy += (my - dy) * 0.3
-      rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1
-      if (dot.current) dot.current.style.transform = `translate(${dx - 4}px,${dy - 4}px) scale(${big ? 2.5 : 1})`
-      if (ring.current) ring.current.style.transform = `translate(${rx - 20}px,${ry - 20}px) scale(${big ? 1.6 : 1})`
-      raf = requestAnimationFrame(tick)
-    }
-    tick()
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("mousemove", onMove); document.removeEventListener("mouseover", onOver); document.removeEventListener("mouseout", onOut) }
-  }, [])
-  return (
-    <>
-      <div ref={dot} style={{ position: "fixed", top: 0, left: 0, width: 8, height: 8, borderRadius: "50%", background: GOLD, pointerEvents: "none", zIndex: 9999, transition: "transform 0.15s ease" }} />
-      <div ref={ring} style={{ position: "fixed", top: 0, left: 0, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${GOLD}`, pointerEvents: "none", zIndex: 9998, opacity: 0.35, transition: "transform 0.08s linear" }} />
-    </>
-  )
-}
-
 // ── AMBIENT LAYERS ────────────────────────────────────────────────────────────
 function AmbientOrbs({ scrollY }) {
   const orbs = [
@@ -560,7 +530,7 @@ function Hero({ ready }) {
         </div>
 
         {/* Huge headline */}
-        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontWeight: 300, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 300', fontWeight: 300, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
           <div style={{ fontSize: "clamp(68px,12vw,168px)", color: TEXT }}>{w1 || "PRODUCT"}</div>
           <div style={{ fontSize: "clamp(68px,12vw,168px)", color: GOLD, fontWeight: 500 }}>{w2 || "DESIGNER"}</div>
         </div>
@@ -1118,7 +1088,6 @@ export default function Portfolio() {
 
       {!loaded && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>
-        <Cursor />
         <Nav scrollY={scrollY} />
         <Hero ready={ready} />
         <Showreel />
