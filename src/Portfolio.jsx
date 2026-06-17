@@ -1,4 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from "react"
+import { getProjectMedia, SHOWREEL, videoPoster } from "./data/projectMedia.js"
+import {
+  isAudioUnlocked,
+  playLoadTick,
+  setPendingLoadPct,
+  setupAudioOnMouseMove,
+  setAmbientVolume,
+  stopAmbientMusic,
+  startAmbientMusic,
+  teardownAudio,
+} from "./lib/portfolioAudio.js"
 
 // ── TOKENS ────────────────────────────────────────────────────────────────────
 const BG    = "#07070c"
@@ -360,18 +371,103 @@ function Cursor() {
   )
 }
 
+// ── AMBIENT LAYERS ────────────────────────────────────────────────────────────
+function AmbientOrbs({ scrollY }) {
+  const orbs = [
+    { x: "12%", y: "18%", size: 420, color: "rgba(201,170,124,0.07)", speed: 0.0004 },
+    { x: "78%", y: "62%", size: 520, color: "rgba(155,124,224,0.06)", speed: 0.0003 },
+    { x: "55%", y: "82%", size: 360, color: "rgba(94,207,177,0.05)", speed: 0.0005 },
+  ]
+  return (
+    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+      {orbs.map((o, i) => (
+        <div key={i} className="ambient-orb" style={{
+          position: "absolute",
+          left: o.x, top: o.y,
+          width: o.size, height: o.size,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${o.color} 0%, transparent 70%)`,
+          transform: `translateY(${Math.sin(scrollY * o.speed + i) * 40}px) translateX(${Math.cos(scrollY * o.speed * 1.3 + i) * 24}px)`,
+          transition: "transform 0.1s linear",
+          filter: "blur(40px)",
+        }} />
+      ))}
+    </div>
+  )
+}
+
+function FilmGrain() {
+  return <div className="film-grain" aria-hidden="true" />
+}
+
+function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (!autoPlay || !ref.current) return
+    ref.current.play().catch(() => {})
+  }, [autoPlay, src])
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={poster || videoPoster(src)}
+      muted={muted}
+      loop={loop}
+      playsInline
+      controls={controls}
+      aria-label={label}
+      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", ...style }}
+    />
+  )
+}
+
+function Showreel() {
+  const [ref, vis] = useReveal(0.15)
+  const doubled = [...SHOWREEL, ...SHOWREEL]
+  return (
+    <section ref={ref} style={{ padding: "0 0 80px", opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.9s" }}>
+      <div style={{ padding: "0 56px", marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 24 }}>
+        <div>
+          <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 4, color: GOLD, marginBottom: 10, textTransform: "uppercase" }}>Motion Reel</div>
+          <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: "clamp(24px,3vw,36px)", fontWeight: 300, color: TEXT }}>Design in <em>motion</em></div>
+        </div>
+        <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>Hover to preview · Click project for full case</div>
+      </div>
+      <div className="showreel-track-wrap">
+        <div className="showreel-track">
+          {doubled.map((item, i) => (
+            <div key={`${item.id}-${i}`} className="showreel-item">
+              <MediaVideo src={item.url} label={item.label} autoPlay muted loop />
+              <div className="showreel-item-label">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── LOADER ────────────────────────────────────────────────────────────────────
 function Loader({ onDone }) {
   const [n, setN] = useState(0)
   const [exit, setExit] = useState(false)
+
   useEffect(() => {
     let v = 0
     const id = setInterval(() => {
       v += Math.random() * 3.5
       if (v >= 100) {
-        setN(100); clearInterval(id)
+        setN(100)
+        setPendingLoadPct(100)
+        if (isAudioUnlocked()) playLoadTick(100)
+        clearInterval(id)
         setTimeout(() => { setExit(true); setTimeout(onDone, 600) }, 400)
-      } else setN(Math.floor(v))
+      } else {
+        const pct = Math.floor(v)
+        setN(pct)
+        setPendingLoadPct(pct)
+        if (isAudioUnlocked()) playLoadTick(pct)
+      }
     }, 22)
     return () => clearInterval(id)
   }, [onDone])
@@ -408,7 +504,7 @@ function Loader({ onDone }) {
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────────────
-function Nav({ scrollY }) {
+function Nav({ scrollY, soundOn, onToggleSound }) {
   const max = Math.max(1, (typeof document !== "undefined" ? document.documentElement.scrollHeight : 1) - (typeof window !== "undefined" ? window.innerHeight : 1))
   const pct = Math.min((scrollY / max) * 100, 100)
   const scrolled = scrollY > 60
@@ -420,7 +516,10 @@ function Nav({ scrollY }) {
         {[["work", "Work"], ["about", "About"], ["contact", "Contact"]].map(([id, label]) => (
           <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
         ))}
-        <a data-h href="/games" style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Play ✦</a>
+        <a data-h href="/games" style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Game ✦</a>
+        <button data-h onClick={onToggleSound} title={soundOn ? "Mute ambience" : "Move mouse to enable sound"} style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 2, color: soundOn ? GOLD : DIM, background: "none", border: `1px solid ${soundOn ? `${GOLD}44` : BORDER}`, padding: "6px 12px", cursor: "none", transition: "all 0.2s" }}>
+          <span style={{ animation: soundOn ? "musicPulse 1.4s ease-in-out infinite" : "none" }}>{soundOn ? "♪ ON" : "♪"}</span>
+        </button>
       </div>
       <div style={{ position: "absolute", bottom: 0, left: 0, height: 1, background: GOLD, width: `${pct}%`, transition: "width 0.1s linear" }} />
     </nav>
@@ -434,6 +533,14 @@ function Hero({ ready }) {
   const [roleIdx, setRoleIdx] = useState(0)
   const [roleFade, setRoleFade] = useState(true)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const [reelIdx, setReelIdx] = useState(0)
+  const heroReel = SHOWREEL[reelIdx]
+
+  useEffect(() => {
+    if (!ready) return
+    const id = setInterval(() => setReelIdx(i => (i + 1) % SHOWREEL.length), 7000)
+    return () => clearInterval(id)
+  }, [ready])
 
   useEffect(() => {
     if (!ready) return
@@ -456,6 +563,11 @@ function Hero({ ready }) {
 
   return (
     <section onMouseMove={handleMouse} style={{ position: "relative", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 56px", overflow: "hidden" }}>
+      {heroReel && (
+        <div key={heroReel.url} className="hero-reel-bg">
+          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop />
+        </div>
+      )}
       <Stars />
 
       {/* Ghost initials — parallax background */}
@@ -569,6 +681,19 @@ function ProjectDetail({ project, onClose }) {
 
         <div style={{ height: 1, background: BORDER, marginBottom: 48 }} />
 
+        {getProjectMedia(project.id)?.hero && (
+          <div style={{ marginBottom: 56, borderRadius: 2, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16/9", background: "#0a0a10" }}>
+            <MediaVideo
+              src={getProjectMedia(project.id).hero.url}
+              label={getProjectMedia(project.id).hero.label}
+              autoPlay
+              muted
+              loop
+              controls
+            />
+          </div>
+        )}
+
         {/* Two-column layout */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 80, marginBottom: 64 }}>
           {/* Description */}
@@ -625,25 +750,42 @@ function ProjectDetail({ project, onClose }) {
           </div>
         </div>
 
-        {/* Media placeholder grid */}
+        {/* Media */}
         <div>
           <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 4, color: GOLD, marginBottom: 24, textTransform: "uppercase" }}>Media & Visuals</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
-            {[
-              { label: "Hero Screen", type: "image" },
-              { label: "User Flow", type: "image" },
-              { label: "Product Demo", type: "video" },
-              { label: "Mobile View", type: "image" },
-              { label: "Design System", type: "image" },
-              { label: "Case Study", type: "image" },
-            ].map(({ label, type }) => (
-              <div key={label} style={{ aspectRatio: "16/9", background: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
-                <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{type === "video" ? "▶ Video" : "◻ Image"}</div>
-                <div style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 14, color: DIM }}>{label}</div>
-                <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 8, letterSpacing: 2, color: "rgba(100,96,91,0.5)", textTransform: "uppercase" }}>Coming soon</div>
+          {getProjectMedia(project.id)?.hero ? (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+              <div style={{ aspectRatio: "16/9", border: `1px solid ${BORDER}`, overflow: "hidden", background: "#0a0a10" }}>
+                <MediaVideo
+                  src={getProjectMedia(project.id).hero.url}
+                  label={getProjectMedia(project.id).hero.label}
+                  controls
+                  muted={false}
+                  loop={false}
+                />
               </div>
-            ))}
-          </div>
+              <div style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 15, color: DIM }}>
+                {getProjectMedia(project.id).hero.label}
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+              {[
+                { label: "Hero Screen", type: "image" },
+                { label: "User Flow", type: "image" },
+                { label: "Product Demo", type: "video" },
+                { label: "Mobile View", type: "image" },
+                { label: "Design System", type: "image" },
+                { label: "Case Study", type: "image" },
+              ].map(({ label, type }) => (
+                <div key={label} style={{ aspectRatio: "16/9", background: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                  <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 9, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{type === "video" ? "▶ Video" : "◻ Image"}</div>
+                  <div style={{ fontFamily: '"Cormorant Garamond",serif', fontStyle: "italic", fontSize: 14, color: DIM }}>{label}</div>
+                  <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 8, letterSpacing: 2, color: "rgba(100,96,91,0.5)", textTransform: "uppercase" }}>Coming soon</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
       </div>
@@ -655,6 +797,7 @@ function ProjectDetail({ project, onClose }) {
 function ProjectCard({ p, i, onOpen }) {
   const [hov, setHov] = useState(false)
   const [ref, vis] = useReveal(0.05)
+  const media = getProjectMedia(p.id)
   return (
     <div ref={ref} data-h className="project-card"
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
@@ -664,18 +807,24 @@ function ProjectCard({ p, i, onOpen }) {
         background: hov ? `${p.accent}0a` : BG,
         cursor: "none",
         opacity: vis ? 1 : 0,
-        transform: vis ? "none" : "translateY(14px)",
+        transform: vis ? `translateY(${hov ? -4 : 0}px)` : "translateY(14px)",
         transition: `opacity 0.6s ${i * 0.07}s ease, transform 0.6s ${i * 0.07}s ease, background 0.3s`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        minHeight: 240,
+        minHeight: media?.hero ? 300 : 240,
         position: "relative",
         overflow: "hidden",
       }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left" }} />
+      {media?.hero && (
+        <div className="project-card-media" style={{ opacity: hov ? 1 : 0, transition: "opacity 0.45s ease" }}>
+          <MediaVideo src={media.hero.url} label={media.hero.label} autoPlay={hov} muted loop />
+          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 30%, ${BG} 95%)` }} />
+        </div>
+      )}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 2 }} />
 
-      <div>
+      <div style={{ position: "relative", zIndex: 1 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 28 }}>
           <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
           <StatusBadge status={p.status} label={p.statusLabel} />
@@ -690,7 +839,7 @@ function ProjectCard({ p, i, onOpen }) {
         </div>
       </div>
 
-      <div style={{ marginTop: 28 }}>
+      <div style={{ marginTop: 28, position: "relative", zIndex: 1 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20, marginBottom: hov ? 16 : 0, transition: "margin 0.3s" }}>
           <div style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
           <div style={{ fontFamily: '"DM Mono",monospace', fontSize: 10, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
@@ -821,7 +970,25 @@ export default function Portfolio() {
   const [ready, setReady] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [activeProject, setActiveProject] = useState(null)
+  const [soundOn, setSoundOn] = useState(false)
   const done = useCallback(() => { setLoaded(true); setTimeout(() => setReady(true), 100) }, [])
+
+  useEffect(() => {
+    const cleanup = setupAudioOnMouseMove(() => setSoundOn(true))
+    return () => { cleanup(); teardownAudio() }
+  }, [])
+
+  const toggleSound = useCallback(() => {
+    if (soundOn) {
+      stopAmbientMusic()
+      setAmbientVolume(0)
+      setSoundOn(false)
+    } else if (isAudioUnlocked()) {
+      setAmbientVolume(0.09)
+      startAmbientMusic()
+      setSoundOn(true)
+    }
+  }, [soundOn])
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY)
@@ -843,7 +1010,9 @@ export default function Portfolio() {
   }, [])
 
   return (
-    <div style={{ background: BG, minHeight: "100vh", cursor: "none", color: TEXT }}>
+    <div style={{ background: BG, minHeight: "100vh", cursor: "none", color: TEXT, position: "relative" }}>
+      <AmbientOrbs scrollY={scrollY} />
+      <FilmGrain />
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::selection { background: ${GOLD}; color: ${BG}; }
@@ -853,6 +1022,45 @@ export default function Portfolio() {
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-25%); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes musicPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @keyframes showreelScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes heroReelFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes grain { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-2%,-3%); } 50% { transform: translate(3%,1%); } 75% { transform: translate(-1%,2%); } }
+        .film-grain {
+          position: fixed; inset: -50%; z-index: 9990; pointer-events: none; opacity: 0.04;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          animation: grain 0.5s steps(2) infinite;
+        }
+        .hero-reel-bg {
+          position: absolute; inset: 0; z-index: 0; opacity: 0.22;
+          animation: heroReelFade 1.2s ease;
+          mask-image: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+        }
+        .hero-reel-bg::after {
+          content: ""; position: absolute; inset: 0;
+          background: linear-gradient(135deg, ${BG}cc 0%, transparent 50%, ${BG}ee 100%);
+        }
+        .showreel-track-wrap {
+          overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
+        }
+        .showreel-track {
+          display: flex; width: max-content;
+          animation: showreelScroll 48s linear infinite;
+        }
+        .showreel-track:hover { animation-play-state: paused; }
+        .showreel-item {
+          position: relative; width: clamp(280px, 28vw, 420px); aspect-ratio: 16/10;
+          flex-shrink: 0; border-right: 1px solid ${BORDER}; overflow: hidden;
+        }
+        .showreel-item-label {
+          position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px;
+          font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: 2px;
+          color: ${TEXT}; text-transform: uppercase;
+          background: linear-gradient(transparent, rgba(7,7,12,0.92));
+        }
+        .project-card-media {
+          position: absolute; inset: 0; z-index: 0;
+        }
         .project-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -889,12 +1097,15 @@ export default function Portfolio() {
       `}</style>
 
       {!loaded && <Loader onDone={done} />}
-      <Cursor />
-      <Nav scrollY={scrollY} />
-      <Hero ready={ready} />
-      <Work onOpen={setActiveProject} />
-      <About />
-      <Contact />
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <Cursor />
+        <Nav scrollY={scrollY} soundOn={soundOn} onToggleSound={toggleSound} />
+        <Hero ready={ready} />
+        <Showreel />
+        <Work onOpen={setActiveProject} />
+        <About />
+        <Contact />
+      </div>
       {activeProject && <ProjectDetail project={activeProject} onClose={() => setActiveProject(null)} />}
     </div>
   )
