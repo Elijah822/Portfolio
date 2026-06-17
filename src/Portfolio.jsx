@@ -739,7 +739,7 @@ function ProjectCard({ p, i }) {
           pointerEvents: "none",
         }}
       >
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: "rgba(224,219,210,0.88)", lineHeight: 1.75, margin: "0 0 16px" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: "rgba(224,219,210,0.88)", lineHeight: 1.75, margin: "0 0 16px" }}>
           {p.desc}
         </p>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: p.accent, textTransform: "uppercase" }}>
@@ -777,7 +777,7 @@ function ProjectCard({ p, i }) {
 
       <div style={{ marginTop: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20 }}>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
+          <div className="project-card-impact" style={{ fontFamily: "var(--font-body)", fontSize: 21, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
         </div>
       </div>
@@ -1163,7 +1163,7 @@ export default function Portfolio() {
           }
           .project-card-mobile-desc {
             font-family: var(--font-body);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 400;
             color: ${DIM};
             line-height: 1.75;
