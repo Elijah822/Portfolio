@@ -917,32 +917,32 @@ function Testimonials() {
 
       <ScrollReveal variant="fade-up" delay={100} className="testimonials-mobile">
         <div className="testimonial-carousel testimonial-carousel--mobile">
-          <div className="testimonial-carousel__viewport">
-            <div key={current.id} className="testimonial-carousel__slide">
-              <TestimonialCard t={current} />
+          <div className="testimonial-carousel__row">
+            <button type="button" className="testimonial-carousel__arrow" onClick={goPrev} aria-label="Previous testimonial">
+              ←
+            </button>
+            <div className="testimonial-carousel__viewport">
+              <div key={current.id} className="testimonial-carousel__slide">
+                <TestimonialCard t={current} />
+              </div>
             </div>
+            <button type="button" className="testimonial-carousel__arrow" onClick={goNext} aria-label="Next testimonial">
+              →
+            </button>
           </div>
 
-          <div className="testimonial-carousel__controls">
-            <button type="button" className="testimonial-carousel__nav" onClick={goPrev} aria-label="Previous testimonial">
-              Prev
-            </button>
-            <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
-              {TESTIMONIALS.map((t, i) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === idx}
-                  aria-label={`Testimonial ${i + 1} of ${total}`}
-                  className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
-                  onClick={() => setIdx(i)}
-                />
-              ))}
-            </div>
-            <button type="button" className="testimonial-carousel__nav" onClick={goNext} aria-label="Next testimonial">
-              Next
-            </button>
+          <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
+            {TESTIMONIALS.map((t, i) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={i === idx}
+                aria-label={`Testimonial ${i + 1} of ${total}`}
+                className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
+                onClick={() => setIdx(i)}
+              />
+            ))}
           </div>
         </div>
       </ScrollReveal>
@@ -1074,9 +1074,32 @@ export default function Portfolio() {
           flex-direction: column;
           width: 100%;
           max-width: none;
+          margin-inline: calc(16px - var(--page-gutter));
         }
         .testimonial-carousel--mobile .testimonial-carousel__viewport {
           width: 100%;
+          min-width: 0;
+        }
+        .testimonial-carousel__row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .testimonial-carousel__arrow {
+          flex-shrink: 0;
+          width: 28px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: var(--font-body);
+          font-size: 22px;
+          line-height: 1;
+          color: ${DIM};
+          background: none;
+          border: none;
+          padding: 0;
+          transition: color 0.2s ease;
         }
         .testimonial-carousel__controls {
           display: flex;
@@ -1098,7 +1121,7 @@ export default function Portfolio() {
           transition: color 0.2s ease;
         }
         .testimonial-carousel--mobile .testimonial-carousel__dots {
-          margin-top: 0;
+          margin-top: 20px;
           max-width: none;
           flex-wrap: wrap;
         }
@@ -1246,7 +1269,8 @@ export default function Portfolio() {
           transition: transform 0.25s ease, background 0.25s ease;
         }
         @media (hover: hover) and (pointer: fine) {
-          .testimonial-carousel__nav:hover {
+          .testimonial-carousel__nav:hover,
+          .testimonial-carousel__arrow:hover {
             color: ${GOLD};
           }
           .testimonial-carousel__dot:hover {

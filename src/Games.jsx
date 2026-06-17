@@ -56,19 +56,19 @@ function MobileGamePad({ showSpace }) {
   return (
     <div className="game-dpad" aria-label="Game controls">
       <div className="game-dpad__grid">
-        <span />
+        <span className="game-dpad__empty" />
         <DpadButton label="↑" keyName="ArrowUp" className="game-dpad__btn--up" />
-        <span />
+        <span className="game-dpad__empty" />
         <DpadButton label="←" keyName="ArrowLeft" className="game-dpad__btn--left" />
         {showSpace ? (
           <DpadButton label="␣" keyName=" " className="game-dpad__btn--space" />
         ) : (
-          <span className="game-dpad__spacer" />
+          <span className="game-dpad__empty game-dpad__empty--center" />
         )}
         <DpadButton label="→" keyName="ArrowRight" className="game-dpad__btn--right" />
-        <span />
+        <span className="game-dpad__empty" />
         <DpadButton label="↓" keyName="ArrowDown" className="game-dpad__btn--down" />
-        <span />
+        <span className="game-dpad__empty" />
       </div>
     </div>
   )
@@ -1028,8 +1028,8 @@ export default function Games() {
               <div className="game-overlay__name">{game.name}</div>
               <div className="game-overlay__tag">{game.tag}</div>
             </div>
-            <button type="button" data-h className="game-overlay__close game-overlay__mobile-only" onClick={closeGame}>
-              Close
+            <button type="button" data-h className="game-overlay__close game-overlay__mobile-only" onClick={closeGame} aria-label="Close">
+              ×
             </button>
             <button data-h type="button" className="game-overlay__close-desktop game-overlay__desktop-only" onClick={closeGame}>CLOSE ×</button>
           </div>
@@ -1244,18 +1244,30 @@ export default function Games() {
         .game-overlay__restart,
         .game-overlay__close {
           font-family: var(--font-body);
-          font-size: 11px;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          background: none;
-          border: 1px solid ${BORDER};
-          color: ${TEXT};
-          padding: 10px 14px;
           flex-shrink: 0;
         }
         .game-overlay__restart {
-          color: ${GOLD};
-          border-color: rgba(201,170,124,0.35);
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: ${BG};
+          background: ${GOLD};
+          border: none;
+          padding: 10px 16px;
+        }
+        .game-overlay__close {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 1px solid ${BORDER};
+          background: rgba(7,7,12,0.92);
+          color: ${TEXT};
+          font-size: 24px;
+          line-height: 1;
+          padding: 0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
         .game-dpad {
           display: flex;
@@ -1264,18 +1276,27 @@ export default function Games() {
         }
         .game-dpad__grid {
           display: grid;
-          grid-template-columns: 56px 56px 56px;
-          grid-template-rows: 56px 56px 56px;
-          gap: 8px;
-          align-items: center;
-          justify-items: center;
+          grid-template-columns: repeat(3, 62px);
+          grid-template-rows: repeat(3, 62px);
+          gap: 1px;
+          padding: 1px;
+          border-radius: 18px;
+          overflow: hidden;
+          background: ${BORDER};
+          border: 1px solid ${BORDER};
+        }
+        .game-dpad__empty {
+          background: rgba(7,7,12,0.98);
+        }
+        .game-dpad__empty--center {
+          background: rgba(255,255,255,0.03);
         }
         .game-dpad__btn {
-          width: 56px;
-          height: 56px;
-          border-radius: 50%;
-          border: 1px solid ${BORDER};
-          background: rgba(255,255,255,0.04);
+          width: 100%;
+          height: 100%;
+          border: none;
+          border-radius: 0;
+          background: rgba(255,255,255,0.05);
           color: ${TEXT};
           font-family: var(--font-body);
           font-size: 18px;
@@ -1286,12 +1307,24 @@ export default function Games() {
           touch-action: manipulation;
           user-select: none;
         }
+        .game-dpad__btn:active,
+        .game-dpad__btn:focus-visible {
+          background: rgba(201,170,124,0.22);
+        }
+        .game-dpad__btn--up {
+          border-radius: 16px 16px 0 0;
+        }
+        .game-dpad__btn--down {
+          border-radius: 0 0 16px 16px;
+        }
+        .game-dpad__btn--left {
+          border-radius: 16px 0 0 16px;
+        }
+        .game-dpad__btn--right {
+          border-radius: 0 16px 16px 0;
+        }
         .game-dpad__btn--space {
           font-size: 22px;
-        }
-        .game-dpad__spacer {
-          width: 56px;
-          height: 56px;
         }
         .game-overlay__note {
           font-family: var(--font-body);
