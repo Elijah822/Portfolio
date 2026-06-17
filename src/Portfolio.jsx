@@ -1076,9 +1076,17 @@ export default function Portfolio() {
         }
         .testimonials-grid {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
-          max-width: 720px;
+          width: 100%;
+        }
+        .testimonials-grid > * {
+          height: 100%;
+        }
+        @media (min-width: 769px) and (max-width: 1099px) {
+          .testimonials-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
         .testimonial-carousel--mobile {
           display: flex;
@@ -1211,6 +1219,7 @@ export default function Portfolio() {
           flex-direction: column;
           gap: 28px;
           min-height: 280px;
+          height: 100%;
         }
         .testimonial-card__quote {
           font-family: var(--font-body);
@@ -1403,6 +1412,18 @@ export default function Portfolio() {
           .testimonial-carousel--mobile .testimonial-card {
             min-height: auto !important;
             padding: 24px 20px 22px !important;
+          }
+          .testimonial-carousel--mobile .testimonial-carousel__controls {
+            position: relative;
+            justify-content: space-between;
+            margin-inline: calc(16px - var(--page-gutter));
+            gap: 0;
+          }
+          .testimonial-carousel--mobile .testimonial-carousel__dots {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
           }
           .contact-section {
             padding-top: 80px !important;
