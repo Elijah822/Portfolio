@@ -33,6 +33,11 @@ export function setPendingLoadPct(pct) {
   pendingLoadPct = pct
 }
 
+export function resetLoadTicks() {
+  pendingLoadPct = 0
+  lastLoadTick = -1
+}
+
 function replayPendingLoadTicks() {
   lastLoadTick = -1
   for (let p = 0; p <= pendingLoadPct; p += 4) playLoadTick(p, true)
@@ -74,8 +79,16 @@ export function playLoadTick(pct, force = false) {
   }
 }
 
-export function startAmbientMusic() {
-  import("./youtubePlayer.js").then(({ playAmbientTrack }) => playAmbientTrack())
+export async function startAmbientMusic() {
+  if (ambientOn) return
+  ambientOn = true
+  try {
+    const { initAmbientPlayer, playAmbientTrack } = await import("./youtubePlayer.js")
+    await initAmbientPlayer()
+    await playAmbientTrack()
+  } catch (_) {
+    ambientOn = false
+  }
 }
 
 export function stopAmbientMusic() {
@@ -99,18 +112,23 @@ export function unlockAudio() {
   master.gain.value = 0.15
   master.connect(audioCtx.destination)
   unlocked = true
-  replayPendingLoadTicks()
+  if (pendingLoadPct > 0) replayPendingLoadTicks()
   startAmbientMusic()
   return true
 }
 
 export function setupAudioOnMouseMove(onUnlock) {
   const handler = () => {
+    if (unlocked) return
     const fresh = unlockAudio()
-    if (fresh) onUnlock?.()
+    if (fresh) {
+      onUnlock?.()
+      window.removeEventListener("mousemove", handler)
+      window.removeEventListener("touchstart", handler)
+    }
   }
-  window.addEventListener("mousemove", handler, { passive: true, once: true })
-  window.addEventListener("touchstart", handler, { passive: true, once: true })
+  window.addEventListener("mousemove", handler, { passive: true })
+  window.addEventListener("touchstart", handler, { passive: true })
   return () => {
     window.removeEventListener("mousemove", handler)
     window.removeEventListener("touchstart", handler)
