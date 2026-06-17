@@ -66,6 +66,19 @@ function StatusBadge({ status, label }) {
   )
 }
 
+function getProjectMetaTags(project, study) {
+  const tags = []
+  const role = study?.role || project.role
+  if (role) tags.push(role)
+  if (project.year) tags.push(project.year)
+  if (study?.productType) {
+    study.productType.split("·").map(s => s.trim()).filter(Boolean).forEach(t => tags.push(t))
+  } else if (project.cat) {
+    project.cat.split(" · ").map(s => s.trim()).filter(Boolean).forEach(t => tags.push(t))
+  }
+  return tags
+}
+
 export default function ProjectPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -91,6 +104,7 @@ export default function ProjectPage() {
 
   const siteUrl = meta?.siteUrl || project.url
   const overview = study?.overview || project.desc
+  const metaTags = getProjectMetaTags(project, study)
 
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
@@ -167,6 +181,60 @@ export default function ProjectPage() {
         }
         @media (max-width: 768px) {
           .project-main { padding-top: 72px !important; padding-bottom: 80px !important; }
+          .project-hero-media {
+            margin-inline: calc(-1 * var(--page-gutter));
+            width: calc(100% + 2 * var(--page-gutter));
+            aspect-ratio: auto;
+            min-height: calc(100svh - 248px);
+            max-height: none;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+          }
+          .project-hero-media video {
+            min-height: calc(100svh - 248px);
+          }
+        }
+        .project-meta-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 6px;
+          row-gap: 10px;
+          margin-bottom: 14px;
+        }
+        .project-meta-badge {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 2px;
+          line-height: 1.55;
+          color: ${DIM};
+          padding: 6px 10px;
+          border: 1px solid ${BORDER};
+          text-transform: uppercase;
+        }
+        .project-meta-region {
+          font-family: var(--font-body);
+          font-size: 12px;
+          letter-spacing: 2px;
+          color: ${DIM};
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 40px;
+        }
+        .project-hero-media {
+          margin-bottom: 56px;
+          border-radius: 2px;
+          overflow: hidden;
+          border: 1px solid ${BORDER};
+          aspect-ratio: 16/9;
+          background: #0a0a10;
+        }
+        .project-hero-media video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
       `}</style>
       <SiteNav sticky />
@@ -181,23 +249,28 @@ export default function ProjectPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
             <StatusBadge status={project.status} label={project.statusLabel} />
-            {meta && (
-              <span style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, display: "flex", alignItems: "center", gap: 8 }}>
-                {meta.flags.join(" ")} {meta.region}
-              </span>
-            )}
           </div>
 
           <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 500, lineHeight: 1.15, margin: "0 0 16px" }}>{project.title}</h1>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, marginBottom: 40 }}>
-            {(study?.role || project.role)} · {project.year}
-            {study?.productType && ` · ${study.productType}`}
+
+          <div className="project-meta-badges">
+            {metaTags.map(tag => (
+              <span key={tag} className="project-meta-badge" style={{ borderColor: `${project.accent}33` }}>{tag}</span>
+            ))}
           </div>
+
+          {meta && (
+            <div className="project-meta-region">
+              <span>{meta.flags.join(" ")}</span>
+              <span>{meta.region}</span>
+            </div>
+          )}
+          {!meta && <div style={{ marginBottom: 40 }} />}
         </ScrollReveal>
 
         {media?.hero && media.hero.showOnProjectPage !== false && (
-          <ScrollReveal variant="scale-up" delay={100} style={{ marginBottom: 56, borderRadius: 2, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16/9", background: "#0a0a10" }}>
-            <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <ScrollReveal variant="scale-up" delay={100} className="project-hero-media">
+            <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline />
           </ScrollReveal>
         )}
 

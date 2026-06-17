@@ -85,6 +85,12 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           gap: 32px;
           align-items: center;
         }
+        .site-nav__mobile-tools {
+          display: none;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+        }
         .site-nav__burger {
           display: none;
           width: 44px;
@@ -147,13 +153,6 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           border-bottom: 1px solid ${BORDER};
           width: 100%;
         }
-        .site-nav__drawer-footer {
-          margin-top: auto;
-          padding-top: 24px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
         @media (min-width: 769px) {
           .site-nav {
             padding: 20px var(--page-gutter);
@@ -165,6 +164,9 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
         @media (max-width: 768px) {
           .site-nav__desktop {
             display: none;
+          }
+          .site-nav__mobile-tools {
+            display: flex;
           }
           .site-nav__burger {
             display: flex;
@@ -202,17 +204,20 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           <SoundButton />
         </div>
 
-        <button
-          type="button"
-          className="site-nav__burger"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen(v => !v)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        <div className="site-nav__mobile-tools">
+          <SoundButton compact />
+          <button
+            type="button"
+            className="site-nav__burger"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen(v => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
 
         {home && (
           <div style={{ position: "absolute", bottom: 0, left: 0, height: 1, background: GOLD, width: `${pct}%`, transition: "width 0.1s linear" }} />
@@ -228,9 +233,6 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           )
         )}
         <Link to="/games" onClick={close}>Game ✦</Link>
-        <div className="site-nav__drawer-footer">
-          <SoundButton />
-        </div>
       </div>
     </>
   )
