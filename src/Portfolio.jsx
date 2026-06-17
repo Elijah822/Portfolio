@@ -501,17 +501,9 @@ function Hero({ ready }) {
             </div>
           </div>
           <div className="hero-stats-mobile">
-            <div className="hero-stats-mobile__row">
-              <ImpactStat stat={IMPACT_STATS[0]} />
-              <ImpactStat stat={IMPACT_STATS[1]} />
-            </div>
-            <div className="hero-stats-mobile__row">
-              <ImpactStat stat={IMPACT_STATS[2]} />
-              <ImpactStat stat={IMPACT_STATS[3]} />
-            </div>
-            <div className="hero-stats-mobile__row hero-stats-mobile__row--single">
-              <ImpactStat stat={IMPACT_STATS[4]} />
-            </div>
+            {IMPACT_STATS.map(stat => (
+              <ImpactStat key={stat.label} stat={stat} />
+            ))}
           </div>
         </div>
 
@@ -1383,14 +1375,9 @@ export default function Portfolio() {
             display: none !important;
           }
           .hero-stats-mobile {
-            display: flex !important;
-            flex-direction: column;
-            gap: 28px;
-          }
-          .hero-stats-mobile__row {
-            display: flex;
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 28px 32px;
-            flex-wrap: wrap;
           }
           .hero-scroll-cue {
             visibility: hidden;
