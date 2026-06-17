@@ -1,3 +1,10 @@
+import {
+  initAmbientPlayer,
+  pauseAmbientTrack,
+  queueAmbientPlay,
+  setAmbientTrackVolume,
+} from "./youtubePlayer.js"
+
 let ctx = null
 let master = null
 let unlocked = false
@@ -5,6 +12,7 @@ let ambientOn = false
 let arpTimer = null
 let lastLoadTick = -1
 let pendingLoadPct = 0
+const unlockListeners = new Set()
 
 function getCtx() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -13,20 +21,19 @@ function getCtx() {
   return ctx
 }
 
-function makeReverb(audioCtx) {
-  const len = audioCtx.sampleRate * 2.5
-  const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate)
-  for (let ch = 0; ch < 2; ch++) {
-    const d = buf.getChannelData(ch)
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4)
-  }
-  const conv = audioCtx.createConvolver()
-  conv.buffer = buf
-  return conv
-}
-
 export function isAudioUnlocked() {
   return unlocked
+}
+
+export function onAudioUnlock(cb) {
+  unlockListeners.add(cb)
+  return () => unlockListeners.delete(cb)
+}
+
+function notifyUnlock() {
+  unlockListeners.forEach(cb => {
+    try { cb() } catch (_) {}
+  })
 }
 
 export function setPendingLoadPct(pct) {
@@ -80,27 +87,30 @@ export function playLoadTick(pct, force = false) {
 }
 
 export async function startAmbientMusic() {
-  if (ambientOn) return
-  ambientOn = true
+  queueAmbientPlay()
   try {
-    const { initAmbientPlayer, playAmbientTrack } = await import("./youtubePlayer.js")
     await initAmbientPlayer()
-    await playAmbientTrack()
+    tryPlayAmbient()
+    ambientOn = true
   } catch (_) {
     ambientOn = false
   }
 }
 
+function tryPlayAmbient() {
+  queueAmbientPlay()
+}
+
 export function stopAmbientMusic() {
-  import("./youtubePlayer.js").then(({ pauseAmbientTrack }) => pauseAmbientTrack())
+  pauseAmbientTrack()
   if (arpTimer) clearInterval(arpTimer)
   arpTimer = null
   ambientOn = false
 }
 
 export function setAmbientVolume(v) {
-  import("./youtubePlayer.js").then(({ setAmbientTrackVolume }) => setAmbientTrackVolume(v))
-  if (master) master.gain.linearRampToValueAtTime(v * 0.3, ctx.currentTime + 0.4)
+  setAmbientTrackVolume(v)
+  if (master && ctx) master.gain.linearRampToValueAtTime(v * 0.3, ctx.currentTime + 0.4)
 }
 
 export function unlockAudio() {
@@ -112,8 +122,14 @@ export function unlockAudio() {
   master.gain.value = 0.15
   master.connect(audioCtx.destination)
   unlocked = true
+
   if (pendingLoadPct > 0) replayPendingLoadTicks()
-  startAmbientMusic()
+
+  // Play synchronously in the user-gesture stack when possible.
+  tryPlayAmbient()
+  initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+
+  notifyUnlock()
   return true
 }
 
@@ -121,17 +137,16 @@ export function setupAudioOnMouseMove(onUnlock) {
   const handler = () => {
     if (unlocked) return
     const fresh = unlockAudio()
-    if (fresh) {
-      onUnlock?.()
-      window.removeEventListener("mousemove", handler)
-      window.removeEventListener("touchstart", handler)
-    }
+    if (fresh) onUnlock?.()
   }
-  window.addEventListener("mousemove", handler, { passive: true })
-  window.addEventListener("touchstart", handler, { passive: true })
+
+  const opts = { passive: true, capture: true }
+  const events = ["pointermove", "mousemove", "touchstart", "click", "keydown"]
+
+  events.forEach(evt => document.addEventListener(evt, handler, opts))
+
   return () => {
-    window.removeEventListener("mousemove", handler)
-    window.removeEventListener("touchstart", handler)
+    events.forEach(evt => document.removeEventListener(evt, handler, opts))
   }
 }
 

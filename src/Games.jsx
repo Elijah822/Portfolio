@@ -10,9 +10,9 @@ const GOLD   = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
 const BTN = {
-  fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3,
+  fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3,
   color: BG, background: GOLD, border: "none", padding: "12px 32px",
-  cursor: "pointer", textTransform: "uppercase",
+  cursor: "none", textTransform: "uppercase",
 }
 
 const GAMES = [
@@ -29,8 +29,8 @@ const GAMES = [
   { id:11, name:"???",      tag:"Coming soon",      color:GOLD,      desc:"Something new is brewing...", locked:true },
 ]
 
-// ── PS4 GAME DATA ─────────────────────────────────────────────────────────────
-const PS4_GAMES = [
+// ── CONSOLE GAME DATA (PS · Xbox) ─────────────────────────────────────────────
+const CONSOLE_GAMES = [
   { id:1,  short:"GTA IV",        title:"Grand Theft Auto IV",           year:"2008", genre:"Open World · Crime",   note:"The most honest Rockstar ever got. Niko's story hit different.", grad:"linear-gradient(150deg,#060e1a 0%,#0d1f38 60%,#1e3554 100%)", accent:"#5a8fbf", trailerId:"dYLbBLpP1KA" },
   { id:2,  short:"GTA V",         title:"Grand Theft Auto V",            year:"2013", genre:"Open World · Crime",   note:"Three protagonists. One perfectly broken city. Still unmatched.", grad:"linear-gradient(150deg,#080e00 0%,#162600 60%,#c9a800 100%)", accent:"#d4a800", trailerId:"QkkoHAzjnUs" },
   { id:3,  short:"FIFA 23",       title:"FIFA 23",                       year:"2022", genre:"Football · Sports",    note:"The last FIFA before the rebrand. End of a 30-year era.", grad:"linear-gradient(150deg,#001228 0%,#002a52 60%,#0055a5 100%)", accent:"#00adef", trailerId:"o3V-GvvZBRE" },
@@ -45,18 +45,41 @@ const PS4_GAMES = [
   { id:12, short:"???",           title:"Next Session",                  year:"—",    genre:"Unknown",              note:"Controller is charged. Game TBD. Stay tuned.", grad:"linear-gradient(150deg,#0a0a0a 0%,#141414 100%)", accent:"#c9aa7c", locked:true },
 ]
 
-const FEATURED_TRAILERS = PS4_GAMES.filter(g => g.trailerId && !g.locked)
+const FEATURED_TRAILERS = CONSOLE_GAMES.filter(g => g.trailerId && !g.locked)
 
-// ── PS4 GAME CARD ─────────────────────────────────────────────────────────────
-function PS4GameCard({ g, onTrailer }) {
-  const [hov, setHov] = useState(false)
-  const thumb = g.trailerId ? ytThumbnail(g.trailerId) : null
+function TrailerPreview({ videoId, alwaysPlay = false, opacity = 0.55 }) {
+  const [play, setPlay] = useState(alwaysPlay)
+  useEffect(() => { setPlay(alwaysPlay) }, [alwaysPlay])
+  if (!videoId) return null
   return (
-    <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+    <div
+      onMouseEnter={() => !alwaysPlay && setPlay(true)}
+      onMouseLeave={() => !alwaysPlay && setPlay(false)}
+      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+    >
+      {play ? (
+        <iframe
+          title=""
+          src={ytEmbedUrl(videoId, { autoplay: true, mute: true, loop: true })}
+          allow="autoplay; encrypted-media"
+          style={{ position: "absolute", top: "50%", left: "50%", width: "300%", height: "300%", transform: "translate(-50%,-50%)", border: "none", pointerEvents: "none" }}
+        />
+      ) : (
+        <img src={ytThumbnail(videoId)} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity, filter: "saturate(0.85)" }} />
+      )}
+    </div>
+  )
+}
+
+// ── CONSOLE GAME CARD ─────────────────────────────────────────────────────────
+function ConsoleGameCard({ g, onTrailer }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <div data-h onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
       onClick={() => !g.locked && g.trailerId && onTrailer?.(g)}
-      style={{ position:"relative", width:"100%", paddingBottom:"145%", overflow:"hidden", cursor:g.locked?"default":"pointer", userSelect:"none" }}>
-      {thumb ? (
-        <img src={thumb} alt="" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:hov?0.72:0.55, filter:"saturate(0.85)", transition:"opacity 0.35s, transform 0.4s", transform:hov?"scale(1.05)":"scale(1)" }} />
+      style={{ position:"relative", width:"100%", paddingBottom:"145%", overflow:"hidden", cursor:"none", userSelect:"none" }}>
+      {g.trailerId ? (
+        <TrailerPreview videoId={g.trailerId} alwaysPlay={hov} opacity={hov ? 0.72 : 0.55} />
       ) : (
         <div style={{ position:"absolute", inset:0, background:g.grad, transition:"transform 0.4s ease", transform:hov?"scale(1.03)":"scale(1)" }} />
       )}
@@ -67,44 +90,44 @@ function PS4GameCard({ g, onTrailer }) {
       <div style={{ position:"absolute", top:0, left:0, right:0, height:3, background:g.locked?DIM:g.accent, opacity:hov?1:0.5, transition:"opacity 0.3s" }} />
       <div style={{ position:"absolute", inset:0, padding:"22px 20px", display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
         <div>
-          <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:8, letterSpacing:3, color:g.locked?DIM:g.accent, marginBottom:6, textTransform:"uppercase" }}>{g.year}</div>
-          <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:8, letterSpacing:2, color:"rgba(255,255,255,0.35)", textTransform:"uppercase" }}>{g.genre}</div>
+          <div style={{ fontFamily:'var(--font-body)', fontSize:8, letterSpacing:3, color:g.locked?DIM:g.accent, marginBottom:6, textTransform:"uppercase" }}>{g.year}</div>
+          <div style={{ fontFamily:'var(--font-body)', fontSize:8, letterSpacing:2, color:"rgba(255,255,255,0.35)", textTransform:"uppercase" }}>{g.genre}</div>
         </div>
         <div>
-          <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:"clamp(20px,2.2vw,28px)", fontWeight:300, color:g.locked?DIM:TEXT, lineHeight:1.15, marginBottom:8 }}>
+          <div style={{ fontFamily:'var(--font-heading)', fontSize:"clamp(20px,2.2vw,28px)", fontWeight:300, color:g.locked?DIM:TEXT, lineHeight:1.15, marginBottom:8 }}>
             {g.short}
           </div>
-          <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:13, fontWeight:400, color:"rgba(224,219,210,0.75)", lineHeight:1.65, maxHeight:hov?"80px":"0px", opacity:hov?1:0, overflow:"hidden", transition:"all 0.35s ease" }}>
+          <div style={{ fontFamily:'var(--font-body)', fontSize:13, fontWeight:400, color:"rgba(224,219,210,0.75)", lineHeight:1.65, maxHeight:hov?"80px":"0px", opacity:hov?1:0, overflow:"hidden", transition:"all 0.35s ease" }}>
             {g.note}
           </div>
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
-          <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:8, letterSpacing:2, color:"rgba(255,255,255,0.22)", textTransform:"uppercase" }}>PS4 · PS5</div>
-          {g.locked && <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:8, letterSpacing:3, color:DIM }}>SOON</div>}
-          {!g.locked && hov && <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:8, letterSpacing:2, color:g.accent }}>{g.trailerId ? "TRAILER" : "◈ PLAYED"}</div>}
+          <div style={{ fontFamily:'var(--font-body)', fontSize:8, letterSpacing:2, color:"rgba(255,255,255,0.22)", textTransform:"uppercase" }}>PS · Xbox</div>
+          {g.locked && <div style={{ fontFamily:'var(--font-body)', fontSize:8, letterSpacing:3, color:DIM }}>SOON</div>}
+          {!g.locked && hov && <div style={{ fontFamily:'var(--font-body)', fontSize:8, letterSpacing:2, color:g.accent }}>{g.trailerId ? "TRAILER" : "◈ PLAYED"}</div>}
         </div>
       </div>
     </div>
   )
 }
 
-function PS4Games({ onTrailer }) {
+function ConsoleGames({ onTrailer }) {
   return (
     <div style={{ padding:"60px 56px" }}>
       <div style={{ marginBottom:48 }}>
-        <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:11, letterSpacing:5, color:GOLD, marginBottom:20, textTransform:"uppercase" }}>PS4 Collection</div>
-        <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:"clamp(28px,3.5vw,44px)", fontWeight:300, color:TEXT, lineHeight:1.2, marginBottom:16 }}>
+        <div style={{ fontFamily:'var(--font-body)', fontSize:11, letterSpacing:5, color:GOLD, marginBottom:20, textTransform:"uppercase" }}>PS · Xbox Collection</div>
+        <div style={{ fontFamily:'var(--font-heading)', fontSize:"clamp(28px,3.5vw,44px)", fontWeight:300, color:TEXT, lineHeight:1.2, marginBottom:16 }}>
           Games that lived<br/>in the controller.
         </div>
-        <div style={{ fontFamily:'"Inter",system-ui,sans-serif', fontSize:12, letterSpacing:2, color:DIM }}>
-          {PS4_GAMES.filter(g=>!g.locked).length} titles played · click a card for the trailer
+        <div style={{ fontFamily:'var(--font-body)', fontSize:12, letterSpacing:2, color:DIM }}>
+          {CONSOLE_GAMES.filter(g=>!g.locked).length} titles played · click a card for the trailer
         </div>
       </div>
 
-      <div className="ps4-poster-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:1, background:BORDER, border:`1px solid ${BORDER}` }}>
-        {PS4_GAMES.map(g => (
+      <div className="console-poster-grid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:1, background:BORDER, border:`1px solid ${BORDER}` }}>
+        {CONSOLE_GAMES.map(g => (
           <div key={g.id} style={{ background:BG }}>
-            <PS4GameCard g={g} onTrailer={onTrailer} />
+            <ConsoleGameCard g={g} onTrailer={onTrailer} />
           </div>
         ))}
       </div>
@@ -199,7 +222,7 @@ function SnakeGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
       <canvas ref={cvs} width={400} height={400} style={{border:`1px solid ${BORDER}`,display:"block"}} />
       {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
@@ -259,11 +282,11 @@ function PongGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>YOU {scores[0]} — {scores[1]} AI</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>YOU {scores[0]} — {scores[1]} AI</div>
       <canvas ref={cvs} width={500} height={350} style={{border:`1px solid ${BORDER}`,cursor:"none"}} />
       {over && (
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:32,color:over==="you"?GOLD:DIM}}>{over==="you"?"You win.":"The machine wins."}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:32,color:over==="you"?GOLD:DIM}}>{over==="you"?"You win.":"The machine wins."}</div>
           <button style={BTN} onClick={onRestart}>REMATCH</button>
         </div>
       )}
@@ -369,7 +392,7 @@ function TetrisGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
       <canvas ref={cvs} width={W} height={H} style={{border:`1px solid ${BORDER}`}} />
       {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
@@ -421,17 +444,17 @@ function Game2048({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:20}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,90px)",gap:8}}>
         {grid.flat().map((v,i)=>(
-          <div key={i} style={{width:90,height:90,background:TILE_C[v]||GOLD,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:'"Inter",system-ui,sans-serif',fontSize:v>=1000?24:v>=100?30:38,fontWeight:300,color:v>4?BG:DIM,transition:"background 0.15s"}}>
+          <div key={i} style={{width:90,height:90,background:TILE_C[v]||GOLD,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:'var(--font-body)',fontSize:v>=1000?24:v>=100?30:38,fontWeight:300,color:v>4?BG:DIM,transition:"background 0.15s"}}>
             {v||""}
           </div>
         ))}
       </div>
       {(won||lost)&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:28,color:won?GOLD:DIM}}>{won?"You reached 2048.":"No moves left."}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:28,color:won?GOLD:DIM}}>{won?"You reached 2048.":"No moves left."}</div>
           <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
@@ -474,7 +497,7 @@ function MemoryGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:20}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>MOVES — {moves}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>MOVES — {moves}</div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,80px)",gap:8}}>
         {cards.map(c=>(
           <div key={c.id} data-h onClick={()=>flip(c.id)} style={{width:80,height:80,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:26,background:c.flipped||c.matched?"rgba(201,170,124,0.1)":"rgba(255,255,255,0.04)",border:`1px solid ${c.matched?GOLD+"44":c.flipped?"rgba(255,255,255,0.15)":BORDER}`,color:c.matched?GOLD:TEXT,transition:"all 0.2s",transform:c.flipped||c.matched?"scale(1)":"scale(0.96)"}}>
@@ -484,7 +507,7 @@ function MemoryGame({ onRestart }) {
       </div>
       {done&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:28,color:GOLD}}>Cleared in {moves} moves.</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:28,color:GOLD}}>Cleared in {moves} moves.</div>
           <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
@@ -525,10 +548,10 @@ function TypingGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:24,maxWidth:540}}>
       <div style={{display:"flex",gap:40}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>TIME — {timer}s</div>
-        {done&&<div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:DIM,letterSpacing:3}}>WPM — {wpm}</div>}
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>TIME — {timer}s</div>
+        {done&&<div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>WPM — {wpm}</div>}
       </div>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:22,color:DIM,lineHeight:2,textAlign:"center",minHeight:88}}>
+      <div style={{fontFamily:'var(--font-body)',fontSize:22,color:DIM,lineHeight:2,textAlign:"center",minHeight:88}}>
         {words.slice(Math.max(0,idx-3),idx+12).map((w,i)=>{
           const abs=Math.max(0,idx-3)+i
           return <span key={abs} style={{marginRight:12,color:abs<idx?GOLD:abs===idx?TEXT:"rgba(255,255,255,0.18)",transition:"color 0.2s"}}>{w}</span>
@@ -536,10 +559,10 @@ function TypingGame({ onRestart }) {
       </div>
       {!done?(
         <input value={input} onChange={onInput} autoFocus placeholder="start typing…"
-          style={{background:"transparent",border:"none",borderBottom:`1px solid ${GOLD}`,color:TEXT,fontFamily:'"Inter",system-ui,sans-serif',fontSize:16,padding:"12px 0",width:280,outline:"none",textAlign:"center"}} />
+          style={{background:"transparent",border:"none",borderBottom:`1px solid ${GOLD}`,color:TEXT,fontFamily:'var(--font-body)',fontSize:16,padding:"12px 0",width:280,outline:"none",textAlign:"center"}} />
       ):(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:56,color:GOLD,fontWeight:300}}>{wpm}<span style={{fontSize:20,color:DIM,marginLeft:8}}>WPM</span></div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:56,color:GOLD,fontWeight:300}}>{wpm}<span style={{fontSize:20,color:DIM,marginLeft:8}}>WPM</span></div>
           <button style={BTN} onClick={onRestart}>TRY AGAIN</button>
         </div>
       )}
@@ -576,9 +599,9 @@ function ReactionGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:24}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>ROUND {Math.min(times.length+1,5)} OF 5</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>ROUND {Math.min(times.length+1,5)} OF 5</div>
       <div onClick={click} data-h style={{width:320,height:280,background:bg,border:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",transition:"background 0.1s",userSelect:"none"}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:26,color:phase==="ready"?"#b8e0b8":DIM,textAlign:"center",lineHeight:1.6}}>
+        <div style={{fontFamily:'var(--font-body)',fontSize:26,color:phase==="ready"?"#b8e0b8":DIM,textAlign:"center",lineHeight:1.6}}>
           {phase==="idle"&&(times.length===0?"Click to start":"Click for next round")}
           {phase==="waiting"&&"Wait for green..."}
           {phase==="ready"&&"CLICK NOW"}
@@ -587,15 +610,15 @@ function ReactionGame({ onRestart }) {
       </div>
       <div style={{display:"flex",gap:16,flexWrap:"wrap",justifyContent:"center"}}>
         {times.map((t,i)=>(
-          <div key={i} style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:1,color:t.early?"#e07c7c":GOLD}}>
+          <div key={i} style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:1,color:t.early?"#e07c7c":GOLD}}>
             {t.early?"EARLY":t.ms+"ms"}
           </div>
         ))}
       </div>
       {phase==="done"&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:48,color:GOLD,fontWeight:300}}>{avg}ms<span style={{fontSize:18,color:DIM,marginLeft:8}}>avg</span></div>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:DIM}}>{avg<200?"lightning fast":avg<300?"sharp reflexes":avg<400?"decent":"room to improve"}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:48,color:GOLD,fontWeight:300}}>{avg}ms<span style={{fontSize:18,color:DIM,marginLeft:8}}>avg</span></div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{avg<200?"lightning fast":avg<300?"sharp reflexes":avg<400?"decent":"room to improve"}</div>
           <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
@@ -657,13 +680,13 @@ function BreakoutGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{display:"flex",gap:32}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
       </div>
       <canvas ref={cvs} width={480} height={400} style={{border:`1px solid ${BORDER}`,cursor:"none"}} />
       {over&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:28,color:over==="win"?GOLD:DIM}}>{over==="win"?"All bricks cleared.":"Game over."}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:28,color:over==="win"?GOLD:DIM}}>{over==="win"?"All bricks cleared.":"Game over."}</div>
           <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
@@ -738,13 +761,13 @@ function SpaceGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{display:"flex",gap:32}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
       </div>
       <canvas ref={cvs} width={400} height={500} style={{border:`1px solid ${BORDER}`}} />
       {over&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:28,color:DIM}}>Destroyed by the field.</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:28,color:DIM}}>Destroyed by the field.</div>
           <button style={BTN} onClick={onRestart}>TRY AGAIN</button>
         </div>
       )}
@@ -790,24 +813,24 @@ function StroopGame({ onRestart }) {
   if(!card) return null
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:28}}>
-      <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,color:GOLD,letterSpacing:3}}>{round+1}/10 — {score} CORRECT</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>{round+1}/10 — {score} CORRECT</div>
       {!done?(
         <>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:80,fontWeight:300,color:card.color,letterSpacing:10,lineHeight:1}}>{card.text}</div>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:4,color:DIM}}>CLICK THE COLOR OF THE TEXT</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:80,fontWeight:300,color:card.color,letterSpacing:10,lineHeight:1}}>{card.text}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:DIM}}>CLICK THE COLOR OF THE TEXT</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
             {opts.map((c,i)=>(
-              <button key={i} data-h onClick={()=>pick(c)} style={{width:150,height:52,background:c.hex,border:"none",cursor:"pointer",fontFamily:'"Inter",system-ui,sans-serif',fontSize:12,letterSpacing:2,color:BG,opacity:fb&&c!==card.answer?0.35:1,transition:"all 0.2s"}}>
+              <button key={i} data-h onClick={()=>pick(c)} style={{width:150,height:52,background:c.hex,border:"none",cursor:"pointer",fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:BG,opacity:fb&&c!==card.answer?0.35:1,transition:"all 0.2s"}}>
                 {c.name}
               </button>
             ))}
           </div>
-          {fb&&<div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:fb==="correct"?"#7ce08a":"#e07c7c"}}>{fb==="correct"?"✓ CORRECT":"✗ WRONG"}</div>}
+          {fb&&<div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:fb==="correct"?"#7ce08a":"#e07c7c"}}>{fb==="correct"?"✓ CORRECT":"✗ WRONG"}</div>}
         </>
       ):(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:60,color:GOLD,fontWeight:300}}>{score}<span style={{fontSize:24,color:DIM}}>/10</span></div>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:DIM}}>{score>=9?"your brain is built different":score>=7?"solid focus":score>=5?"the word keeps winning":"the word won every time"}</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:60,color:GOLD,fontWeight:300}}>{score}<span style={{fontSize:24,color:DIM}}>/10</span></div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{score>=9?"your brain is built different":score>=7?"solid focus":score>=5?"the word keeps winning":"the word won every time"}</div>
           <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
@@ -823,19 +846,20 @@ function GameCard({ game, onClick }) {
   const [hov,setHov]=useState(false)
   return (
     <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={!game.locked?onClick:undefined}
+      data-h={!game.locked ? "" : undefined}
       className="arcade-card"
-      style={{padding:0,border:`1px solid ${hov&&!game.locked?game.color+"55":BORDER}`,cursor:game.locked?"default":"pointer",position:"relative",transition:"all 0.25s",background:BG,userSelect:"none",overflow:"hidden",minHeight:220}}>
+      style={{padding:0,border:`1px solid ${hov&&!game.locked?game.color+"55":BORDER}`,cursor:"none",position:"relative",transition:"all 0.25s",background:BG,userSelect:"none",overflow:"hidden",minHeight:220}}>
       <div style={{height:100,background:`linear-gradient(135deg, ${game.color}22, ${BG})`,borderBottom:`1px solid ${BORDER}`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:42,fontWeight:300,color:game.color,opacity:0.35,lineHeight:1}}>{String(game.id).padStart(2,"0")}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:42,fontWeight:300,color:game.color,opacity:0.35,lineHeight:1}}>{String(game.id).padStart(2,"0")}</div>
         <div style={{position:"absolute",inset:0,background:`radial-gradient(circle at 50% 120%, ${game.color}33, transparent 60%)`}} />
       </div>
       <div style={{padding:"22px 24px"}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:28,fontWeight:300,color:game.locked?DIM:TEXT,marginBottom:8,transition:"color 0.2s"}}>{game.name}</div>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:2,color:DIM,marginBottom:10}}>{game.tag}</div>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:14,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.55}}>{game.desc}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:28,fontWeight:300,color:game.locked?DIM:TEXT,marginBottom:8,transition:"color 0.2s"}}>{game.name}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:10}}>{game.tag}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:14,fontWeight:400,color:DIM,opacity:hov?1:0.85,transition:"opacity 0.2s",lineHeight:1.55}}>{game.desc}</div>
       </div>
-      {!game.locked&&hov&&<div style={{position:"absolute",bottom:16,right:20,fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:2,color:game.color}}>PLAY →</div>}
-      {game.locked&&<div style={{position:"absolute",top:14,right:16,fontFamily:'"Inter",system-ui,sans-serif',fontSize:8,letterSpacing:3,color:DIM}}>SOON</div>}
+      {!game.locked&&hov&&<div style={{position:"absolute",bottom:16,right:20,fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:game.color}}>PLAY →</div>}
+      {game.locked&&<div style={{position:"absolute",top:14,right:16,fontFamily:'var(--font-body)',fontSize:8,letterSpacing:3,color:DIM}}>SOON</div>}
     </div>
   )
 }
@@ -866,11 +890,22 @@ export default function Games() {
   const restart=()=>setGameKey(k=>k+1)
   const openTrailer = g => { setActiveTrailer(g); setTrailerOpen(true) }
 
+  useEffect(() => {
+    const onKey = e => {
+      if (e.key !== "Escape") return
+      setActive(null)
+      setTrailerOpen(false)
+      setActiveTrailer(null)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [])
+
   const GameComponent=active?GAME_MAP[active]:null
   const game=active?GAMES.find(g=>g.id===active):null
   const trailerGame = activeTrailer ?? featured
 
-  const TABS=[["browser","Arcade"],["ps4","PS4 Shelf"]]
+  const TABS=[["browser","Arcade"],["console","PS/Xbox Shelf"]]
 
   return (
     <div className="game-room" style={{minHeight:"100vh",background:BG,color:TEXT,cursor:"none",position:"relative"}}>
@@ -879,42 +914,32 @@ export default function Games() {
       <Cursor />
 
       <div style={{position:"fixed",top:0,left:0,right:0,padding:"18px 56px",display:"flex",justifyContent:"space-between",alignItems:"center",zIndex:100,background:"rgba(7,7,12,0.94)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${BORDER}`}}>
-        <Link to="/" style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:22,color:TEXT,letterSpacing:3,fontWeight:300,textDecoration:"none",cursor:"none"}}>AE</Link>
+        <Link to="/" style={{fontFamily:'var(--font-body)',fontSize:22,color:TEXT,letterSpacing:3,fontWeight:300,textDecoration:"none",cursor:"none"}}>AE</Link>
         <SoundButton compact />
-        <Link to="/" data-h style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
+        <Link to="/" data-h style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
       </div>
 
-      <section className="games-hero" style={{position:"relative",minHeight:"72vh",paddingTop:88,display:"grid",gridTemplateColumns:"1fr 1.1fr",borderBottom:`1px solid ${BORDER}`}}>
+      <section className="games-hero" style={{position:"relative",minHeight:"58vh",paddingTop:88,display:"grid",gridTemplateColumns:"1fr 1.1fr",borderBottom:`1px solid ${BORDER}`}}>
         <div style={{padding:"80px 56px 48px",display:"flex",flexDirection:"column",justifyContent:"center",position:"relative",zIndex:2}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:5,color:GOLD,marginBottom:20,textTransform:"uppercase"}}>Game Room · VR Lounge</div>
-          <h1 style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:"clamp(44px,5.5vw,80px)",fontWeight:300,color:TEXT,lineHeight:1.05,margin:"0 0 20px"}}>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:5,color:GOLD,marginBottom:20,textTransform:"uppercase"}}>Game Room · VR Lounge</div>
+          <h1 style={{fontFamily:'var(--font-heading)',fontSize:"clamp(44px,5.5vw,80px)",fontWeight:300,color:TEXT,lineHeight:1.05,margin:"0 0 20px"}}>
             Even designers<br/><em style={{color:GOLD}}>need to play.</em>
           </h1>
-          <p style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:17,fontWeight:400,color:DIM,lineHeight:1.75,maxWidth:440,margin:"0 0 32px"}}>
-            Browser arcade classics, a PS4 shelf of favourites, and trailers pulled from each title.
+          <p style={{fontFamily:'var(--font-body)',fontSize:17,fontWeight:400,color:DIM,lineHeight:1.75,maxWidth:440,margin:0}}>
+            Browser arcade classics, a PS/Xbox shelf of favourites, and trailers pulled from each title.
           </p>
-          <div style={{display:"flex",gap:0,borderTop:`1px solid ${BORDER}`,marginTop:"auto"}}>
-            {TABS.map(([id,label])=>(
-              <button key={id} data-h onClick={()=>setTab(id)} style={{
-                fontFamily:'"Inter",system-ui,sans-serif',fontSize:12,letterSpacing:3,
-                color:tab===id?TEXT:DIM,background:"none",border:"none",
-                borderBottom:`2px solid ${tab===id?GOLD:"transparent"}`,
-                padding:"18px 28px 18px 0",marginRight:16,cursor:"none",textTransform:"uppercase",transition:"all 0.2s",
-              }}>{label}</button>
-            ))}
-          </div>
         </div>
 
         <button data-h type="button" onClick={() => openTrailer(featured)} className="featured-trailer" style={{position:"relative",border:"none",borderLeft:`1px solid ${BORDER}`,background:BG,padding:0,cursor:"none",overflow:"hidden",minHeight:420}}>
           {featured?.trailerId && (
-            <img key={featured.trailerId} src={ytThumbnail(featured.trailerId)} alt={featured.short} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.62,filter:"saturate(0.9)",transition:"opacity 0.6s"}} />
+            <TrailerPreview key={featured.trailerId} videoId={featured.trailerId} alwaysPlay opacity={0.62} />
           )}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(90deg, rgba(7,7,12,0.92) 0%, rgba(7,7,12,0.2) 45%, rgba(7,7,12,0.75) 100%)"}} />
           <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:40,textAlign:"left"}}>
-            <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:12,textTransform:"uppercase"}}>Now featuring</div>
-            <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:"clamp(28px,3vw,44px)",fontWeight:300,color:TEXT,marginBottom:8}}>{featured?.short}</div>
-            <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:2,color:DIM,marginBottom:20}}>{featured?.genre} · {featured?.year}</div>
-            <div style={{display:"inline-flex",alignItems:"center",gap:10,fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:GOLD,textTransform:"uppercase"}}>
+            <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:12,textTransform:"uppercase"}}>Now featuring</div>
+            <div style={{fontFamily:'var(--font-heading)',fontSize:"clamp(28px,3vw,44px)",fontWeight:300,color:TEXT,marginBottom:8}}>{featured?.short}</div>
+            <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:2,color:DIM,marginBottom:20}}>{featured?.genre} · {featured?.year}</div>
+            <div style={{display:"inline-flex",alignItems:"center",gap:10,fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:GOLD,textTransform:"uppercase"}}>
               <span style={{width:40,height:40,borderRadius:"50%",border:`1px solid ${GOLD}`,display:"inline-flex",alignItems:"center",justifyContent:"center"}}>▶</span>
               Watch trailer
             </div>
@@ -922,9 +947,20 @@ export default function Games() {
         </button>
       </section>
 
+      <div className="games-tabs" style={{position:"sticky",top:73,zIndex:60,display:"flex",gap:0,padding:"0 56px",background:"rgba(7,7,12,0.96)",backdropFilter:"blur(16px)",borderBottom:`1px solid ${BORDER}`}}>
+        {TABS.map(([id,label])=>(
+          <button key={id} data-h type="button" onClick={()=>setTab(id)} style={{
+            fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,
+            color:tab===id?TEXT:DIM,background:"none",border:"none",
+            borderBottom:`2px solid ${tab===id?GOLD:"transparent"}`,
+            padding:"20px 28px 20px 0",marginRight:16,cursor:"none",textTransform:"uppercase",transition:"all 0.2s",
+          }}>{label}</button>
+        ))}
+      </div>
+
       {tab==="browser"&&(
         <div style={{padding:"48px 56px"}}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:4,color:DIM,marginBottom:24,textTransform:"uppercase"}}>In-browser arcade</div>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:DIM,marginBottom:24,textTransform:"uppercase"}}>In-browser arcade</div>
           <div className="game-grid-vr" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:1,background:BORDER,border:`1px solid ${BORDER}`}}>
             {GAMES.map(g=>(
               <div key={g.id} style={{background:BG}}>
@@ -935,12 +971,12 @@ export default function Games() {
         </div>
       )}
 
-      {tab==="ps4"&&<PS4Games onTrailer={openTrailer} />}
+      {tab==="console"&&<ConsoleGames onTrailer={openTrailer} />}
 
       {/* FOOTER */}
       <div style={{padding:"40px 56px",borderTop:`1px solid ${BORDER}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:DIM}}>AKINLOLU ELIJAH — GAME ROOM</div>
-        <a data-h href="/" style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=GOLD} onMouseLeave={e=>e.target.style.color=DIM}>Back to portfolio →</a>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>AKINLOLU ELIJAH — GAME ROOM</div>
+        <a data-h href="/" style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=GOLD} onMouseLeave={e=>e.target.style.color=DIM}>Back to portfolio →</a>
       </div>
 
       {/* GAME OVERLAY */}
@@ -948,10 +984,10 @@ export default function Games() {
         <div style={{position:"fixed",inset:0,background:"rgba(7,7,12,0.97)",zIndex:200,display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
           <div style={{width:"100%",padding:"18px 40px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${BORDER}`,position:"sticky",top:0,background:BG,zIndex:10,flexShrink:0}}>
             <div style={{display:"flex",alignItems:"baseline",gap:20}}>
-              <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:24,fontWeight:300,color:TEXT}}>{game.name}</div>
-              <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:3,color:DIM}}>{game.tag}</div>
+              <div style={{fontFamily:'var(--font-body)',fontSize:24,fontWeight:300,color:TEXT}}>{game.name}</div>
+              <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{game.tag}</div>
             </div>
-            <button data-h onClick={closeGame} style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:12,letterSpacing:2,color:DIM,background:"none",border:`1px solid ${BORDER}`,padding:"8px 20px",cursor:"none",transition:"all 0.2s"}} onMouseEnter={e=>{e.target.style.color=TEXT;e.target.style.borderColor="rgba(255,255,255,0.2)"}} onMouseLeave={e=>{e.target.style.color=DIM;e.target.style.borderColor=BORDER}}>CLOSE ×</button>
+            <button data-h onClick={closeGame} style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:DIM,background:"none",border:`1px solid ${BORDER}`,padding:"8px 20px",cursor:"none",transition:"all 0.2s"}} onMouseEnter={e=>{e.target.style.color=TEXT;e.target.style.borderColor="rgba(255,255,255,0.2)"}} onMouseLeave={e=>{e.target.style.color=DIM;e.target.style.borderColor=BORDER}}>CLOSE ×</button>
           </div>
           <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"48px 24px"}}>
             <GameComponent key={gameKey} onRestart={restart} />
@@ -961,7 +997,8 @@ export default function Games() {
 
       {trailerOpen && trailerGame?.trailerId && (
         <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(7,7,12,0.96)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24}} onClick={() => { setTrailerOpen(false); setActiveTrailer(null) }}>
-          <div style={{fontFamily:'"Inter",system-ui,sans-serif',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:16,textTransform:"uppercase"}}>{trailerGame.short} · Official trailer</div>
+          <button data-h type="button" onClick={() => { setTrailerOpen(false); setActiveTrailer(null) }} style={{position:"absolute",top:24,right:32,fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:DIM,background:"none",border:`1px solid ${BORDER}`,padding:"8px 20px",cursor:"none"}}>CLOSE ×</button>
+          <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:GOLD,marginBottom:16,textTransform:"uppercase"}}>{trailerGame.short} · Official trailer</div>
           <div style={{width:"min(92vw,960px)",aspectRatio:"16/9",border:`1px solid ${BORDER}`}} onClick={e => e.stopPropagation()}>
             <iframe title={`${trailerGame.short} trailer`} src={ytEmbedUrl(trailerGame.trailerId, { autoplay: true, mute: false, loop: false })} allow="autoplay; encrypted-media" style={{width:"100%",height:"100%",border:"none"}} />
           </div>
@@ -970,8 +1007,8 @@ export default function Games() {
 
       <style>{`
         @keyframes musicPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        .game-room, .game-room * { cursor: none !important; }
         .game-room { perspective: 1400px; }
-        .game-grid-vr, .ps4-poster-grid { transform: rotateX(1.5deg); transform-style: preserve-3d; }
         .vr-hud::before, .vr-hud::after, .vr-hud span::before, .vr-hud span::after {
           content: ""; position: fixed; width: 56px; height: 56px; border: 1px solid rgba(201,170,124,0.22); pointer-events: none; z-index: 90;
         }

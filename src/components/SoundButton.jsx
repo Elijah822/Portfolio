@@ -16,7 +16,7 @@ export default function SoundButton({ compact = false }) {
       onClick={toggleSound}
       title={soundOn ? "Mute ambience" : "Move mouse to enable sound"}
       style={{
-        fontFamily: '"Inter",system-ui,sans-serif',
+        fontFamily: "var(--font-body)",
         fontSize: compact ? 9 : 10,
         letterSpacing: 2,
         color: soundOn ? GOLD : DIM,

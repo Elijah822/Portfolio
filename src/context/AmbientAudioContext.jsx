@@ -1,25 +1,38 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import {
   isAudioUnlocked,
+  onAudioUnlock,
   setAmbientVolume,
   setupAudioOnMouseMove,
   startAmbientMusic,
   stopAmbientMusic,
 } from "../lib/portfolioAudio.js"
+import { initAmbientPlayer } from "../lib/youtubePlayer.js"
 
 const AmbientAudioContext = createContext(null)
 
 export function AmbientAudioProvider({ children }) {
-  const [soundOn, setSoundOn] = useState(false)
+  const [soundOn, setSoundOn] = useState(() => isAudioUnlocked())
+
+  const enableSound = useCallback(() => {
+    setSoundOn(true)
+    setAmbientVolume(0.22)
+    startAmbientMusic()
+  }, [])
 
   useEffect(() => {
-    import("../lib/youtubePlayer.js").then(m => m.initAmbientPlayer())
-    const cleanup = setupAudioOnMouseMove(() => {
-      setSoundOn(true)
-      setAmbientVolume(0.22)
-    })
-    return cleanup
-  }, [])
+    initAmbientPlayer().catch(() => {})
+
+    const offUnlock = onAudioUnlock(enableSound)
+    const cleanupGesture = setupAudioOnMouseMove(enableSound)
+
+    if (isAudioUnlocked()) enableSound()
+
+    return () => {
+      offUnlock()
+      cleanupGesture()
+    }
+  }, [enableSound])
 
   const toggleSound = useCallback(() => {
     if (soundOn) {
@@ -27,11 +40,9 @@ export function AmbientAudioProvider({ children }) {
       setAmbientVolume(0)
       setSoundOn(false)
     } else if (isAudioUnlocked()) {
-      setAmbientVolume(0.22)
-      startAmbientMusic()
-      setSoundOn(true)
+      enableSound()
     }
-  }, [soundOn])
+  }, [soundOn, enableSound])
 
   return (
     <AmbientAudioContext.Provider value={{ soundOn, toggleSound }}>

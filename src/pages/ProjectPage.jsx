@@ -15,7 +15,7 @@ const BORDER = "rgba(255,255,255,0.07)"
 function Section({ label, children }) {
   return (
     <div style={{ marginBottom: 48 }}>
-      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>{label}</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>{label}</div>
       {children}
     </div>
   )
@@ -23,7 +23,7 @@ function Section({ label, children }) {
 
 function Prose({ children }) {
   return (
-    <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 17, fontWeight: 400, lineHeight: 1.8, color: TEXT, margin: 0 }}>{children}</p>
+    <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, lineHeight: 1.8, color: TEXT, margin: 0 }}>{children}</p>
   )
 }
 
@@ -37,7 +37,7 @@ function StatusBadge({ status, label }) {
   }
   const c = cfg[status] || cfg.testing
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: c.color, background: c.bg, padding: "4px 10px", border: `1px solid ${c.color}22`, textTransform: "uppercase" }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: c.color, background: c.bg, padding: "4px 10px", border: `1px solid ${c.color}22`, textTransform: "uppercase" }}>
       {label}
     </span>
   )
@@ -60,7 +60,7 @@ export default function ProjectPage() {
   if (!project) {
     return (
       <div style={{ background: BG, minHeight: "100vh", color: TEXT, padding: 120, textAlign: "center" }}>
-        <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 28 }}>Project not found.</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 28 }}>Project not found.</p>
         <Link to="/" style={{ color: GOLD }}>← Back home</Link>
       </div>
     )
@@ -72,10 +72,10 @@ export default function ProjectPage() {
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT }}>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(7,7,12,0.94)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${BORDER}` }}>
-        <Link to="/" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
+        <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
         <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
           <SoundButton />
-          <button onClick={() => navigate("/#work")} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "pointer", textTransform: "uppercase" }}>
+          <button onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "pointer", textTransform: "uppercase" }}>
             ← All work
           </button>
         </div>
@@ -83,17 +83,17 @@ export default function ProjectPage() {
 
       <main style={{ maxWidth: 900, margin: "0 auto", padding: "80px 56px 120px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
-          <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
           <StatusBadge status={project.status} label={project.statusLabel} />
           {meta && (
-            <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 2, color: DIM, display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, display: "flex", alignItems: "center", gap: 8 }}>
               {meta.flags.join(" ")} {meta.region}
             </span>
           )}
         </div>
 
-        <h1 style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(36px,5vw,64px)", fontWeight: 500, lineHeight: 1.15, margin: "0 0 16px" }}>{project.title}</h1>
-        <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 2, color: DIM, marginBottom: 40 }}>
+        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 500, lineHeight: 1.15, margin: "0 0 16px" }}>{project.title}</h1>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM, marginBottom: 40 }}>
           {(study?.role || project.role)} · {project.year}
           {study?.productType && ` · ${study.productType}`}
         </div>
@@ -107,8 +107,8 @@ export default function ProjectPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 24, marginBottom: 56, paddingBottom: 40, borderBottom: `1px solid ${BORDER}` }}>
           {project.metrics.map(({ value, label }) => (
             <div key={label}>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 32, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 8, letterSpacing: 2, color: DIM, textTransform: "uppercase", marginTop: 6 }}>{label}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 32, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{value}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: DIM, textTransform: "uppercase", marginTop: 6 }}>{label}</div>
             </div>
           ))}
         </div>
@@ -123,7 +123,7 @@ export default function ProjectPage() {
         {study?.approach && (
           <Section label="Approach">
             {study.approach.map((item, i) => (
-              <p key={i} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 14px", paddingLeft: 16, borderLeft: `2px solid ${project.accent}33` }}>{item}</p>
+              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 14px", paddingLeft: 16, borderLeft: `2px solid ${project.accent}33` }}>{item}</p>
             ))}
           </Section>
         )}
@@ -132,7 +132,7 @@ export default function ProjectPage() {
           <Section label="Core Features">
             {study.features.map((f, i) => (
               <div key={i} style={{ marginBottom: 20, paddingLeft: 20, borderLeft: `2px solid ${project.accent}33` }}>
-                <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 20, color: TEXT, marginBottom: 6 }}>{f.title}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 20, color: TEXT, marginBottom: 6 }}>{f.title}</div>
                 <Prose>{f.desc}</Prose>
               </div>
             ))}
@@ -142,7 +142,7 @@ export default function ProjectPage() {
         {study?.highlights && (
           <Section label="Redesign Highlights">
             {study.highlights.map((h, i) => (
-              <p key={i} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {h}</p>
+              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {h}</p>
             ))}
           </Section>
         )}
@@ -151,7 +151,7 @@ export default function ProjectPage() {
           <Section label="Deliverables">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {study.deliverables.map(d => (
-                <span key={d} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, padding: "6px 12px", border: `1px solid ${BORDER}`, textTransform: "uppercase" }}>{d}</span>
+                <span key={d} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "6px 12px", border: `1px solid ${BORDER}`, textTransform: "uppercase" }}>{d}</span>
               ))}
             </div>
           </Section>
@@ -160,7 +160,7 @@ export default function ProjectPage() {
         {study?.impact && (
           <Section label="Impact & Results">
             {study.impact.map((item, i) => (
-              <p key={i} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {item}</p>
+              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {item}</p>
             ))}
           </Section>
         )}
@@ -168,7 +168,7 @@ export default function ProjectPage() {
         {study?.outcomes && (
           <Section label="Outcomes">
             {study.outcomes.map((o, i) => (
-              <p key={i} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {o}</p>
+              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {o}</p>
             ))}
           </Section>
         )}
@@ -176,7 +176,7 @@ export default function ProjectPage() {
         {study?.problemsSolved && (
           <Section label="Problems Solved">
             {study.problemsSolved.map((p, i) => (
-              <p key={i} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 12px" }}>{p}</p>
+              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 12px" }}>{p}</p>
             ))}
           </Section>
         )}
@@ -185,9 +185,9 @@ export default function ProjectPage() {
           <Section label="Workstreams">
             {project.streams.map((s, i) => (
               <div key={i} style={{ marginBottom: 24, paddingLeft: 20, borderLeft: `2px solid ${project.accent}33` }}>
-                <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 22, color: TEXT, marginBottom: 8 }}>{s.title}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 22, color: TEXT, marginBottom: 8 }}>{s.title}</div>
                 <Prose>{s.desc}</Prose>
-                <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: project.accent, marginTop: 8 }}>{s.metric}</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: project.accent, marginTop: 8 }}>{s.metric}</div>
               </div>
             ))}
           </Section>
@@ -199,12 +199,12 @@ export default function ProjectPage() {
 
         <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginTop: 48, paddingTop: 32, borderTop: `1px solid ${BORDER}` }}>
           {siteUrl && (
-            <a href={siteUrl} target="_blank" rel="noopener" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}44`, paddingBottom: 4 }}>
+            <a href={siteUrl} target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}44`, paddingBottom: 4 }}>
               Visit live site ↗
             </a>
           )}
           {study?.docUrl && (
-            <a href={study.docUrl} target="_blank" rel="noopener" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${BORDER}`, paddingBottom: 4 }}>
+            <a href={study.docUrl} target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${BORDER}`, paddingBottom: 4 }}>
               Full case study doc ↗
             </a>
           )}

@@ -169,42 +169,6 @@ export const INDUSTRIES = [
       },
     ],
   },
-  {
-    id: "foresight",
-    label: "Strategy & Foresight",
-    sub: "Market Intelligence · Product Prediction · Business Design",
-    projects: [
-      {
-        id: "08", title: "Design Foresight",
-        cat: "Product Strategy · Market Intelligence · Design Prediction",
-        year: "2022–2024", status: "proven", statusLabel: "Predicted & Shipped",
-        impact: "Both predictions validated", accent: "#9b7ce0",
-        url: null,
-        desc: "Without internal access to any product roadmap, I independently identified two major opportunity gaps — designed the solutions, published them publicly — and watched both Netflix and WhatsApp ship the exact features months later.",
-        metrics: [
-          { value: "2/2", label: "Public predictions validated" },
-          { value: "€M+", label: "Estimated Netflix retention value" },
-          { value: "100M+", label: "WhatsApp Channels users onboarded" },
-          { value: "0", label: "Internal access. Pure signal reading." },
-        ],
-        role: "Independent Product Strategist",
-        about: "Using first-principles business thinking, platform trajectory analysis, and deep user psychology, I identified two major opportunity gaps before the companies announced them — then designed and published the solutions publicly.",
-        streams: [
-          {
-            title: "Netflix Reels",
-            desc: "Identified that Netflix was losing younger audiences during the browsing phase — before users committed to a title. I designed a vertical short-clip discovery feature and tagged Netflix on LinkedIn. They followed through: the feature now surfaces long-form content through short previews, improving content-to-watch conversion and generating rich behavioral data worth tens of millions in recommendation accuracy.",
-            metric: "Now live — millions in retention value",
-          },
-          {
-            title: "WhatsApp Channels → Ad Infrastructure",
-            desc: "Predicted that WhatsApp Channels — before Meta announced them in 2023 — was not primarily a broadcasting feature but a deliberate behavioral onboarding ramp toward ad monetization. Mass adoption of a broadcast-style consumption model inside WhatsApp conditions users to ads without the backlash Facebook faced. The channel habit creates the infrastructure Meta needs to monetize at scale without losing trust.",
-            metric: "100M+ users primed for ad rollout",
-          },
-        ],
-        cta: "Identify opportunity gaps in your market with me and scale to reach even more users",
-      },
-    ],
-  },
 ]
 
 export const ALL_PROJECTS = INDUSTRIES.flatMap(g => g.projects)
@@ -270,7 +234,7 @@ function StatusBadge({ status, label }) {
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 6,
-      fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2,
+      fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2,
       color: c.color, background: c.bg,
       padding: "4px 10px", border: `1px solid ${c.color}22`,
       textTransform: "uppercase",
@@ -430,10 +394,10 @@ function Showreel() {
     <section ref={ref} style={{ padding: "72px 0 80px", opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.9s" }}>
       <div style={{ padding: "0 56px", marginBottom: 48, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 40, flexWrap: "wrap" }}>
         <div>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(24px,3vw,36px)", fontWeight: 400, color: TEXT }}>Design in <em>motion</em></div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
+          <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(24px,3vw,36px)", fontWeight: 400, color: TEXT }}>Design in <em>motion</em></div>
         </div>
-        <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase", maxWidth: 280, lineHeight: 1.6, textAlign: "right" }}>Hover to preview · Click project for full case</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase", maxWidth: 280, lineHeight: 1.6, textAlign: "right" }}>Hover to preview · Click project for full case</div>
       </div>
       <div className="showreel-track-wrap">
         <div className="showreel-track">
@@ -480,9 +444,9 @@ function Loader({ onDone }) {
   const gap = CIRC - dash
 
   return (
-    <div onMouseMove={() => { if (!isAudioUnlocked()) unlockAudio() }} onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }}
+    <div onMouseMove={() => { if (!isAudioUnlocked()) unlockAudio() }} onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }} onClick={() => { if (!isAudioUnlocked()) unlockAudio() }}
       style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>
-      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 5, color: DIM, marginBottom: 48, textTransform: "uppercase" }}>Akinlolu Elijah</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, marginBottom: 48, textTransform: "uppercase" }}>Akinlolu Elijah</div>
 
       <div style={{ position: "relative", width: 160, height: 160, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <svg width="160" height="160" style={{ position: "absolute", inset: 0, transform: "rotate(-90deg)" }}>
@@ -498,8 +462,8 @@ function Loader({ onDone }) {
           />
         </svg>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-          <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 52, fontWeight: 300, color: TEXT, lineHeight: 1 }}>{n}</span>
-          <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 3, color: GOLD }}>%</span>
+          <span style={{ fontFamily: "var(--font-heading)", fontSize: 52, fontWeight: 300, color: TEXT, lineHeight: 1 }}>{n}</span>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD }}>%</span>
         </div>
       </div>
     </div>
@@ -514,16 +478,16 @@ function Nav({ scrollY }) {
   const go = id => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
   return (
     <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: scrolled ? "rgba(7,7,12,0.9)" : "transparent", backdropFilter: scrolled ? "blur(20px)" : "none", borderBottom: `1px solid ${scrolled ? BORDER : "transparent"}`, transition: "all 0.3s" }}>
-      <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300 }}>AE</span>
+      <span style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300 }}>AE</span>
       <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-        {[["work", "Work"], ["about", "About"], ["contact", "Contact"]].map(([id, label]) => (
-          id === "about" ? (
-            <Link key={id} to="/about" data-h style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</Link>
+        {[["work", "Work"], ["about", "About"], ["exploration", "Explore"], ["contact", "Contact"]].map(([id, label]) => (
+          id === "about" || id === "exploration" ? (
+            <Link key={id} to={id === "about" ? "/about" : "/exploration"} data-h style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</Link>
           ) : (
-            <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
+            <button key={id} data-h onClick={() => go(id)} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: "none", cursor: "none", padding: 0, textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>{label}</button>
           )
         ))}
-        <a data-h href="/games" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Game ✦</a>
+        <a data-h href="/games" style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, textDecoration: "none", cursor: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = GOLD} onMouseLeave={e => e.target.style.color = DIM}>Game ✦</a>
         <SoundButton />
       </div>
       <div style={{ position: "absolute", bottom: 0, left: 0, height: 1, background: GOLD, width: `${pct}%`, transition: "width 0.1s linear" }} />
@@ -577,7 +541,7 @@ function Hero({ ready }) {
       {/* Ghost initials — parallax background */}
       <div style={{
         position: "absolute", right: "-2vw", bottom: "-8vw",
-        fontFamily: '"Inter",system-ui,sans-serif', fontSize: "34vw",
+        fontFamily: "var(--font-heading)", fontSize: "34vw",
         fontWeight: 300, color: "rgba(255,255,255,0.018)",
         lineHeight: 1, userSelect: "none", pointerEvents: "none",
         transform: `translate(${mouse.x * -18}px, ${mouse.y * -12}px)`,
@@ -585,35 +549,41 @@ function Hero({ ready }) {
       }}>AE</div>
 
       {/* Year label — right column */}
-      <div style={{ ...f(1.8), position: "absolute", right: 56, top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
+      <div style={{ ...f(1.8), position: "absolute", right: 56, top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
         LAGOS · NIGERIA · 2025
       </div>
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "85vw" }}>
         {/* Label */}
-        <div style={{ ...f(0.2), fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 36 }}>
+        <div style={{ ...f(0.2), fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 36 }}>
           [ AKINLOLU ELIJAH · PRODUCT DESIGNER ]
         </div>
 
         {/* Huge headline */}
-        <div style={{ ...f(0.05), fontFamily: '"Inter",system-ui,sans-serif', fontWeight: 300, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
+        <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontWeight: 300, lineHeight: 0.87, letterSpacing: -2, transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }}>
           <div style={{ fontSize: "clamp(68px,12vw,168px)", color: TEXT }}>{w1 || "PRODUCT"}</div>
           <div style={{ fontSize: "clamp(68px,12vw,168px)", color: GOLD, fontWeight: 500 }}>{w2 || "DESIGNER"}</div>
         </div>
 
         {/* Morphing role */}
         <div style={{ ...f(1.0), marginTop: 28, height: 32, overflow: "hidden" }}>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(16px,1.8vw,22px)", fontWeight: 500, color: DIM, opacity: roleFade ? 1 : 0, transform: roleFade ? "none" : "translateY(8px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,1.8vw,22px)", fontWeight: 500, color: DIM, opacity: roleFade ? 1 : 0, transform: roleFade ? "none" : "translateY(8px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}>
             {ROLES[roleIdx]}
           </div>
         </div>
+
+        {/* Bio */}
+        <p style={{ ...f(1.15), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "24px 0 0" }}>
+          I design products people understand and businesses can grow with — riding the AI wave to move faster, think sharper, and ship more. Currently building my own products with{" "}
+          <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning design decisions into working software without the old handoff tax.
+        </p>
 
         {/* Impact stats row */}
         <div style={{ ...f(1.4), display: "flex", gap: 40, marginTop: 40, flexWrap: "wrap" }}>
           {IMPACT_STATS.map(({ value, label }) => (
             <div key={label} style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 16 }}>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 5, textTransform: "uppercase" }}>{label}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 5, textTransform: "uppercase" }}>{label}</div>
             </div>
           ))}
         </div>
@@ -621,7 +591,7 @@ function Hero({ ready }) {
         {/* CTA */}
         <div style={{ ...f(1.9), marginTop: 44 }}>
           <button data-h onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", cursor: "none", textTransform: "uppercase", transition: "all 0.3s" }}
+            style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", cursor: "none", textTransform: "uppercase", transition: "all 0.3s" }}
             onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }}
             onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = TEXT }}
           >View Work →</button>
@@ -631,7 +601,7 @@ function Hero({ ready }) {
       {/* Scroll cue */}
       <div style={{ ...f(2.4), position: "absolute", bottom: 64, left: 56, display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{ height: 1, width: 40, background: `linear-gradient(to right, transparent, ${DIM})` }} />
-        <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
       </div>
 
       <HeroTicker />
@@ -677,24 +647,24 @@ function ProjectDetail({ project, onClose }) {
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "120px 56px 80px" }}>
 
         {/* Close */}
-        <button data-h onClick={onClose} style={{ position: "fixed", top: 32, right: 56, fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", transition: "all 0.2s", textTransform: "uppercase" }} onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }} onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = DIM }}>
+        <button data-h onClick={onClose} style={{ position: "fixed", top: 32, right: 56, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", cursor: "none", transition: "all 0.2s", textTransform: "uppercase" }} onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }} onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = DIM }}>
           ESC / Close
         </button>
 
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-            <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 64, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{project.id}</span>
             <StatusBadge status={project.status} label={project.statusLabel} />
           </div>
-          <h2 style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: TEXT, margin: "0 0 16px", lineHeight: 1.1 }}>{project.title}</h2>
+          <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(36px,5vw,64px)", fontWeight: 300, color: TEXT, margin: "0 0 16px", lineHeight: 1.1 }}>{project.title}</h2>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
             {project.cat.split(" · ").map(t => (
-              <span key={t} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, padding: "3px 9px", border: `1px solid ${BORDER}`, textTransform: "uppercase" }}>{t}</span>
+              <span key={t} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "3px 9px", border: `1px solid ${BORDER}`, textTransform: "uppercase" }}>{t}</span>
             ))}
-            <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, padding: "3px 9px", border: `1px solid ${BORDER}` }}>{project.year}</span>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "3px 9px", border: `1px solid ${BORDER}` }}>{project.year}</span>
           </div>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 2, color: DIM }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: DIM }}>
             Role: {project.role}
           </div>
         </div>
@@ -718,9 +688,9 @@ function ProjectDetail({ project, onClose }) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 80, marginBottom: 64 }}>
           {/* Description */}
           <div>
-            <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Overview</div>
-            <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(18px,2vw,24px)", fontWeight: 300, color: TEXT, lineHeight: 1.65, margin: "0 0 24px" }}>{project.desc}</p>
-            <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.9, margin: "0 0 40px" }}>{project.about}</p>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Overview</div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(18px,2vw,24px)", fontWeight: 300, color: TEXT, lineHeight: 1.65, margin: "0 0 24px" }}>{project.desc}</p>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.9, margin: "0 0 40px" }}>{project.about}</p>
 
             {/* Work streams (Toke) */}
             {project.streams && (
@@ -728,10 +698,10 @@ function ProjectDetail({ project, onClose }) {
                 {project.streams.map((s, i) => (
                   <div key={i} style={{ paddingLeft: 20, borderLeft: `2px solid ${project.accent}33` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-                      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 20, fontWeight: 500, color: TEXT }}>{s.title}</div>
-                      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: project.accent, whiteSpace: "nowrap", marginLeft: 16 }}>{s.metric}</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontSize: 20, fontWeight: 500, color: TEXT }}>{s.title}</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: project.accent, whiteSpace: "nowrap", marginLeft: 16 }}>{s.metric}</div>
                     </div>
-                    <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: 0 }}>{s.desc}</p>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: 0 }}>{s.desc}</p>
                   </div>
                 ))}
               </div>
@@ -740,19 +710,19 @@ function ProjectDetail({ project, onClose }) {
 
           {/* Metrics */}
           <div>
-            <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Impact</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Impact</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {project.metrics.map(({ value, label }) => (
                 <div key={label} style={{ borderLeft: `2px solid ${project.accent}`, paddingLeft: 20 }}>
-                  <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 40, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{value}</div>
-                  <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{label}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 40, fontWeight: 300, color: project.accent, lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{label}</div>
                 </div>
               ))}
             </div>
 
             {/* Live link */}
             {project.url && (
-              <a href={project.url} target="_blank" rel="noopener" data-h style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 40, fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}44`, paddingBottom: 4, transition: "opacity 0.2s" }} onMouseEnter={e => e.target.style.opacity = "0.7"} onMouseLeave={e => e.target.style.opacity = "1"}>
+              <a href={project.url} target="_blank" rel="noopener" data-h style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 40, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: GOLD, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${GOLD}44`, paddingBottom: 4, transition: "opacity 0.2s" }} onMouseEnter={e => e.target.style.opacity = "0.7"} onMouseLeave={e => e.target.style.opacity = "1"}>
                 Visit Live Site ↗
               </a>
             )}
@@ -760,9 +730,9 @@ function ProjectDetail({ project, onClose }) {
             {/* CTA (strategy/foresight projects) */}
             {project.cta && (
               <div style={{ marginTop: 48, padding: "32px 36px", border: `1px solid ${project.accent}33`, background: `${project.accent}06` }}>
-                <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: project.accent, marginBottom: 16, textTransform: "uppercase" }}>Work with me</div>
-                <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(18px,2vw,26px)", fontWeight: 300, color: TEXT, lineHeight: 1.55, marginBottom: 24 }}>{project.cta}</div>
-                <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }) }} data-h style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: project.accent, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${project.accent}55`, paddingBottom: 4, cursor: "none", transition: "opacity 0.2s" }} onMouseEnter={e => e.target.style.opacity = "0.7"} onMouseLeave={e => e.target.style.opacity = "1"}>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: project.accent, marginBottom: 16, textTransform: "uppercase" }}>Work with me</div>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(18px,2vw,26px)", fontWeight: 300, color: TEXT, lineHeight: 1.55, marginBottom: 24 }}>{project.cta}</div>
+                <a href="#contact" onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }) }} data-h style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: project.accent, textDecoration: "none", textTransform: "uppercase", borderBottom: `1px solid ${project.accent}55`, paddingBottom: 4, cursor: "none", transition: "opacity 0.2s" }} onMouseEnter={e => e.target.style.opacity = "0.7"} onMouseLeave={e => e.target.style.opacity = "1"}>
                   Let's talk ↗
                 </a>
               </div>
@@ -772,7 +742,7 @@ function ProjectDetail({ project, onClose }) {
 
         {/* Media */}
         <div>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 24, textTransform: "uppercase" }}>Media & Visuals</div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 24, textTransform: "uppercase" }}>Media & Visuals</div>
           {getProjectMedia(project.id)?.hero ? (
             <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
               <div style={{ aspectRatio: "16/9", border: `1px solid ${BORDER}`, overflow: "hidden", background: "#0a0a10" }}>
@@ -784,7 +754,7 @@ function ProjectDetail({ project, onClose }) {
                   loop={false}
                 />
               </div>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 15, fontWeight: 400, color: DIM }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: DIM }}>
                 {getProjectMedia(project.id).hero.label}
               </div>
             </div>
@@ -799,9 +769,9 @@ function ProjectDetail({ project, onClose }) {
                 { label: "Case Study", type: "image" },
               ].map(({ label, type }) => (
                 <div key={label} style={{ aspectRatio: "16/9", background: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
-                  <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{type === "video" ? "▶ Video" : "◻ Image"}</div>
-                  <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 14, fontWeight: 400, color: DIM }}>{label}</div>
-                  <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 8, letterSpacing: 2, color: "rgba(100,96,91,0.5)", textTransform: "uppercase" }}>Coming soon</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{type === "video" ? "▶ Video" : "◻ Image"}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 400, color: DIM }}>{label}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: 8, letterSpacing: 2, color: "rgba(100,96,91,0.5)", textTransform: "uppercase" }}>Coming soon</div>
                 </div>
               ))}
             </div>
@@ -848,30 +818,30 @@ function ProjectCard({ p, i }) {
       <div style={{ position: "relative", zIndex: 1, padding: "28px 32px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
-          <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
+          <span style={{ fontFamily: "var(--font-heading)", fontSize: 52, fontWeight: 300, lineHeight: 1, color: hov ? p.accent : "rgba(255,255,255,0.1)", transition: "color 0.3s", flexShrink: 0 }}>{p.id}</span>
           <StatusBadge status={p.status} label={p.statusLabel} />
         </div>
 
         {meta && (
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
             <span style={{ fontSize: 14, letterSpacing: 2 }}>{meta.flags.join(" ")}</span>
-            <span style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{meta.region}</span>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase" }}>{meta.region}</span>
           </div>
         )}
 
-        <h3 className="project-card-title" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 500, color: hov ? TEXT : "rgba(224,219,210,0.85)", transition: "color 0.3s", lineHeight: 1.2, margin: "0 0 18px" }}>{p.title}</h3>
+        <h3 className="project-card-title" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 500, color: hov ? TEXT : "rgba(224,219,210,0.85)", transition: "color 0.3s", lineHeight: 1.2, margin: "0 0 18px" }}>{p.title}</h3>
 
         <div className="project-card-tags" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {p.cat.split(" · ").map(t => (
-            <span key={t} style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${hov ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
+            <span key={t} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${hov ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
           ))}
         </div>
       </div>
 
       <div style={{ marginTop: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 20 }}>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
-          <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 24, fontWeight: 300, color: p.accent, whiteSpace: "nowrap" }}>{p.impact}</div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, whiteSpace: "nowrap", flexShrink: 0 }}>{p.year}</div>
         </div>
       </div>
       </div>
@@ -885,11 +855,11 @@ function Work() {
   return (
     <section id="work" style={{ paddingTop: 120, paddingBottom: 80 }}>
       <div ref={hdr} style={{ padding: "0 56px", marginBottom: 80, opacity: hdrVis ? 1 : 0, transform: hdrVis ? "none" : "translateY(20px)", transition: "all 0.8s" }}>
-        <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 — Selected Work ]</div>
-        <h2 style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 — Selected Work ]</div>
+        <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
-        <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 17, fontWeight: 400, color: DIM, margin: 0, lineHeight: 1.7 }}>Click any project for the full case study.</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, margin: 0, lineHeight: 1.7 }}>Click any project for the full case study.</p>
       </div>
 
       {INDUSTRIES.map((group, gi) => (
@@ -910,8 +880,8 @@ function IndustryGroup({ group, gi }) {
   return (
     <div style={{ padding: "0 56px", marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
       <div ref={ref} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 8, borderTop: gi === 0 ? "none" : `1px solid ${BORDER}`, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(12px)", transition: "all 0.7s" }}>
-        <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
-        <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
       </div>
 
       <div className={gridClass}>
@@ -928,21 +898,21 @@ function About() {
   const [ref, vis] = useReveal()
   return (
     <section id="about" ref={ref} style={{ padding: "120px 56px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — About ]</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — About ]</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "64px 80px", marginBottom: 64, opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
         <div>
-          <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(22px,2.6vw,34px)", fontWeight: 400, color: TEXT, lineHeight: 1.55, margin: "0 0 24px" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(22px,2.6vw,34px)", fontWeight: 400, color: TEXT, lineHeight: 1.55, margin: "0 0 24px" }}>
             I'm a product designer who believes great design is invisible — until it isn't, and then it changes everything.
           </p>
-          <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.95, margin: 0 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, lineHeight: 1.95, margin: 0 }}>
             Over 6 years, I've worked across consumer apps, enterprise platforms, fintech, healthcare, and AI-native products. I design where user needs, business goals, and regulatory reality collide — currently at Toke, designing the future of financial product experiences.
           </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignContent: "start" }}>
           {IMPACT_STATS.map(({ value, label }) => (
             <div key={label}>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 48, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 3, color: DIM, marginTop: 8, textTransform: "uppercase" }}>{label}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 48, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{value}</div>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, marginTop: 8, textTransform: "uppercase" }}>{label}</div>
             </div>
           ))}
         </div>
@@ -955,8 +925,8 @@ function About() {
           ["Strategy", "Regulatory UX · Compliance · Enterprise"],
         ].map(([cat, skills]) => (
           <div key={cat}>
-            <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 12, textTransform: "uppercase" }}>{cat}</div>
-            <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 15, color: DIM, lineHeight: 2 }}>{skills}</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 12, textTransform: "uppercase" }}>{cat}</div>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 15, color: DIM, lineHeight: 2 }}>{skills}</div>
           </div>
         ))}
       </div>
@@ -969,21 +939,21 @@ function Contact() {
   const [ref, vis] = useReveal()
   return (
     <section id="contact" ref={ref} style={{ padding: "120px 56px 80px", borderTop: `1px solid ${BORDER}` }}>
-      <div style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
+      <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
       <div style={{ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(24px)", transition: "all 0.85s" }}>
-        <p style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
           Have a product that needs the right design mind? Let's create something that matters.
         </p>
-        <a data-h href="mailto:akinloluelijah822@gmail.com" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s" }} onMouseEnter={e => { e.target.style.color = GOLD; e.target.style.borderColor = GOLD }} onMouseLeave={e => { e.target.style.color = TEXT; e.target.style.borderColor = BORDER }}>
+        <a data-h href="mailto:akinloluelijah822@gmail.com" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s" }} onMouseEnter={e => { e.target.style.color = GOLD; e.target.style.borderColor = GOLD }} onMouseLeave={e => { e.target.style.color = TEXT; e.target.style.borderColor = BORDER }}>
           akinloluelijah822@gmail.com
         </a>
         <div style={{ display: "flex", gap: 32, marginTop: 44 }}>
-          <a data-h href="https://www.linkedin.com/in/akinlolu-elijah/" target="_blank" rel="noopener" style={{ fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>
+          <a data-h href="https://www.linkedin.com/in/akinlolu-elijah/" target="_blank" rel="noopener" style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: DIM, textDecoration: "none", textTransform: "uppercase", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = TEXT} onMouseLeave={e => e.target.style.color = DIM}>
             LinkedIn ↗
           </a>
         </div>
       </div>
-      <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", fontFamily: '"Inter",system-ui,sans-serif', fontSize: 11, letterSpacing: 2, color: DIM }}>
+      <div style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
         <span>© 2025 Akinlolu Elijah</span>
         <span>Product Designer · Lagos, Nigeria</span>
       </div>
@@ -1029,7 +999,7 @@ export default function Portfolio() {
           animation: ticker 45s linear infinite;
         }
         .hero-ticker-item {
-          font-family: "Inter", system-ui, sans-serif;
+          font-family: var(--font-body);
           font-size: 11px;
           font-weight: 500;
           letter-spacing: 2px;
@@ -1104,7 +1074,7 @@ export default function Portfolio() {
         }
         .showreel-item-label {
           position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px;
-          font-family: "Inter", system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+          font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
           color: ${TEXT}; text-transform: uppercase;
           background: linear-gradient(transparent, rgba(7,7,12,0.92));
         }

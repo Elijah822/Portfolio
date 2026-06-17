@@ -1,0 +1,29 @@
+/* Graphie — place licensed .woff2 files in public/fonts/graphie/ */
+@font-face {
+  font-family: "Graphie";
+  src: url("/fonts/graphie/Graphie-Book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Graphie";
+  src: url("/fonts/graphie/Graphie-BookItalic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Graphie";
+  src: url("/fonts/graphie/Graphie-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-heading: "Bricolage Grotesque Variable", "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Graphie", system-ui, sans-serif;
+}
