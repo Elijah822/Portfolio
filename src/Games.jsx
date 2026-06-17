@@ -16,6 +16,64 @@ const BTN = {
   cursor: "none", textTransform: "uppercase",
 }
 
+const MOBILE_ARROW_GAME_IDS = new Set([1, 3, 4, 9])
+const MOBILE_SPACE_GAME_IDS = new Set([3, 9])
+const MOBILE_MOUSE_GAME_IDS = new Set([2, 8])
+
+function pressKey(key) {
+  window.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }))
+}
+
+function releaseKey(key) {
+  window.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles: true, cancelable: true }))
+}
+
+function DpadButton({ label, keyName, onPress, onRelease, className = "" }) {
+  const down = () => {
+    onPress?.(keyName)
+    pressKey(keyName)
+  }
+  const up = () => {
+    onRelease?.(keyName)
+    releaseKey(keyName)
+  }
+  return (
+    <button
+      type="button"
+      className={`game-dpad__btn ${className}`.trim()}
+      aria-label={label}
+      onPointerDown={e => { e.preventDefault(); down() }}
+      onPointerUp={up}
+      onPointerLeave={up}
+      onPointerCancel={up}
+    >
+      {label}
+    </button>
+  )
+}
+
+function MobileGamePad({ showSpace }) {
+  return (
+    <div className="game-dpad" aria-label="Game controls">
+      <div className="game-dpad__grid">
+        <span />
+        <DpadButton label="↑" keyName="ArrowUp" className="game-dpad__btn--up" />
+        <span />
+        <DpadButton label="←" keyName="ArrowLeft" className="game-dpad__btn--left" />
+        {showSpace ? (
+          <DpadButton label="␣" keyName=" " className="game-dpad__btn--space" />
+        ) : (
+          <span className="game-dpad__spacer" />
+        )}
+        <DpadButton label="→" keyName="ArrowRight" className="game-dpad__btn--right" />
+        <span />
+        <DpadButton label="↓" keyName="ArrowDown" className="game-dpad__btn--down" />
+        <span />
+      </div>
+    </div>
+  )
+}
+
 const GAMES = [
   { id:1,  name:"Snake",    tag:"Arrow keys",       color:"#5ecfb1", desc:"Eat. Grow. Don't bite yourself." },
   { id:2,  name:"Pong",     tag:"Mouse to move",    color:"#c9aa7c", desc:"Beat the machine. First to 7." },
@@ -198,7 +256,7 @@ function SnakeGame({ onRestart }) {
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
       <canvas ref={cvs} width={400} height={400} style={{border:`1px solid ${BORDER}`,display:"block"}} />
-      {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
+      {over && <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
   )
 }
@@ -261,7 +319,7 @@ function PongGame({ onRestart }) {
       {over && (
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:32,color:over==="you"?GOLD:DIM}}>{over==="you"?"You win.":"The machine wins."}</div>
-          <button style={BTN} onClick={onRestart}>REMATCH</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>REMATCH</button>
         </div>
       )}
     </div>
@@ -368,7 +426,7 @@ function TetrisGame({ onRestart }) {
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
       <canvas ref={cvs} width={W} height={H} style={{border:`1px solid ${BORDER}`}} />
-      {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
+      {over && <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
   )
 }
@@ -429,7 +487,7 @@ function Game2048({ onRestart }) {
       {(won||lost)&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:28,color:won?GOLD:DIM}}>{won?"You reached 2048.":"No moves left."}</div>
-          <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
     </div>
@@ -482,7 +540,7 @@ function MemoryGame({ onRestart }) {
       {done&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:28,color:GOLD}}>Cleared in {moves} moves.</div>
-          <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
     </div>
@@ -537,7 +595,7 @@ function TypingGame({ onRestart }) {
       ):(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:56,color:GOLD,fontWeight:300}}>{wpm}<span style={{fontSize:20,color:DIM,marginLeft:8}}>WPM</span></div>
-          <button style={BTN} onClick={onRestart}>TRY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>TRY AGAIN</button>
         </div>
       )}
     </div>
@@ -593,7 +651,7 @@ function ReactionGame({ onRestart }) {
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:48,color:GOLD,fontWeight:300}}>{avg}ms<span style={{fontSize:18,color:DIM,marginLeft:8}}>avg</span></div>
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{avg<200?"lightning fast":avg<300?"sharp reflexes":avg<400?"decent":"room to improve"}</div>
-          <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
     </div>
@@ -661,7 +719,7 @@ function BreakoutGame({ onRestart }) {
       {over&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:28,color:over==="win"?GOLD:DIM}}>{over==="win"?"All bricks cleared.":"Game over."}</div>
-          <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
     </div>
@@ -742,7 +800,7 @@ function SpaceGame({ onRestart }) {
       {over&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:28,color:DIM}}>Destroyed by the field.</div>
-          <button style={BTN} onClick={onRestart}>TRY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>TRY AGAIN</button>
         </div>
       )}
     </div>
@@ -805,7 +863,7 @@ function StroopGame({ onRestart }) {
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
           <div style={{fontFamily:'var(--font-body)',fontSize:60,color:GOLD,fontWeight:300}}>{score}<span style={{fontSize:24,color:DIM}}>/10</span></div>
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{score>=9?"your brain is built different":score>=7?"solid focus":score>=5?"the word keeps winning":"the word won every time"}</div>
-          <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>
+          <button type="button" className="game-inline-restart" style={BTN} onClick={onRestart}>PLAY AGAIN</button>
         </div>
       )}
     </div>
@@ -860,6 +918,13 @@ export default function Games() {
   const closeGame=()=>setActive(null)
   const restart=()=>setGameKey(k=>k+1)
   const openTrailer = g => { setActiveTrailer(g); setTrailerOpen(true) }
+
+  useEffect(() => {
+    if (!active) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [active])
 
   useEffect(() => {
     const onKey = e => {
@@ -929,6 +994,9 @@ export default function Games() {
       {tab==="browser"&&(
         <div className="page-pad-x" style={{ paddingTop: 48, paddingBottom: 48 }}>
           <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:4,color:DIM,marginBottom:24,textTransform:"uppercase"}}>In-browser arcade</div>
+          <p className="arcade-mobile-note">
+            Arcade games are best on desktop. On mobile, tap a game to open full screen and use the on-screen directional controls.
+          </p>
           <div className="game-grid-vr" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:1,background:BORDER,border:`1px solid ${BORDER}`}}>
             {GAMES.map(g=>(
               <div key={g.id} style={{background:BG}}>
@@ -950,17 +1018,37 @@ export default function Games() {
 
       {/* GAME OVERLAY */}
       {active&&GameComponent&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(7,7,12,0.97)",zIndex:200,display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
-          <CloseButton onClick={closeGame} />
-          <div className="page-pad-x" style={{width:"100%",paddingTop:18,paddingBottom:18,display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:`1px solid ${BORDER}`,position:"sticky",top:0,background:BG,zIndex:10,flexShrink:0,gap:16,flexWrap:"wrap"}}>
-            <div style={{display:"flex",alignItems:"baseline",gap:20}}>
-              <div style={{fontFamily:'var(--font-body)',fontSize:24,fontWeight:300,color:TEXT}}>{game.name}</div>
-              <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>{game.tag}</div>
+        <div className="game-overlay" role="dialog" aria-modal="true" aria-label={`${game.name} game`}>
+          <CloseButton onClick={closeGame} className="game-close-floating" />
+          <div className="game-overlay__topbar page-pad-x">
+            <button type="button" className="game-overlay__restart game-overlay__mobile-only" onClick={restart}>
+              Play again
+            </button>
+            <div className="game-overlay__meta">
+              <div className="game-overlay__name">{game.name}</div>
+              <div className="game-overlay__tag">{game.tag}</div>
             </div>
-            <button data-h onClick={closeGame} style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:2,color:DIM,background:"none",border:`1px solid ${BORDER}`,padding:"8px 20px",cursor:"none",transition:"all 0.2s"}} onMouseEnter={e=>{e.target.style.color=TEXT;e.target.style.borderColor="rgba(255,255,255,0.2)"}} onMouseLeave={e=>{e.target.style.color=DIM;e.target.style.borderColor=BORDER}}>CLOSE ×</button>
+            <button type="button" data-h className="game-overlay__close game-overlay__mobile-only" onClick={closeGame}>
+              Close
+            </button>
+            <button data-h type="button" className="game-overlay__close-desktop game-overlay__desktop-only" onClick={closeGame}>CLOSE ×</button>
           </div>
-          <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"48px 24px"}}>
-            <GameComponent key={gameKey} onRestart={restart} />
+          <div className="game-overlay__body">
+            <div className="game-stage">
+              <GameComponent key={gameKey} onRestart={restart} />
+            </div>
+          </div>
+          <div className="game-overlay__mobile-foot game-overlay__mobile-only">
+            {MOBILE_MOUSE_GAME_IDS.has(game.id) ? (
+              <p className="game-overlay__note">This game plays best on desktop with a mouse or trackpad.</p>
+            ) : MOBILE_ARROW_GAME_IDS.has(game.id) ? (
+              <>
+                <p className="game-overlay__note">Use the controls below, or switch to desktop for keyboard play.</p>
+                <MobileGamePad showSpace={MOBILE_SPACE_GAME_IDS.has(game.id)} />
+              </>
+            ) : (
+              <p className="game-overlay__note">Tap the game area to play. For the smoothest experience, try desktop.</p>
+            )}
           </div>
         </div>
       )}
@@ -1081,12 +1169,190 @@ export default function Games() {
         @media (hover: hover) and (pointer: fine) {
           .arcade-card:hover { transform: translateY(-8px) scale(1.035); }
         }
+        .arcade-mobile-note {
+          display: none;
+        }
+        .game-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 200;
+          background: rgba(7,7,12,0.97);
+          display: flex;
+          flex-direction: column;
+        }
+        .game-overlay__topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding-top: 18px;
+          padding-bottom: 18px;
+          border-bottom: 1px solid ${BORDER};
+          background: ${BG};
+          flex-shrink: 0;
+          position: sticky;
+          top: 0;
+          z-index: 12;
+        }
+        .game-overlay__meta {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          align-items: baseline;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .game-overlay__name {
+          font-family: var(--font-body);
+          font-size: 24px;
+          font-weight: 300;
+          color: ${TEXT};
+        }
+        .game-overlay__tag {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 3px;
+          color: ${DIM};
+        }
+        .game-overlay__body {
+          flex: 1;
+          overflow-y: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 48px 24px;
+        }
+        .game-overlay__close-desktop {
+          font-family: var(--font-body);
+          font-size: 12px;
+          letter-spacing: 2px;
+          color: ${DIM};
+          background: none;
+          border: 1px solid ${BORDER};
+          padding: 8px 20px;
+          cursor: none;
+          text-transform: uppercase;
+          transition: all 0.2s;
+          flex-shrink: 0;
+        }
+        .game-overlay__mobile-only {
+          display: none;
+        }
+        .game-overlay__desktop-only {
+          display: block;
+        }
+        .game-overlay__restart,
+        .game-overlay__close {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          background: none;
+          border: 1px solid ${BORDER};
+          color: ${TEXT};
+          padding: 10px 14px;
+          flex-shrink: 0;
+        }
+        .game-overlay__restart {
+          color: ${GOLD};
+          border-color: rgba(201,170,124,0.35);
+        }
+        .game-dpad {
+          display: flex;
+          justify-content: center;
+          padding-top: 8px;
+        }
+        .game-dpad__grid {
+          display: grid;
+          grid-template-columns: 56px 56px 56px;
+          grid-template-rows: 56px 56px 56px;
+          gap: 8px;
+          align-items: center;
+          justify-items: center;
+        }
+        .game-dpad__btn {
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          border: 1px solid ${BORDER};
+          background: rgba(255,255,255,0.04);
+          color: ${TEXT};
+          font-family: var(--font-body);
+          font-size: 18px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          touch-action: manipulation;
+          user-select: none;
+        }
+        .game-dpad__btn--space {
+          font-size: 22px;
+        }
+        .game-dpad__spacer {
+          width: 56px;
+          height: 56px;
+        }
+        .game-overlay__note {
+          font-family: var(--font-body);
+          font-size: 12px;
+          line-height: 1.6;
+          color: ${DIM};
+          text-align: center;
+          margin: 0 0 14px;
+        }
+        .game-overlay__mobile-foot {
+          flex-shrink: 0;
+          padding: 16px var(--page-gutter) calc(16px + env(safe-area-inset-bottom));
+          border-top: 1px solid ${BORDER};
+          background: rgba(7,7,12,0.98);
+        }
         @media (max-width: 900px) {
           .game-grid-vr { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important; }
           .console-poster-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
         }
         @media (max-width: 768px) {
           .game-grid-vr { grid-template-columns: 1fr !important; }
+          .arcade-mobile-note {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 13px;
+            line-height: 1.65;
+            color: ${DIM};
+            margin: 0 0 20px;
+            padding: 14px 16px;
+            border: 1px solid ${BORDER};
+            background: rgba(255,255,255,0.02);
+          }
+          .game-overlay__mobile-only {
+            display: block;
+          }
+          .game-overlay__restart.game-overlay__mobile-only,
+          .game-overlay__close.game-overlay__mobile-only {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .game-overlay__desktop-only,
+          .game-close-floating {
+            display: none !important;
+          }
+          .game-overlay__body {
+            align-items: flex-start;
+            padding: 20px var(--page-gutter) 12px;
+          }
+          .game-stage {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+          }
+          .game-stage canvas {
+            max-width: 100%;
+            height: auto;
+          }
+          .game-inline-restart {
+            display: none !important;
+          }
           .arcade-card.is-hovered,
           .console-card.is-hovered {
             transform: translateY(-4px) scale(1.02);

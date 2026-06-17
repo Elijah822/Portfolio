@@ -794,9 +794,9 @@ function ProjectCard({ p, i }) {
 
         <h3 className="project-card-title" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.2vw, 30px)", fontWeight: 500, color: active ? TEXT : "rgba(224,219,210,0.85)", transition: "color 0.3s", lineHeight: 1.2, margin: "0 0 18px" }}>{p.title}</h3>
 
-        <div className="project-card-tags" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <div className="project-card-tags">
           {p.cat.split(" · ").map(t => (
-            <span key={t} style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, padding: "4px 10px", border: `1px solid ${active ? `${p.accent}33` : BORDER}`, textTransform: "uppercase", whiteSpace: "nowrap", transition: "border-color 0.3s" }}>{t}</span>
+            <span key={t} className="project-card-tag" style={{ borderColor: active ? `${p.accent}33` : BORDER }}>{t}</span>
           ))}
         </div>
 
@@ -846,7 +846,7 @@ function IndustryGroup({ group, gi }) {
   return (
     <div className="page-pad-x" style={{ marginBottom: gi === INDUSTRIES.length - 1 ? 0 : 72 }}>
       <ScrollReveal variant="slide-left" delay={gi * 80} style={{ marginBottom: 28, paddingTop: gi === 0 ? 0 : 32 }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase" }}>{group.sub}</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD, marginBottom: 8, textTransform: "uppercase", lineHeight: 1.75 }} className="industry-group-sub">{group.sub}</div>
         <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(22px, 2.4vw, 30px)", fontWeight: 400, color: "rgba(224,219,210,0.55)", lineHeight: 1.2 }}>{group.label}</div>
       </ScrollReveal>
 
@@ -1147,7 +1147,25 @@ export default function Portfolio() {
           hyphens: none;
         }
         .project-card-tags {
-          row-gap: 8px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 6px;
+          row-gap: 14px;
+        }
+        .project-card-tag {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 2px;
+          line-height: 1.55;
+          color: ${DIM};
+          padding: 6px 10px;
+          border: 1px solid ${BORDER};
+          text-transform: uppercase;
+          white-space: nowrap;
+          transition: border-color 0.3s;
+        }
+        .industry-group-sub {
+          max-width: 36ch;
         }
         .project-card-mobile-detail {
           display: none;
@@ -1355,6 +1373,18 @@ export default function Portfolio() {
           }
           .contact-section {
             padding-top: 80px !important;
+          }
+          .project-card-tags {
+            row-gap: 16px;
+            gap: 10px 6px;
+          }
+          .project-card-tag {
+            line-height: 1.65;
+            padding: 7px 10px;
+          }
+          .industry-group-sub {
+            line-height: 1.85;
+            max-width: none;
           }
           .project-card {
             min-height: auto !important;

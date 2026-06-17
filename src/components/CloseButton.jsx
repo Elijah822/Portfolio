@@ -4,12 +4,13 @@ const DIM = "#a39e98"
 const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
-export default function CloseButton({ onClick, fixed = true, style = {} }) {
+export default function CloseButton({ onClick, fixed = true, className = "", style = {} }) {
   return (
     <button
       data-h
       type="button"
       aria-label="Close"
+      className={className}
       onClick={onClick}
       style={{
         ...(fixed ? { position: "fixed", top: 24, right: 32, zIndex: 1000 } : {}),
