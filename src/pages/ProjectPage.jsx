@@ -6,6 +6,7 @@ import { ALL_PROJECTS } from "../data/projects.js"
 import { getCaseStudy } from "../data/caseStudies.js"
 import { getProjectMeta } from "../data/projectMeta.js"
 import { getProjectMedia, videoPoster } from "../data/projectMedia.js"
+import { navigateBackToWork } from "../lib/scrollRestore.js"
 
 const BG = "#07070c"
 const TEXT = "#e0dbd2"
@@ -88,7 +89,7 @@ export default function ProjectPage() {
   const study = getCaseStudy(id)
 
   useEffect(() => {
-    const onKey = e => { if (e.key === "Escape") navigate("/#work") }
+    const onKey = e => { if (e.key === "Escape") navigateBackToWork(navigate) }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [navigate])
@@ -182,14 +183,9 @@ export default function ProjectPage() {
         @media (max-width: 768px) {
           .project-main { padding-top: 72px !important; padding-bottom: 80px !important; }
           .project-hero-media {
-            margin-inline: calc(-1 * var(--page-gutter));
-            width: calc(100% + 2 * var(--page-gutter));
             aspect-ratio: auto;
             min-height: calc(100svh - 248px);
             max-height: none;
-            border-left: none;
-            border-right: none;
-            border-radius: 0;
           }
           .project-hero-media video {
             min-height: calc(100svh - 248px);
@@ -239,7 +235,7 @@ export default function ProjectPage() {
       `}</style>
       <SiteNav sticky />
       <div className="page-pad-x page-shell" style={{ maxWidth: 900, paddingTop: 12, display: "flex", justifyContent: "flex-end" }}>
-        <button data-h type="button" onClick={() => navigate("/#work")} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", textTransform: "uppercase" }}>
+        <button data-h type="button" onClick={() => navigateBackToWork(navigate)} style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: DIM, background: "none", border: `1px solid ${BORDER}`, padding: "10px 18px", textTransform: "uppercase" }}>
           ← All work
         </button>
       </div>

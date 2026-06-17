@@ -17,6 +17,7 @@ import {
   unlockAudio,
 } from "./lib/portfolioAudio.js"
 import { hasIntroLoaderCompleted, markIntroLoaderCompleted } from "./lib/loaderState.js"
+import { saveHomeScroll } from "./lib/scrollRestore.js"
 import { enforceScrollPosition } from "./lib/scrollToTop.js"
 
 // ── TOKENS ────────────────────────────────────────────────────────────────────
@@ -329,10 +330,17 @@ function Showreel() {
       <div className="showreel-track-wrap">
         <div className="showreel-track">
           {doubled.map((item, i) => (
-            <div key={`${item.id}-${i}`} className="showreel-item">
+            <Link
+              key={`${item.id}-${i}`}
+              to={`/work/${item.id}`}
+              data-h
+              className="showreel-item"
+              aria-label={`Open ${item.label} case study`}
+              onClick={() => saveHomeScroll()}
+            >
               <MediaVideo src={item.url} label={item.label} autoPlay muted loop />
               <div className="showreel-item-label">{item.label}</div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -739,7 +747,10 @@ function ProjectCard({ p, i }) {
       delay={Math.min(i * 70, 420)}
       onMouseEnter={finePointer ? () => setHov(true) : undefined}
       onMouseLeave={finePointer ? () => setHov(false) : undefined}
-      onClick={() => navigate(`/work/${p.id}`)}
+      onClick={() => {
+        saveHomeScroll()
+        navigate(`/work/${p.id}`)
+      }}
       style={{
         padding: 0,
         background: BG,
@@ -917,32 +928,32 @@ function Testimonials() {
 
       <ScrollReveal variant="fade-up" delay={100} className="testimonials-mobile">
         <div className="testimonial-carousel testimonial-carousel--mobile">
-          <div className="testimonial-carousel__row">
-            <button type="button" className="testimonial-carousel__arrow" onClick={goPrev} aria-label="Previous testimonial">
-              ←
-            </button>
-            <div className="testimonial-carousel__viewport">
-              <div key={current.id} className="testimonial-carousel__slide">
-                <TestimonialCard t={current} />
-              </div>
+          <div className="testimonial-carousel__viewport">
+            <div key={current.id} className="testimonial-carousel__slide">
+              <TestimonialCard t={current} />
             </div>
-            <button type="button" className="testimonial-carousel__arrow" onClick={goNext} aria-label="Next testimonial">
-              →
-            </button>
           </div>
 
-          <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
-            {TESTIMONIALS.map((t, i) => (
-              <button
-                key={t.id}
-                type="button"
-                role="tab"
-                aria-selected={i === idx}
-                aria-label={`Testimonial ${i + 1} of ${total}`}
-                className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
-                onClick={() => setIdx(i)}
-              />
-            ))}
+          <div className="testimonial-carousel__controls">
+            <button type="button" className="testimonial-carousel__arrow-btn" onClick={goPrev} aria-label="Previous testimonial">
+              ←
+            </button>
+            <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
+              {TESTIMONIALS.map((t, i) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === idx}
+                  aria-label={`Testimonial ${i + 1} of ${total}`}
+                  className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
+                  onClick={() => setIdx(i)}
+                />
+              ))}
+            </div>
+            <button type="button" className="testimonial-carousel__arrow-btn" onClick={goNext} aria-label="Next testimonial">
+              →
+            </button>
           </div>
         </div>
       </ScrollReveal>
@@ -1074,39 +1085,34 @@ export default function Portfolio() {
           flex-direction: column;
           width: 100%;
           max-width: none;
-          margin-inline: calc(16px - var(--page-gutter));
         }
         .testimonial-carousel--mobile .testimonial-carousel__viewport {
           width: 100%;
           min-width: 0;
         }
-        .testimonial-carousel__row {
+        .testimonial-carousel__controls {
           display: flex;
           align-items: center;
-          gap: 10px;
+          justify-content: center;
+          gap: 24px;
+          margin-top: 24px;
         }
-        .testimonial-carousel__arrow {
+        .testimonial-carousel__arrow-btn {
           flex-shrink: 0;
-          width: 28px;
+          width: 44px;
           height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: var(--font-body);
-          font-size: 22px;
+          font-size: 20px;
           line-height: 1;
           color: ${DIM};
-          background: none;
-          border: none;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid ${BORDER};
+          border-radius: 10px;
           padding: 0;
-          transition: color 0.2s ease;
-        }
-        .testimonial-carousel__controls {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 20px;
-          margin-top: 24px;
+          transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
         .testimonial-carousel__nav {
           font-family: var(--font-body);
@@ -1121,7 +1127,7 @@ export default function Portfolio() {
           transition: color 0.2s ease;
         }
         .testimonial-carousel--mobile .testimonial-carousel__dots {
-          margin-top: 20px;
+          margin-top: 0;
           max-width: none;
           flex-wrap: wrap;
         }
@@ -1152,6 +1158,7 @@ export default function Portfolio() {
         .showreel-item {
           position: relative; width: clamp(280px, 28vw, 420px); aspect-ratio: 16/10;
           flex-shrink: 0; border-right: 1px solid ${BORDER}; overflow: hidden;
+          display: block; text-decoration: none; color: inherit;
         }
         .showreel-item-label {
           position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px;
@@ -1270,8 +1277,9 @@ export default function Portfolio() {
         }
         @media (hover: hover) and (pointer: fine) {
           .testimonial-carousel__nav:hover,
-          .testimonial-carousel__arrow:hover {
+          .testimonial-carousel__arrow-btn:hover {
             color: ${GOLD};
+            border-color: rgba(201,170,124,0.35);
           }
           .testimonial-carousel__dot:hover {
             background: rgba(201,170,124,0.45);
@@ -1376,7 +1384,8 @@ export default function Portfolio() {
             flex-wrap: wrap;
           }
           .hero-scroll-cue {
-            display: none;
+            visibility: hidden;
+            pointer-events: none;
           }
           .work-section {
             padding-top: 80px !important;
