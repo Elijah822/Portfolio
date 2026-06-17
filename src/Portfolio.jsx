@@ -841,7 +841,7 @@ function Testimonials() {
           From founders and teams I've shipped with.
         </p>
       </ScrollReveal>
-      <div className="testimonials-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+      <div className="testimonials-grid">
         {TESTIMONIALS.map((t, i) => (
           <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
             <article
@@ -1034,6 +1034,16 @@ export default function Portfolio() {
         .project-card-mobile-detail {
           display: none;
         }
+        .testimonials-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+          max-width: 720px;
+        }
+        .testimonials-grid > * {
+          width: 100%;
+          min-width: 0;
+        }
         .project-card {
           border-radius: 20px;
           border: 1px solid rgba(255,255,255,0.06);
@@ -1134,9 +1144,6 @@ export default function Portfolio() {
           }
           .contact-section {
             padding-top: 80px !important;
-          }
-          .testimonials-grid {
-            grid-template-columns: 1fr !important;
           }
           .testimonials-grid article {
             min-height: auto !important;
