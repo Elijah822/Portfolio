@@ -5,7 +5,7 @@ export const PROJECT_MEDIA = {
     hero: {
       type: "video",
       url: `${CLOUD}/v1781690565/RiskEase_1_cban6j.mp4`,
-      label: "RiskEase — Compliance Platform",
+      label: "RiskEase: Compliance Platform",
       showOnProjectPage: false,
     },
   },
@@ -13,21 +13,21 @@ export const PROJECT_MEDIA = {
     hero: {
       type: "video",
       url: `${CLOUD}/v1781689621/QueuePay_Final_1_1_dt8ysa.mp4`,
-      label: "QueuePay — Self-Checkout",
+      label: "QueuePay: Self-Checkout",
     },
   },
   "03": {
     hero: {
       type: "video",
       url: `${CLOUD}/v1781667517/Simpat_Motion_d6lzaz.mp4`,
-      label: "SimPat — Medical Simulation",
+      label: "SimPat: Medical Simulation",
     },
   },
   "07": {
     hero: {
       type: "video",
       url: `${CLOUD}/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4`,
-      label: "Svar.se — Expert Marketplace",
+      label: "Svar.se: Expert Marketplace",
     },
   },
 }

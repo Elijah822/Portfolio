@@ -5,7 +5,7 @@ export const CASE_STUDIES = {
     role: "Lead UX/Product Designer",
     productType: "Retail Self-Checkout · Mobile",
     overview:
-      "QueuePay is a smart mobile self-checkout system built to help retail stores cut down long checkout lines. Customers scan items with their phones and pay instantly — no extra hardware required.",
+      "QueuePay is a smart mobile self-checkout system built to help retail stores cut down long checkout lines. Customers scan items with their phones and pay instantly, no extra hardware required.",
     problem:
       "Retail stores still struggle with long checkout lines, especially during busy hours. Traditional POS systems depend heavily on staff availability, while self-checkout stations are expensive and slow when customers have trouble scanning. Advanced solutions like Amazon's Just Walk Out require costly infrastructure.",
     solution:
@@ -21,7 +21,7 @@ export const CASE_STUDIES = {
       "Transaction processing improved by 45% during peak hours",
       "Queue congestion reduced by approximately 40%",
       "Operational costs lowered by up to 30%",
-      "Customer satisfaction improved — clearer, faster, less stressful checkout",
+      "Customer satisfaction improved, clearer, faster, less stressful checkout",
     ],
     conclusion:
       "Future improvements will focus on easier onboarding, loyalty integrations, and a smoother experience at the security checkpoint.",
@@ -31,7 +31,7 @@ export const CASE_STUDIES = {
     role: "UI/UX Designer & Product Designer",
     productType: "Medical Simulation & Clinical Training",
     overview:
-      "SimPat is a clinical training platform that helps medical students and doctors practice patient consultations through realistic simulated scenarios — built around the structure of real OSCE exams.",
+      "SimPat is a clinical training platform that helps medical students and doctors practice patient consultations through realistic simulated scenarios, built around the structure of real OSCE exams.",
     problem:
       "Many simulation platforms struggle to feel realistic and easy to use. The earlier version had slow-loading case cards, premium-gated tools, visual clutter, and text-only interaction that reduced immersion in clinical practice.",
     goal:
@@ -61,7 +61,7 @@ export const CASE_STUDIES = {
     role: "Product Design & UX Strategy",
     productType: "Learning Resource & School Management Platform",
     overview:
-      "The Autism Helper is a digital platform supporting educators and schools working with autistic students — structured learning materials, assessments, and subscription-based access in a single system.",
+      "The Autism Helper is a digital platform supporting educators and schools working with autistic students, structured learning materials, assessments, and subscription-based access in a single system.",
     problem:
       "Challenges spanned UX, system architecture, and business model: a rigid 4-layer navigation hierarchy, fragmented Shopify integrations causing subscription sync failures, hardcoded content structure, and no school team management.",
     approach: [
@@ -74,7 +74,7 @@ export const CASE_STUDIES = {
     highlights: [
       "Navigation restructure: Subject → Level → Unit → Resource reduced to a faster 2-layer structure",
       "Controlled subscription flow with immediate payment-to-access alignment",
-      "Flexible content management — categories, classes, and resources without developer intervention",
+      "Flexible content management, categories, classes, and resources without developer intervention",
       "School and seat management with roles, permissions, and team invites",
       "Student assessment system with immediate results",
       "Progress tracking and ongoing content updates for continuous engagement",
@@ -88,18 +88,18 @@ export const CASE_STUDIES = {
       "Schools transitioned from shared accounts to structured access",
     ],
     conclusion:
-      "The Autism Helper evolved from a content-driven platform into a structured system that supports both teaching and learning — easier to use, easier to manage, and more sustainable over time.",
+      "The Autism Helper evolved from a content-driven platform into a structured system that supports both teaching and learning, easier to use, easier to manage, and more sustainable over time.",
   },
   "05": {
     docUrl: "https://docs.google.com/document/d/1zz1loB6rtQX5-xiOtHbVXYP65flR9w4BDa7JPt0EZw0/edit",
     role: "Product Designer & UI/UX Designer",
     productType: "iOS & Android Mobile App",
     overview:
-      "Dreamtter is a personal growth companion app that helps users transform abstract dreams into actionable habits and measurable progress — guided by an AI sensei that keeps users focused and accountable.",
+      "Dreamtter is a personal growth companion app that helps users transform abstract dreams into actionable habits and measurable progress, guided by an AI sensei that keeps users focused and accountable.",
     problem:
       "Most people have dreams they want to pursue but struggle with vague aspirations, lack of structure, lost momentum without accountability, and isolation in their journey. Traditional goal apps miss the emotional and motivational aspects.",
     goal:
-      "Create an experience where ambition meets structure — inspiring, not overwhelming — with AI-guided support and human connection through mentorship.",
+      "Create an experience where ambition meets structure, inspiring, not overwhelming, with AI-guided support and human connection through mentorship.",
     solution:
       "The core experience centres around 'The Guided Path': dream creation with AI prompts, habit tracker with visual progress, vision board, mentor connection, and task breakdown with deadlines and milestones. Bold purple/blue gradients and dreamy 3D illustrations set the visual tone.",
     highlights: [
@@ -110,7 +110,7 @@ export const CASE_STUDIES = {
       "Task breakdown system with deadlines and milestones",
     ],
     impact: [
-      "68% onboarding completion — more than double the 20–30% industry average",
+      "68% onboarding completion, more than double the 20 to 30% industry average",
       "42% of users returned after 7 days",
       "Users broke dreams into an average of 3.2 habits and 8 tasks per dream",
       "35% increase in weekly active users with AI sensei vs. early beta",
@@ -127,13 +127,13 @@ export const CASE_STUDIES = {
     role: "Lead UX/Product Designer",
     productType: "Career Management & Job Application Platform",
     overview:
-      "Career Tracker Plus is a career management platform for modern professionals — track applications, tailor resumes, organise documents, record accomplishments, and plan long-term career growth in one place.",
+      "Career Tracker Plus is a career management platform for modern professionals, track applications, tailor resumes, organise documents, record accomplishments, and plan long-term career growth in one place.",
     problem:
-      "Finding a job has become a full-time job. People apply to several roles weekly, track conversations in different places, forget follow-ups, and send resumes not tailored to each role — creating frustration, burnout, and missed opportunities.",
+      "Finding a job has become a full-time job. People apply to several roles weekly, track conversations in different places, forget follow-ups, and send resumes not tailored to each role, creating frustration, burnout, and missed opportunities.",
     solution:
       "A single workspace for the entire job search: visual application pipeline, resume & cover letter builder tailored to job descriptions, document repository, career development system, accomplishment manager, and goal tracking.",
     features: [
-      { title: "Job Application Tracker", desc: "Visual pipeline from saved to applied, interview, offer, and acceptance — with reminders and follow-ups." },
+      { title: "Job Application Tracker", desc: "Visual pipeline from saved to applied, interview, offer, and acceptance, with reminders and follow-ups." },
       { title: "Resume & Cover Letter Builder", desc: "Paste a job description and instantly generate tailored application materials." },
       { title: "Document Repository", desc: "Central hub for resumes, certificates, portfolios, and references." },
       { title: "Career Development System", desc: "Plan future roles, identify skill gaps, and map career moves." },
@@ -142,7 +142,7 @@ export const CASE_STUDIES = {
     ],
     impact: [
       "Over 70% of users complete onboarding",
-      "Users track an average of 8–10 applications per month",
+      "Users track an average of 8 to 10 applications per month",
       "More than 60% use resume tailoring for at least one application",
       "Most active users return weekly to update progress",
       "Acquired by LinkedIn",
@@ -153,16 +153,16 @@ export const CASE_STUDIES = {
       "Lost career history → Documented growth for future applications and reviews",
     ],
     conclusion:
-      "When people are given the right structure, they apply with more confidence and stay in control of their career journey — not just more organised applications, but a better way to build a career.",
+      "When people are given the right structure, they apply with more confidence and stay in control of their career journey, not just more organised applications, but a better way to build a career.",
   },
   "07": {
     docUrl: "https://docs.google.com/document/d/1EnV3NOnfl4xMjPBKxxmeziL3argjPgiLOi-I2d2cKRY/edit",
     role: "Product Design & UX Strategy",
     productType: "Expert Consultation Platform",
     overview:
-      "Svar.se connects people to verified experts for help with construction, interior design, garden projects, and accommodation — through video calls and chat, in real time.",
+      "Svar.se connects people to verified experts for help with construction, interior design, garden projects, and accommodation, through video calls and chat, in real time.",
     problem:
-      "When someone needs specialised help, they don't know where to begin. Online information is too general or contradictory. Getting professional help usually requires upfront payment and long back-and-forth — the earlier version's broad directories made it hard to know where to start.",
+      "When someone needs specialised help, they don't know where to begin. Online information is too general or contradictory. Getting professional help usually requires upfront payment and long back-and-forth, the earlier version's broad directories made it hard to know where to start.",
     goal:
       "Help people avoid costly mistakes by giving them easy access to expert guidance and the right professionals in one place.",
     solution:
@@ -186,7 +186,7 @@ export const CASE_STUDIES = {
   },
   "01": {
     challenge:
-      "Enterprise clients needed compliant payment, KYC, and design infrastructure at scale — without slowing delivery or exposing the business to regulatory penalty.",
+      "Enterprise clients needed compliant payment, KYC, and design infrastructure at scale, without slowing delivery or exposing the business to regulatory penalty.",
     approach: [
       "Mapped regulatory requirements across EU DMA, Thailand, South Africa, and other markets.",
       "Built a Claude MCP-integrated design system automating tokens, components, and documentation.",
@@ -201,7 +201,7 @@ export const CASE_STUDIES = {
   },
   "08": {
     challenge:
-      "Identify major product opportunity gaps without internal roadmap access — then design and publish solutions before incumbents ship.",
+      "Identify major product opportunity gaps without internal roadmap access, then design and publish solutions before incumbents ship.",
     approach: [
       "Applied platform trajectory analysis and user psychology to read where Netflix and WhatsApp were heading.",
       "Designed and published public solutions for both opportunity gaps.",

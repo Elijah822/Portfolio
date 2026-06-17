@@ -53,7 +53,7 @@ export default function Exploration() {
             Ideas I'm building<br /><em style={{ color: GOLD }}>and proving.</em>
           </h1>
           <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 620, margin: "0 0 72px" }}>
-            Personal products, design foresight, and experiments at the edge of AI — where riding the wave means shipping faster and thinking deeper.
+            Personal products, design foresight, and experiments at the edge of AI, where riding the wave means shipping faster and thinking deeper.
           </p>
         </ScrollReveal>
 

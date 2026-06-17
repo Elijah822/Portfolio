@@ -13,13 +13,13 @@ const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
 const EXPERIENCE = [
-  { role: "Senior Product Designer", company: "Toke", period: "Sep 2024 — Present", place: "United Kingdom" },
-  { role: "Product Designer", company: "Boglex Software", period: "Aug 2023 — Present", place: "Romania" },
-  { role: "CEO & Co-Founder", company: "QueuePay Africa", period: "Aug 2024 — Present", place: "Nigeria" },
-  { role: "Senior Product Designer", company: "The Autism Helper", period: "Sep 2024 — Feb 2025", place: "United States" },
-  { role: "Senior Product Designer", company: "StrengthMaker", period: "Nov 2023 — Jun 2024", place: "Germany" },
-  { role: "Product Designer", company: "SwipeAbove", period: "Sep 2023 — Feb 2024", place: "United Kingdom" },
-  { role: "Senior Product Designer", company: "Expaat", period: "Apr 2022 — Aug 2023", place: "Nigeria" },
+  { role: "Senior Product Designer", company: "Toke", period: "Sep 2024 to Present", place: "United Kingdom" },
+  { role: "Product Designer", company: "Boglex Software", period: "Aug 2023 to Present", place: "Romania" },
+  { role: "CEO & Co-Founder", company: "QueuePay Africa", period: "Aug 2024 to Present", place: "Nigeria" },
+  { role: "Senior Product Designer", company: "The Autism Helper", period: "Sep 2024 to Feb 2025", place: "United States" },
+  { role: "Senior Product Designer", company: "StrengthMaker", period: "Nov 2023 to Jun 2024", place: "Germany" },
+  { role: "Product Designer", company: "SwipeAbove", period: "Sep 2023 to Feb 2024", place: "United Kingdom" },
+  { role: "Senior Product Designer", company: "Expaat", period: "Apr 2022 to Aug 2023", place: "Nigeria" },
 ]
 
 const RESUME_HIGHLIGHTS = [
@@ -80,10 +80,10 @@ export default function About() {
             <ScrollReveal as="section" variant="fade-up" delay={80} style={{ marginBottom: 64 }}>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 20, textTransform: "uppercase" }}>Origin</div>
               <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(20px,2.4vw,28px)", fontWeight: 400, lineHeight: 1.65, margin: "0 0 20px" }}>
-                Product designer from Lagos, Nigeria — designing products people understand and businesses can grow with.
+                Product designer from Lagos, Nigeria, designing products people understand and businesses can grow with.
               </p>
               <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.9, margin: 0 }}>
-                Nigeria gave me resourcefulness. Experience across the UK, US, and Europe gave me rigour and access. I work where user needs, business goals, and regulatory reality collide — currently as Senior Product Designer at Toke, building e-commerce and retail experiences alongside AI-powered design infrastructure for enterprise clients.
+                Nigeria gave me resourcefulness. Experience across the UK, US, and Europe gave me rigour and access. I work where user needs, business goals, and regulatory reality collide, currently as Senior Product Designer at Toke, building e-commerce and retail experiences alongside AI-powered design infrastructure for enterprise clients.
               </p>
             </ScrollReveal>
 

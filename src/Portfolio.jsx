@@ -36,10 +36,10 @@ export const INDUSTRIES = [
       {
         id: "01", title: "Toke",
         cat: "E-Commerce · Retail · Design Systems · AI",
-        year: "2024–25", status: "live", statusLabel: "Live",
+        year: "2024 to 25", status: "live", statusLabel: "Live",
         impact: "€40M+ impact", accent: "#c9aa7c",
         url: "https://www.toke.ai/",
-        desc: "Lead Product Designer at Toke — an e-commerce and retail platform serving major enterprise clients across storefronts, payments, compliance, and AI-powered design infrastructure. Solely responsible for product design across three concurrent enterprise clients.",
+        desc: "Lead Product Designer at Toke, an e-commerce and retail platform serving major enterprise clients across storefronts, payments, compliance, and AI-powered design infrastructure. Solely responsible for product design across three concurrent enterprise clients.",
         metrics: [
           { value: "€40M+", label: "Regulatory exposure avoided (KYC)" },
           { value: "€M+", label: "App Store commissions saved" },
@@ -47,27 +47,27 @@ export const INDUSTRIES = [
           { value: "3", label: "Enterprise clients, simultaneously" },
         ],
         role: "Lead Product Designer",
-        about: "At Toke, I operated as the sole designer across three major enterprise clients simultaneously — covering three distinct high-stakes workstreams:",
+        about: "At Toke, I operated as the sole designer across three major enterprise clients simultaneously, covering three distinct high-stakes workstreams:",
         streams: [
           {
             title: "AI-Powered Design System",
-            desc: "Built a Claude MCP-integrated design system automating token generation, component scaffolding, and documentation — compressing 2-week design cycles to under one week.",
+            desc: "Built a Claude MCP-integrated design system automating token generation, component scaffolding, and documentation, compressing 2-week design cycles to under one week.",
             metric: "50% faster delivery",
           },
           {
             title: "App Store Commission Strategy",
-            desc: "Designed compliant alternative payment flows across EU (Digital Markets Act), Thailand, South Africa, and other markets — legally bypassing Apple and Google's 30% billing commission.",
+            desc: "Designed compliant alternative payment flows across EU (Digital Markets Act), Thailand, South Africa, and other markets, legally bypassing Apple and Google's 30% billing commission.",
             metric: "Tens of €M saved",
           },
           {
             title: "KYC & Industrial Compliance",
-            desc: "Navigated KYC and industrial regulatory requirements to design compliant experiences that eliminated business penalty exposure entirely — across three enterprise clients.",
+            desc: "Navigated KYC and industrial regulatory requirements to design compliant experiences that eliminated business penalty exposure entirely, across three enterprise clients.",
             metric: "€40M exposure avoided",
           },
         ],
       },
       {
-        id: "02", title: "QueuePay — Self-Checkout",
+        id: "02", title: "QueuePay: Self-Checkout",
         cat: "Retail Tech · Hardware UX",
         year: "2022", status: "partial", statusLabel: "Admin & Cashier Live",
         impact: "60% checkout time ↓", accent: "#5ecfb1",
@@ -89,12 +89,12 @@ export const INDUSTRIES = [
     sub: "Medical · EdTech · Inclusive Design",
     projects: [
       {
-        id: "03", title: "SimPat — Medical Simulation",
+        id: "03", title: "SimPat: Medical Simulation",
         cat: "HealthTech · Clinical Training",
-        year: "2023–24", status: "live", statusLabel: "Live",
+        year: "2023 to 24", status: "live", statusLabel: "Live",
         impact: "35% simulation start rate ↑", accent: "#9b7ec8",
         url: "https://simpat.ai/",
-        desc: "Redesigned a clinical training platform for medical students and doctors to practice AI-powered patient consultations — shifting from text-based interaction to voice-based simulation mirroring real OSCE exams.",
+        desc: "Redesigned a clinical training platform for medical students and doctors to practice AI-powered patient consultations, shifting from text-based interaction to voice-based simulation mirroring real OSCE exams.",
         metrics: [
           { value: "35%", label: "Simulation start rate increase" },
           { value: "28%", label: "Completion rate improvement" },
@@ -107,10 +107,10 @@ export const INDUSTRIES = [
       {
         id: "04", title: "The Autism Helper",
         cat: "EdTech · Accessibility · SaaS",
-        year: "2023–24", status: "live", statusLabel: "Live",
+        year: "2023 to 24", status: "live", statusLabel: "Live",
         impact: "50% faster resource access", accent: "#f0c060",
         url: "https://theautismhelper.com/",
-        desc: "Restructured a digital learning platform for schools supporting autistic students — simplifying navigation, fixing subscription reliability, and introducing school-wide team and access management.",
+        desc: "Restructured a digital learning platform for schools supporting autistic students, simplifying navigation, fixing subscription reliability, and introducing school-wide team and access management.",
         metrics: [
           { value: "50%", label: "Faster resource access" },
           { value: "70%", label: "Task completion improvement" },
@@ -133,7 +133,7 @@ export const INDUSTRIES = [
         year: "2023", status: "testing", statusLabel: "In Testing",
         impact: "42% retention lift", accent: "#c47fdd",
         url: null,
-        desc: "Designed a dream journaling app from 0 to 1 — achieving 68% onboarding completion, 35% WAU growth, and a 42% lift in 30-day retention through ritual-based UX and progressive disclosure.",
+        desc: "Designed a dream journaling app from 0 to 1, achieving 68% onboarding completion, 35% WAU growth, and a 42% lift in 30-day retention through ritual-based UX and progressive disclosure.",
         metrics: [
           { value: "68%", label: "Onboarding completion" },
           { value: "42%", label: "30-day retention lift" },
@@ -148,14 +148,14 @@ export const INDUSTRIES = [
         year: "2023", status: "acquired", statusLabel: "Acquired by LinkedIn",
         impact: "70% onboarding lift", accent: "#e87a65",
         url: null,
-        desc: "Led UX for a career-management platform — driving 70% onboarding completion via progressive disclosure and 60% AI feature adoption through context-aware assistant entry points.",
+        desc: "Led UX for a career-management platform, driving 70% onboarding completion via progressive disclosure and 60% AI feature adoption through context-aware assistant entry points.",
         metrics: [
           { value: "70%", label: "Onboarding completion" },
           { value: "60%", label: "AI feature adoption" },
           { value: "→", label: "Acquired by LinkedIn" },
         ],
         role: "Lead UX/Product Designer",
-        about: "Designed the full product experience from sign-up through daily use — including the AI assistant integration that became the product's core differentiator. The acquisition validated the product direction.",
+        about: "Designed the full product experience from sign-up through daily use, including the AI assistant integration that became the product's core differentiator. The acquisition validated the product direction.",
       },
       {
         id: "07", title: "Svar.se",
@@ -163,7 +163,7 @@ export const INDUSTRIES = [
         year: "2023", status: "live", statusLabel: "Live",
         impact: "<2 min to booking", accent: "#5ba3f5",
         url: "https://svar.se",
-        desc: "Redesigned a Swedish expert consultation platform from broad directory browsing to an AI-powered search-led experience — connecting users with vetted experts for video consultations.",
+        desc: "Redesigned a Swedish expert consultation platform from broad directory browsing to an AI-powered search-led experience, connecting users with vetted experts for video consultations.",
         metrics: [
           { value: "<2min", label: "Search to booking" },
           { value: "40%", label: "Search usage increase" },
@@ -171,7 +171,7 @@ export const INDUSTRIES = [
           { value: "20%", label: "Checkout abandonment reduction" },
         ],
         role: "Product Design & UX Strategy",
-        about: "Svar.se helps people get expert guidance on home projects, construction, interior design, and more. The redesign introduced AI-powered natural language search, guest access, free first session, and user-controlled booking — cutting time from search to booked session to under 2 minutes.",
+        about: "Svar.se helps people get expert guidance on home projects, construction, interior design, and more. The redesign introduced AI-powered natural language search, guest access, free first session, and user-controlled booking, cutting time from search to booked session to under 2 minutes.",
       },
     ],
   },
@@ -319,12 +319,12 @@ function Showreel() {
   const doubled = [...SHOWREEL, ...SHOWREEL]
   return (
     <ScrollReveal as="section" variant="fade-up" threshold={0.08} className="showreel-section" style={{ padding: "72px 0 80px" }}>
-      <div className="page-pad-x" style={{ marginBottom: 48, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 40, flexWrap: "wrap" }}>
+      <div className="page-pad-x" style={{ marginBottom: 48 }}>
         <div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: GOLD, marginBottom: 16, textTransform: "uppercase" }}>Motion Reel</div>
-          <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(24px,3vw,36px)", fontWeight: 400, color: TEXT }}>Design in <em>motion</em></div>
+          <div style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(24px,3vw,36px)", fontWeight: 400, color: TEXT, marginBottom: 12 }}>Design in <em>motion</em></div>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase", lineHeight: 1.6 }}>Click project for full case</div>
         </div>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, textTransform: "uppercase", maxWidth: 280, lineHeight: 1.6, textAlign: "right" }}>Hover to preview · Click project for full case</div>
       </div>
       <div className="showreel-track-wrap">
         <div className="showreel-track">
@@ -458,7 +458,7 @@ function Hero({ ready }) {
 
         {/* Bio */}
         <p style={{ ...f(1.0), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "32px 0 0" }}>
-          I design products people understand — and businesses can scale. I build fast with{" "}
+          I design products people understand, and businesses can scale. I build fast with{" "}
           <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
         </p>
 
@@ -791,7 +791,7 @@ function Work() {
   return (
     <section id="work" className="work-section" style={{ paddingTop: 120, paddingBottom: 80 }}>
       <ScrollReveal variant="fade-up" className="page-pad-x" style={{ marginBottom: 80 }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 — Selected Work ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 Selected Work ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
@@ -829,11 +829,43 @@ function IndustryGroup({ group, gi }) {
 }
 
 // ── TESTIMONIALS ──────────────────────────────────────────────────────────────
+function TestimonialCard({ t }) {
+  return (
+    <article className="testimonial-card">
+      <p className="testimonial-card__quote">"{t.quote}"</p>
+      <div className="testimonial-card__author">
+        <div className="testimonial-card__avatar" style={{ borderColor: `${t.accent}44`, background: `linear-gradient(135deg, ${t.accent}44, rgba(255,255,255,0.06))`, color: t.accent }}>
+          {t.avatar ? (
+            <img src={t.avatar} alt="" />
+          ) : (
+            t.name.split(" ").map(n => n[0]).join("").slice(0, 2)
+          )}
+        </div>
+        <div>
+          <div className="testimonial-card__name">
+            {t.name}{t.company ? `, ${t.company}` : ""}
+          </div>
+          <div className="testimonial-card__meta">
+            {t.role}{t.country ? ` · ${t.country}` : ""}{t.date ? ` · ${t.date}` : ""}
+          </div>
+        </div>
+      </div>
+    </article>
+  )
+}
+
 function Testimonials() {
+  const [idx, setIdx] = useState(0)
+  const total = TESTIMONIALS.length
+  const current = TESTIMONIALS[idx]
+
+  const goPrev = () => setIdx(i => (i - 1 + total) % total)
+  const goNext = () => setIdx(i => (i + 1) % total)
+
   return (
     <section id="testimonials" className="testimonials-section page-pad-x" style={{ padding: "120px 0", borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 — Testimonials ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 Testimonials ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           What clients say
         </h2>
@@ -841,61 +873,38 @@ function Testimonials() {
           From founders and teams I've shipped with.
         </p>
       </ScrollReveal>
-      <div className="testimonials-grid">
-        {TESTIMONIALS.map((t, i) => (
-          <ScrollReveal key={t.id} variant="scale-up" delay={i * 100}>
-            <article
-              style={{
-                background: "rgba(255,255,255,0.02)",
-                border: `1px solid ${BORDER}`,
-                padding: "32px 32px 28px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 28,
-                minHeight: 280,
-              }}
-            >
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px, 1.6vw, 18px)", color: TEXT, lineHeight: 1.8, margin: 0, flex: 1 }}>
-                "{t.quote}"
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    border: `1px solid ${BORDER}`,
-                    background: `linear-gradient(135deg, ${t.accent}44, rgba(255,255,255,0.06))`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "var(--font-body)",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: t.accent,
-                  }}
-                >
-                  {t.avatar ? (
-                    <img src={t.avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    t.name.split(" ").map(n => n[0]).join("").slice(0, 2)
-                  )}
-                </div>
-                <div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 600, color: TEXT, marginBottom: 4 }}>
-                    {t.name}{t.company ? `, ${t.company}` : ""}
-                  </div>
-                  <div style={{ fontFamily: "var(--font-body)", fontSize: 13, color: DIM }}>
-                    {t.role}{t.country ? ` · ${t.country}` : ""}{t.date ? ` · ${t.date}` : ""}
-                  </div>
-                </div>
-              </div>
-            </article>
-          </ScrollReveal>
-        ))}
-      </div>
+
+      <ScrollReveal variant="fade-up" delay={100}>
+        <div className="testimonial-carousel">
+          <button type="button" className="testimonial-carousel__arrow" onClick={goPrev} aria-label="Previous testimonial">
+            ←
+          </button>
+
+          <div className="testimonial-carousel__viewport">
+            <div key={current.id} className="testimonial-carousel__slide">
+              <TestimonialCard t={current} />
+            </div>
+          </div>
+
+          <button type="button" className="testimonial-carousel__arrow" onClick={goNext} aria-label="Next testimonial">
+            →
+          </button>
+        </div>
+
+        <div className="testimonial-carousel__dots" role="tablist" aria-label="Testimonials">
+          {TESTIMONIALS.map((t, i) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={i === idx}
+              aria-label={`Testimonial ${i + 1} of ${total}`}
+              className={`testimonial-carousel__dot${i === idx ? " is-active" : ""}`}
+              onClick={() => setIdx(i)}
+            />
+          ))}
+        </div>
+      </ScrollReveal>
     </section>
   )
 }
@@ -905,7 +914,7 @@ function Contact() {
   return (
     <section id="contact" className="contact-section page-pad-x" style={{ padding: "120px 0 80px", borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 — Contact ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 Contact ]</div>
       </ScrollReveal>
       <ScrollReveal variant="fade-up" delay={80}>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
@@ -1034,15 +1043,122 @@ export default function Portfolio() {
         .project-card-mobile-detail {
           display: none;
         }
-        .testimonials-grid {
-          display: grid;
-          grid-template-columns: 1fr;
+        .testimonial-carousel {
+          display: flex;
+          align-items: center;
           gap: 16px;
-          max-width: 720px;
+          max-width: 820px;
         }
-        .testimonials-grid > * {
-          width: 100%;
+        .testimonial-carousel__viewport {
+          flex: 1;
           min-width: 0;
+        }
+        .testimonial-carousel__slide {
+          animation: testimonialFade 0.45s ease;
+        }
+        @keyframes testimonialFade {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: none; }
+        }
+        .testimonial-card {
+          background: rgba(255,255,255,0.02);
+          border: 1px solid ${BORDER};
+          padding: 32px 32px 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 28px;
+          min-height: 280px;
+        }
+        .testimonial-card__quote {
+          font-family: var(--font-body);
+          font-size: clamp(16px, 1.6vw, 18px);
+          color: ${TEXT};
+          line-height: 1.8;
+          margin: 0;
+          flex: 1;
+        }
+        .testimonial-card__author {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .testimonial-card__avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 1px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 600;
+        }
+        .testimonial-card__avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .testimonial-card__name {
+          font-family: var(--font-body);
+          font-size: 16px;
+          font-weight: 600;
+          color: ${TEXT};
+          margin-bottom: 4px;
+        }
+        .testimonial-card__meta {
+          font-family: var(--font-body);
+          font-size: 13px;
+          color: ${DIM};
+        }
+        .testimonial-carousel__arrow {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: 1px solid ${BORDER};
+          background: rgba(255,255,255,0.03);
+          color: ${TEXT};
+          font-family: var(--font-body);
+          font-size: 18px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+        .testimonial-carousel__dots {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+          margin-top: 28px;
+          max-width: 820px;
+        }
+        .testimonial-carousel__dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          border: none;
+          padding: 0;
+          background: rgba(255,255,255,0.18);
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+        .testimonial-carousel__dot.is-active {
+          background: ${GOLD};
+          transform: scale(1.2);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .testimonial-carousel__arrow:hover {
+            border-color: ${GOLD};
+            color: ${GOLD};
+            background: rgba(201,170,124,0.08);
+          }
+          .testimonial-carousel__dot:hover {
+            background: rgba(201,170,124,0.45);
+          }
         }
         .project-card {
           border-radius: 20px;
@@ -1145,9 +1261,17 @@ export default function Portfolio() {
           .contact-section {
             padding-top: 80px !important;
           }
-          .testimonials-grid article {
+          .testimonial-carousel {
+            gap: 10px;
+          }
+          .testimonial-carousel__arrow {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+          }
+          .testimonial-card {
             min-height: auto !important;
-            padding: 24px !important;
+            padding: 24px 20px 22px !important;
           }
           .project-card {
             min-height: auto !important;

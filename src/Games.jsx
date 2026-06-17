@@ -39,11 +39,11 @@ const CONSOLE_GAMES = [
   { id:5,  short:"FC 26",         title:"EA Sports FC 26",               year:"2025", genre:"Football · Sports",    note:"The latest in the collection. The Beautiful Game, undefeated.", grad:"linear-gradient(150deg,#150300 0%,#341000 60%,#cc4800 100%)", accent:"#ff6b1a", trailerId:"Xh5f5P7_77U" },
   { id:6,  short:"Spider-Man",    title:"Marvel's Spider-Man",           year:"2018", genre:"Action Adventure",     note:"Web-swinging through Manhattan at golden hour. A masterclass.", grad:"linear-gradient(150deg,#120000 0%,#2e0404 60%,#c41e1e 100%)", accent:"#e83535", trailerId:"9fboG9X_itk" },
   { id:7,  short:"Ghost of Tsushima", title:"Ghost of Tsushima",        year:"2020", genre:"Action RPG · Samurai", note:"A haiku in game form. The wind mechanic alone deserves an award.", grad:"linear-gradient(150deg,#0d0600 0%,#251400 50%,#c49a3c 80%,#8b1a1a 100%)", accent:"#c49a3c", trailerId:"7zPrsmrXnWE" },
-  { id:8,  short:"A Way Out",     title:"A Way Out",                     year:"2018", genre:"Co-op · Drama",        note:"The best co-op I've played. That ending — nothing prepares you.", grad:"linear-gradient(150deg,#00102a 0%,#001a10 50%,#2a3a5c 100%)", accent:"#7ca8e0", trailerId:"D0U0kl9q3oE" },
+  { id:8,  short:"A Way Out",     title:"A Way Out",                     year:"2018", genre:"Co-op · Drama",        note:"The best co-op I've played. That ending, nothing prepares you.", grad:"linear-gradient(150deg,#00102a 0%,#001a10 50%,#2a3a5c 100%)", accent:"#7ca8e0", trailerId:"D0U0kl9q3oE" },
   { id:9,  short:"Black Ops 7",   title:"Call of Duty: Black Ops 7",     year:"2025", genre:"FPS · Tactical",       note:"The grind is real. The chaos is real. Still can't stop.", grad:"linear-gradient(150deg,#040804 0%,#0a1408 60%,#1e3210 100%)", accent:"#4a7a20", trailerId:"i6GkFzczZAE" },
   { id:10, short:"Beach Buggy",   title:"Beach Buggy Racing",            year:"2014", genre:"Racing · Kart",        note:"Deceptively competitive. Don't let the beach fool you.", grad:"linear-gradient(150deg,#120800 0%,#2e1800 60%,#e8880a 100%)", accent:"#ff9f1c", trailerId:"ONpzj0n7Ez4" },
   { id:11, short:"Beach Buggy 2", title:"Beach Buggy Racing 2",          year:"2018", genre:"Racing · Kart",        note:"More tracks. More chaos. More damage. The sequel that earned it.", grad:"linear-gradient(150deg,#150010 0%,#380030 60%,#c83c80 100%)", accent:"#e05090", trailerId:"SLW1sZPcvnU" },
-  { id:12, short:"???",           title:"Next Session",                  year:"—",    genre:"Unknown",              note:"Controller is charged. Game TBD. Stay tuned.", grad:"linear-gradient(150deg,#0a0a0a 0%,#141414 100%)", accent:"#c9aa7c", locked:true },
+  { id:12, short:"???",           title:"Next Session",                  year:"TBD",    genre:"Unknown",              note:"Controller is charged. Game TBD. Stay tuned.", grad:"linear-gradient(150deg,#0a0a0a 0%,#141414 100%)", accent:"#c9aa7c", locked:true },
 ]
 
 const FEATURED_TRAILERS = CONSOLE_GAMES.filter(g => g.trailerId && !g.locked)
@@ -191,7 +191,7 @@ function SnakeGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
       <canvas ref={cvs} width={400} height={400} style={{border:`1px solid ${BORDER}`,display:"block"}} />
       {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
@@ -251,7 +251,7 @@ function PongGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>YOU {scores[0]} — {scores[1]} AI</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>YOU {scores[0]} · {scores[1]} AI</div>
       <canvas ref={cvs} width={500} height={350} style={{border:`1px solid ${BORDER}`,cursor:"none"}} />
       {over && (
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12}}>
@@ -361,7 +361,7 @@ function TetrisGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
       <canvas ref={cvs} width={W} height={H} style={{border:`1px solid ${BORDER}`}} />
       {over && <button style={BTN} onClick={onRestart}>PLAY AGAIN</button>}
     </div>
@@ -413,7 +413,7 @@ function Game2048({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:20}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,90px)",gap:8}}>
         {grid.flat().map((v,i)=>(
           <div key={i} style={{width:90,height:90,background:TILE_C[v]||GOLD,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:'var(--font-body)',fontSize:v>=1000?24:v>=100?30:38,fontWeight:300,color:v>4?BG:DIM,transition:"background 0.15s"}}>
@@ -466,7 +466,7 @@ function MemoryGame({ onRestart }) {
 
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:20}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>MOVES — {moves}</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>MOVES: {moves}</div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,80px)",gap:8}}>
         {cards.map(c=>(
           <div key={c.id} data-h onClick={()=>flip(c.id)} style={{width:80,height:80,display:"flex",alignItems:"center",justifyContent:"center",cursor:"none",fontSize:26,background:c.flipped||c.matched?"rgba(201,170,124,0.1)":"rgba(255,255,255,0.04)",border:`1px solid ${c.matched?GOLD+"44":c.flipped?"rgba(255,255,255,0.15)":BORDER}`,color:c.matched?GOLD:TEXT,transition:"all 0.2s",transform:c.flipped||c.matched?"scale(1)":"scale(0.96)"}}>
@@ -517,8 +517,8 @@ function TypingGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:24,maxWidth:540}}>
       <div style={{display:"flex",gap:40}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>TIME — {timer}s</div>
-        {done&&<div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>WPM — {wpm}</div>}
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>TIME: {timer}s</div>
+        {done&&<div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>WPM: {wpm}</div>}
       </div>
       <div style={{fontFamily:'var(--font-body)',fontSize:22,color:DIM,lineHeight:2,textAlign:"center",minHeight:88}}>
         {words.slice(Math.max(0,idx-3),idx+12).map((w,i)=>{
@@ -649,7 +649,7 @@ function BreakoutGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{display:"flex",gap:32}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
         <div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
       </div>
       <canvas ref={cvs} width={480} height={400} style={{border:`1px solid ${BORDER}`,cursor:"none"}} />
@@ -730,7 +730,7 @@ function SpaceGame({ onRestart }) {
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:16}}>
       <div style={{display:"flex",gap:32}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE — {score}</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>SCORE: {score}</div>
         <div style={{fontFamily:'var(--font-body)',fontSize:11,color:DIM,letterSpacing:3}}>{"◈".repeat(Math.max(0,lives))}</div>
       </div>
       <canvas ref={cvs} width={400} height={500} style={{border:`1px solid ${BORDER}`}} />
@@ -782,7 +782,7 @@ function StroopGame({ onRestart }) {
   if(!card) return null
   return (
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:28}}>
-      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>{round+1}/10 — {score} CORRECT</div>
+      <div style={{fontFamily:'var(--font-body)',fontSize:11,color:GOLD,letterSpacing:3}}>{round+1}/10 · {score} CORRECT</div>
       {!done?(
         <>
           <div style={{fontFamily:'var(--font-body)',fontSize:80,fontWeight:300,color:card.color,letterSpacing:10,lineHeight:1}}>{card.text}</div>
@@ -938,7 +938,7 @@ export default function Games() {
 
       {/* FOOTER */}
       <div style={{padding:"40px 56px",borderTop:`1px solid ${BORDER}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>AKINLOLU ELIJAH — GAME ROOM</div>
+        <div style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM}}>AKINLOLU ELIJAH · GAME ROOM</div>
         <a data-h href="/" style={{fontFamily:'var(--font-body)',fontSize:11,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=GOLD} onMouseLeave={e=>e.target.style.color=DIM}>Back to portfolio →</a>
       </div>
 

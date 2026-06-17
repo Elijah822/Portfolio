@@ -19,7 +19,7 @@ export const TESTIMONIALS = [
     country: "Sweden",
     date: "Nov 2024",
     quote:
-      "Elijah brought structure to a complex marketplace experience. He simplified search, booking, and expert discovery — users went from confused to confident in minutes. Rare mix of craft and product thinking.",
+      "Elijah brought structure to a complex marketplace experience. He simplified search, booking, and expert discovery, users went from confused to confident in minutes. Rare mix of craft and product thinking.",
     avatar: null,
     accent: "#5ecfb1",
   },
@@ -43,7 +43,7 @@ export const TESTIMONIALS = [
     country: "Nigeria",
     date: "Aug 2024",
     quote:
-      "Elijah turned a messy checkout problem into something shoppers actually want to use. He thinks in flows, edge cases, and real store operations — not just pretty screens.",
+      "Elijah turned a messy checkout problem into something shoppers actually want to use. He thinks in flows, edge cases, and real store operations, not just pretty screens.",
     avatar: null,
     accent: "#4ade80",
   },
@@ -55,7 +55,7 @@ export const TESTIMONIALS = [
     country: "United States",
     date: "Jan 2025",
     quote:
-      "He redesigned our platform with educators in mind — less clutter, clearer paths, and features that finally felt accessible. Adoption improved because the product finally matched how teachers work.",
+      "He redesigned our platform with educators in mind, less clutter, clearer paths, and features that finally felt accessible. Adoption improved because the product finally matched how teachers work.",
     avatar: null,
     accent: "#f472b6",
   },
@@ -67,7 +67,7 @@ export const TESTIMONIALS = [
     country: "Germany",
     date: "May 2024",
     quote:
-      "Precise, calm under pressure, and always user-first. Elijah helped us align stakeholders around a design system that scaled across teams — without slowing delivery.",
+      "Precise, calm under pressure, and always user-first. Elijah helped us align stakeholders around a design system that scaled across teams, without slowing delivery.",
     avatar: null,
     accent: "#9b7ce0",
   },
