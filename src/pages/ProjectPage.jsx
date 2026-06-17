@@ -28,6 +28,15 @@ function Prose({ children }) {
   )
 }
 
+function CaseStudyListItem({ title, children, accent }) {
+  return (
+    <div className="case-study-item" style={{ borderLeftColor: `${accent}44` }}>
+      <h3 className="case-study-item-title" style={{ color: accent }}>{title}</h3>
+      <div className="case-study-item-body">{children}</div>
+    </div>
+  )
+}
+
 function ProjectMetrics({ metrics, accent }) {
   return (
     <div className="project-metrics">
@@ -117,6 +126,45 @@ export default function ProjectPage() {
             grid-template-columns: repeat(2, 1fr);
           }
         }
+        .case-study-list {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+        }
+        .case-study-item {
+          padding: 4px 0 4px 28px;
+          border-left: 2px solid;
+        }
+        .case-study-item-title {
+          font-family: var(--font-heading);
+          font-size: clamp(19px, 2.4vw, 24px);
+          font-weight: 500;
+          line-height: 1.25;
+          margin: 0 0 14px;
+          letter-spacing: -0.01em;
+        }
+        .case-study-item-body {
+          font-family: var(--font-body);
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 1.8;
+          color: ${DIM};
+          max-width: 62ch;
+        }
+        .case-study-bullets {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+        .case-study-bullet {
+          font-family: var(--font-body);
+          font-size: 17px;
+          font-weight: 400;
+          line-height: 1.75;
+          color: ${TEXT};
+          margin: 0;
+          padding-left: 4px;
+        }
       `}</style>
       <nav style={{ position: "sticky", top: 0, zIndex: 50, padding: "20px 56px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(7,7,12,0.94)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${BORDER}` }}>
         <Link to="/" style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>AE</Link>
@@ -164,28 +212,33 @@ export default function ProjectPage() {
 
         {study?.approach && (
           <Section label="Approach">
-            {study.approach.map((item, i) => (
-              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 14px", paddingLeft: 16, borderLeft: `2px solid ${project.accent}33` }}>{item}</p>
-            ))}
+            <div className="case-study-list">
+              {study.approach.map((item, i) => (
+                <p key={i} className="case-study-item-body" style={{ paddingLeft: 28, borderLeft: `2px solid ${project.accent}44`, margin: 0 }}>{item}</p>
+              ))}
+            </div>
           </Section>
         )}
 
         {study?.features && (
           <Section label="Core Features">
-            {study.features.map((f, i) => (
-              <div key={i} style={{ marginBottom: 20, paddingLeft: 20, borderLeft: `2px solid ${project.accent}33` }}>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 20, color: TEXT, marginBottom: 6 }}>{f.title}</div>
-                <Prose>{f.desc}</Prose>
-              </div>
-            ))}
+            <div className="case-study-list">
+              {study.features.map((f, i) => (
+                <CaseStudyListItem key={i} title={f.title} accent={project.accent}>
+                  {f.desc}
+                </CaseStudyListItem>
+              ))}
+            </div>
           </Section>
         )}
 
         {study?.highlights && (
           <Section label="Redesign Highlights">
-            {study.highlights.map((h, i) => (
-              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {h}</p>
-            ))}
+            <div className="case-study-bullets">
+              {study.highlights.map((h, i) => (
+                <p key={i} className="case-study-bullet">→ {h}</p>
+              ))}
+            </div>
           </Section>
         )}
 
@@ -201,37 +254,46 @@ export default function ProjectPage() {
 
         {study?.impact && (
           <Section label="Impact & Results">
-            {study.impact.map((item, i) => (
-              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {item}</p>
-            ))}
+            <div className="case-study-bullets">
+              {study.impact.map((item, i) => (
+                <p key={i} className="case-study-bullet">→ {item}</p>
+              ))}
+            </div>
           </Section>
         )}
 
         {study?.outcomes && (
           <Section label="Outcomes">
-            {study.outcomes.map((o, i) => (
-              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 18, color: TEXT, lineHeight: 1.7, margin: "0 0 10px" }}>→ {o}</p>
-            ))}
+            <div className="case-study-bullets">
+              {study.outcomes.map((o, i) => (
+                <p key={i} className="case-study-bullet">→ {o}</p>
+              ))}
+            </div>
           </Section>
         )}
 
         {study?.problemsSolved && (
           <Section label="Problems Solved">
-            {study.problemsSolved.map((p, i) => (
-              <p key={i} style={{ fontFamily: "var(--font-body)", fontSize: 16, fontWeight: 400, color: DIM, lineHeight: 1.8, margin: "0 0 12px" }}>{p}</p>
-            ))}
+            <div className="case-study-list">
+              {study.problemsSolved.map((p, i) => (
+                <p key={i} className="case-study-item-body" style={{ paddingLeft: 28, borderLeft: `2px solid ${project.accent}44`, margin: 0 }}>{p}</p>
+              ))}
+            </div>
           </Section>
         )}
 
         {project.streams && (
           <Section label="Workstreams">
-            {project.streams.map((s, i) => (
-              <div key={i} style={{ marginBottom: 24, paddingLeft: 20, borderLeft: `2px solid ${project.accent}33` }}>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 22, color: TEXT, marginBottom: 8 }}>{s.title}</div>
-                <Prose>{s.desc}</Prose>
-                <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: project.accent, marginTop: 8 }}>{s.metric}</div>
-              </div>
-            ))}
+            <div className="case-study-list">
+              {project.streams.map((s, i) => (
+                <CaseStudyListItem key={i} title={s.title} accent={project.accent}>
+                  <>
+                    {s.desc}
+                    <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: project.accent, marginTop: 14, textTransform: "uppercase" }}>{s.metric}</div>
+                  </>
+                </CaseStudyListItem>
+              ))}
+            </div>
           </Section>
         )}
 

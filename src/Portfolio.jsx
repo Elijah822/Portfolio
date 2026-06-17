@@ -553,20 +553,18 @@ function Hero({ ready }) {
           ))}
         </div>
 
-        {/* CTA */}
-        <div style={{ ...f(1.9), marginTop: 44 }}>
+        {/* CTA + scroll cue */}
+        <div style={{ ...f(1.9), marginTop: 44, display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
           <button data-h onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
             style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", cursor: "none", textTransform: "uppercase", transition: "all 0.3s" }}
             onMouseEnter={e => { e.target.style.borderColor = GOLD; e.target.style.color = GOLD }}
             onMouseLeave={e => { e.target.style.borderColor = BORDER; e.target.style.color = TEXT }}
           >View Work →</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ height: 1, width: 40, background: `linear-gradient(to right, transparent, ${DIM})` }} />
+            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
+          </div>
         </div>
-      </div>
-
-      {/* Scroll cue */}
-      <div style={{ ...f(2.4), position: "absolute", bottom: 64, left: 56, display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ height: 1, width: 40, background: `linear-gradient(to right, transparent, ${DIM})` }} />
-        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
       </div>
 
       <HeroTicker />
@@ -748,49 +746,12 @@ function ProjectDetail({ project, onClose }) {
   )
 }
 
-function ProjectCardVideo({ src, playing }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const v = ref.current
-    if (!v) return
-    if (playing) {
-      v.play().catch(() => {})
-    } else {
-      v.pause()
-      try { v.currentTime = 0 } catch (_) {}
-    }
-  }, [playing, src])
-  return (
-    <video
-      ref={ref}
-      src={src}
-      poster={videoPoster(src)}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      aria-hidden="true"
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        opacity: playing ? 0.62 : 0,
-        transition: "opacity 0.45s ease",
-        filter: "saturate(0.9)",
-      }}
-    />
-  )
-}
-
 // ── PROJECT CARD TEXTURE ───────────────────────────────────────────────────────
-function ProjectCardTexture({ variant, accent, dimmed }) {
+function ProjectCardTexture({ variant, accent }) {
   return (
     <div
       className={`project-card-texture project-card-texture--${variant}`}
       aria-hidden="true"
-      style={{ opacity: dimmed ? 0.4 : 1, transition: "opacity 0.4s ease" }}
     >
       <div
         className="project-card-texture-glow"
@@ -811,9 +772,7 @@ function ProjectCardTexture({ variant, accent, dimmed }) {
 function ProjectCard({ p, i }) {
   const navigate = useNavigate()
   const [hov, setHov] = useState(false)
-  const media = getProjectMedia(p.id)
   const meta = getProjectMeta(p.id)
-  const videoSrc = media?.hero?.url ?? null
   const texture = i % 2 === 0 ? "noise" : "mosaic"
   return (
     <ScrollReveal
@@ -837,8 +796,7 @@ function ProjectCard({ p, i }) {
         overflow: "hidden",
       }}
     >
-      <ProjectCardTexture variant={texture} accent={p.accent} dimmed={hov && !!videoSrc} />
-      {videoSrc && <ProjectCardVideo src={videoSrc} playing={hov} />}
+      <ProjectCardTexture variant={texture} accent={p.accent} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: p.accent, transform: hov ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: "left", zIndex: 4 }} />
 
       <div
@@ -1119,9 +1077,6 @@ export default function Portfolio() {
           inset: 0;
           background: linear-gradient(90deg, ${BG} 0%, transparent 35%, ${BG}88 100%);
           pointer-events: none;
-        }
-        .project-card-media {
-          position: absolute; inset: 0; z-index: 0;
         }
         .showreel-track-wrap {
           overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
