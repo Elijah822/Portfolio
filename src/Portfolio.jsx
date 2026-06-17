@@ -481,10 +481,12 @@ function Hero({ ready }) {
             {CONTACT.name}
           </div>
           <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(20px,2.4vw,30px)", fontWeight: 500, lineHeight: 1.35, color: TEXT, maxWidth: 720, marginBottom: 4 }}>
-            I'm a{" "}
-            <span style={{ color: GOLD }}>Fullstack product designer</span>
-            {" and "}
-            <span style={{ color: GOLD }}>AI engineer</span>
+            <div>
+              I'm a <span style={{ color: GOLD }}>Fullstack product designer</span>
+            </div>
+            <div>
+              and <span style={{ color: GOLD }}>AI engineer</span>
+            </div>
           </div>
         </div>
 
@@ -494,11 +496,18 @@ function Hero({ ready }) {
           <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
         </p>
 
-        {/* Impact stats row */}
-        <div style={{ ...f(1.3), display: "flex", gap: "48px 40px", marginTop: 44, flexWrap: "wrap", rowGap: 32 }}>
-          {IMPACT_STATS.map(stat => (
-            <ImpactStat key={stat.label} stat={stat} />
-          ))}
+        {/* Impact stats */}
+        <div style={{ ...f(1.3), display: "flex", flexDirection: "column", gap: 32, marginTop: 44 }}>
+          <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
+            {IMPACT_STATS.slice(0, 3).map(stat => (
+              <ImpactStat key={stat.label} stat={stat} />
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
+            {IMPACT_STATS.slice(3).map(stat => (
+              <ImpactStat key={stat.label} stat={stat} />
+            ))}
+          </div>
         </div>
 
         {/* CTA + scroll cue */}
