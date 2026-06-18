@@ -15,6 +15,8 @@ let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
 const SOUND_TOGGLE = "[data-sound-toggle]"
+const SOUND_NUDGE = "[data-sound-nudge]"
+const SOUND_NUDGE_CLOSE = "[data-sound-nudge-close]"
 
 const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "click"]
 const SOFT_EVENTS = ["pointermove", "mousemove", "scroll", "wheel", "touchmove"]
@@ -155,8 +157,8 @@ export function unlockAudio() {
   return true
 }
 
-function isSoundToggleTarget(target) {
-  return Boolean(target?.closest?.(SOUND_TOGGLE))
+function isIgnoredActivationTarget(target) {
+  return Boolean(target?.closest?.(`${SOUND_TOGGLE}, ${SOUND_NUDGE_CLOSE}`))
 }
 
 export function setupAudioOnMouseMove(onEnable) {
@@ -187,7 +189,7 @@ export function setupAudioOnMouseMove(onEnable) {
   }
 
   const activateHandler = e => {
-    if (isExplicitlyMuted() || isSoundToggleTarget(e.target)) return
+    if (isExplicitlyMuted() || isIgnoredActivationTarget(e.target)) return
     void tryPlay()
   }
 

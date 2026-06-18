@@ -55,13 +55,14 @@ export default function SoundNudge() {
   }, [dismissNudge])
 
   return (
-    <div ref={nudgeRef} className="sound-nudge" role="status" aria-live="polite">
+    <div ref={nudgeRef} className="sound-nudge" data-sound-nudge role="status" aria-live="polite">
       <span className="sound-nudge__icon" aria-hidden="true">♪</span>
       <span className="sound-nudge__text">Click anywhere to enable ambient sound</span>
       <button
         type="button"
         className="sound-nudge__close"
         data-h
+        data-sound-nudge-close
         aria-label="Dismiss sound prompt"
         onPointerDown={closeNudge}
         onClick={closeNudge}
