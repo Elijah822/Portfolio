@@ -38,7 +38,7 @@ export const TESTIMONIALS = [
   {
     id: "04",
     name: "Progress Ibrahim",
-    company: "QueuePay Africa",
+    company: "Expaat Nigeria",
     role: "Co-Founder",
     country: "Nigeria",
     date: "Aug 2024",
