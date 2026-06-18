@@ -14,7 +14,7 @@ export default function SoundButton({ compact = false }) {
       data-h
       type="button"
       onClick={toggleSound}
-      title={soundOn ? "Mute ambience" : "Tap anywhere to enable sound"}
+      title={soundOn ? "Mute ambience" : "Move mouse or scroll to enable sound"}
       style={{
         fontFamily: "var(--font-body)",
         fontSize: compact ? 9 : 10,

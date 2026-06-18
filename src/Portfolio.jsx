@@ -380,7 +380,6 @@ function Loader({ onDone }) {
 
   return (
     <div
-      onPointerDown={() => { if (!isAudioUnlocked()) unlockAudio() }}
       onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }}
       onClick={() => { if (!isAudioUnlocked()) unlockAudio() }}
       style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>

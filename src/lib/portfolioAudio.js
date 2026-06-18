@@ -176,12 +176,11 @@ export function unlockAudio() {
   return !wasUnlocked
 }
 
-export function setupAudioOnMouseMove(onUnlock) {
+export function setupAudioOnMouseMove(onEnable) {
   let autoEnabled = false
 
-  const activate = () => {
+  const enableAmbient = () => {
     if (isExplicitlyMuted()) return
-    unlockAudio()
 
     if (isAudioPrefOn()) {
       kickYouTubePlayback()
@@ -190,23 +189,24 @@ export function setupAudioOnMouseMove(onUnlock) {
 
     if (!autoEnabled && shouldAutoEnableOnGesture()) {
       autoEnabled = true
-      onUnlock?.()
+      onEnable?.()
       kickYouTubePlayback()
     }
   }
 
-  const softRetry = () => {
-    if (!unlocked || !isAudioPrefOn()) return
-    kickYouTubePlayback()
+  const activate = () => {
+    if (isExplicitlyMuted()) return
+    unlockAudio()
+    enableAmbient()
   }
 
   const opts = { passive: true, capture: true }
+  SOFT_EVENTS.forEach(evt => window.addEventListener(evt, enableAmbient, opts))
   ACTIVATION_EVENTS.forEach(evt => window.addEventListener(evt, activate, opts))
-  SOFT_EVENTS.forEach(evt => window.addEventListener(evt, softRetry, opts))
 
   return () => {
+    SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, enableAmbient, opts))
     ACTIVATION_EVENTS.forEach(evt => window.removeEventListener(evt, activate, opts))
-    SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, softRetry, opts))
   }
 }
 
