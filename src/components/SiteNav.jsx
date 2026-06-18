@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import SoundButton from "./SoundButton.jsx"
+import SiteLogo from "./SiteLogo.jsx"
 
 const TEXT = "#e0dbd2"
 const DIM = "#a39e98"
@@ -186,8 +187,8 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           borderBottom: `1px solid ${sticky || scrolled ? BORDER : "transparent"}`,
         }}
       >
-        <Link to="/" onClick={close} style={{ fontFamily: "var(--font-heading)", fontSize: 22, color: TEXT, letterSpacing: 3, fontWeight: 300, textDecoration: "none" }}>
-          AE
+        <Link to="/" onClick={close} style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
+          <SiteLogo size={30} />
         </Link>
 
         <div className="site-nav__desktop">

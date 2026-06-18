@@ -449,12 +449,13 @@ function Hero({ ready }) {
 
       <div className="hero-ghost" style={{
         position: "absolute", right: "-2vw", bottom: "-8vw",
-        fontFamily: "var(--font-heading)", fontSize: "34vw",
-        fontWeight: 300, color: "rgba(255,255,255,0.018)",
-        lineHeight: 1, userSelect: "none", pointerEvents: "none",
+        width: "34vw", maxWidth: 520, opacity: 0.045,
+        userSelect: "none", pointerEvents: "none",
         transform: finePointer ? `translate(${mouse.x * -18}px, ${mouse.y * -12}px)` : undefined,
         transition: "transform 0.6s ease",
-      }}>AE</div>
+      }}>
+        <img src="/logo-mark.png" alt="" aria-hidden="true" style={{ width: "100%", height: "auto", display: "block" }} />
+      </div>
 
       <div className="hero-side-label" style={{ ...f(1.8), position: "absolute", right: "var(--page-gutter)", top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
         LAGOS · NIGERIA · 2025

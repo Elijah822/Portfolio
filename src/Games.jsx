@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Link } from "react-router-dom"
 import SoundButton from "./components/SoundButton.jsx"
+import SiteLogo from "./components/SiteLogo.jsx"
 import CloseButton from "./components/CloseButton.jsx"
 import { ytEmbedUrl, ytThumbnail } from "./lib/youtube.js"
 
@@ -965,7 +966,9 @@ export default function Games() {
       <div className="vr-grid-floor" aria-hidden="true" />
 
       <div className="games-nav page-pad-x">
-        <Link to="/" style={{fontFamily:'var(--font-body)',fontSize:22,color:TEXT,letterSpacing:3,fontWeight:300,textDecoration:"none",cursor:"none"}}>AE</Link>
+        <Link to="/" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none", cursor: "none" }}>
+          <SiteLogo size={30} />
+        </Link>
         <SoundButton compact />
         <Link to="/" data-h className="games-nav__back" style={{fontFamily:'var(--font-body)',fontSize:12,letterSpacing:3,color:DIM,textDecoration:"none",cursor:"none",transition:"color 0.2s"}} onMouseEnter={e=>e.target.style.color=TEXT} onMouseLeave={e=>e.target.style.color=DIM}>← Portfolio</Link>
       </div>
