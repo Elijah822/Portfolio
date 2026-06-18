@@ -6,7 +6,8 @@ import SocialLinks from "./components/SocialLinks.jsx"
 import ScrollReveal from "./components/ScrollReveal.jsx"
 import SiteNav from "./components/SiteNav.jsx"
 import { HeroSection } from "./components/HeroSection.jsx"
-import { useFinePointer } from "./hooks/useMediaQuery.js"
+import { useCoarsePointer, useFinePointer } from "./hooks/useMediaQuery.js"
+import { usePlayWhenVisible } from "./hooks/usePlayWhenVisible.js"
 import { CONTACT } from "./data/contact.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
@@ -295,12 +296,18 @@ function FilmGrain() {
   return <div className="film-grain" aria-hidden="true" />
 }
 
-function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false, heroVideo = false }) {
+function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false, heroVideo = false, playWhenVisible = false }) {
   const ref = useRef(null)
+  const coarsePointer = useCoarsePointer()
+  const lazyPlay = playWhenVisible || coarsePointer
+
+  usePlayWhenVisible(ref, autoPlay && lazyPlay)
+
   useEffect(() => {
-    if (!autoPlay || !ref.current) return
+    if (!autoPlay || lazyPlay || !ref.current) return
     ref.current.play().catch(() => {})
-  }, [autoPlay, src])
+  }, [autoPlay, lazyPlay, src])
+
   return (
     <video
       ref={ref}
@@ -311,6 +318,8 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
       playsInline
       controls={controls}
       aria-label={label}
+      autoPlay={autoPlay && !lazyPlay}
+      preload={lazyPlay ? "none" : "auto"}
       {...(heroVideo ? { "data-hero-video": true } : {})}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", ...style }}
     />
@@ -339,7 +348,7 @@ function Showreel() {
               aria-label={`Open ${item.label} case study`}
               onClick={() => saveHomeScroll()}
             >
-              <MediaVideo src={item.url} label={item.label} autoPlay muted loop />
+              <MediaVideo src={item.url} label={item.label} autoPlay muted loop playWhenVisible />
               <div className="showreel-item-label">{item.label}</div>
             </Link>
           ))}
@@ -861,7 +870,15 @@ export default function Portfolio() {
   }, [introDone])
 
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY)
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        setScrollY(window.scrollY)
+        ticking = false
+      })
+    }
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
@@ -1270,6 +1287,17 @@ export default function Portfolio() {
           .work-section-intro p {
             margin: 0;
             max-width: 480px;
+          }
+        }
+        @media (pointer: coarse) {
+          .showreel-track {
+            animation-duration: 64s;
+          }
+          .showreel-item video {
+            filter: none;
+          }
+          .showreel-item::after {
+            display: none;
           }
         }
         @media (max-width: 768px) {

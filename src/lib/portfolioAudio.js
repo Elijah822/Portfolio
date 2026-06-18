@@ -194,11 +194,16 @@ export function setupAudioOnMouseMove(onEnable) {
   }
 
   const opts = { passive: true, capture: true }
-  SOFT_EVENTS.forEach(evt => window.addEventListener(evt, softHandler, opts))
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  if (finePointer) {
+    SOFT_EVENTS.forEach(evt => window.addEventListener(evt, softHandler, opts))
+  }
   ACTIVATION_EVENTS.forEach(evt => window.addEventListener(evt, activateHandler, opts))
 
   return () => {
-    SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, softHandler, opts))
+    if (finePointer) {
+      SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, softHandler, opts))
+    }
     ACTIVATION_EVENTS.forEach(evt => window.removeEventListener(evt, activateHandler, opts))
   }
 }

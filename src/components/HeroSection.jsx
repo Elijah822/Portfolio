@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAccessibility } from '../context/AccessibilityContext.jsx';
+import { useCoarsePointer, useFinePointer } from '../hooks/useMediaQuery.js';
+import { usePlayWhenVisible } from '../hooks/usePlayWhenVisible.js';
 import './HeroSection.css';
 
 // ─── Count-up hook ────────────────────────────────────────────────────────────
@@ -29,43 +32,24 @@ function Stat({ prefix = '', value, suffix = '', label, inView }) {
   );
 }
 
-// ─── Sound nudge ──────────────────────────────────────────────────────────────
-function SoundNudge() {
-  const ref  = useRef(null);
-  const shown = useRef(false);
-
-  useEffect(() => {
-    if (sessionStorage.getItem('portfolio-audio-on') !== null) return;
-
-    const show    = () => { if (shown.current) return; shown.current = true; ref.current?.classList.add('visible'); };
-    const dismiss = () => { ref.current?.classList.remove('visible'); ref.current?.classList.add('done'); };
-
-    document.addEventListener('mousemove',   show,    { once: true });
-    document.addEventListener('pointerdown', dismiss, { once: true });
-    return () => {
-      document.removeEventListener('mousemove',   show);
-      document.removeEventListener('pointerdown', dismiss);
-    };
-  }, []);
-
-  return (
-    <div ref={ref} className="hero__nudge" aria-live="polite">
-      <span className="hero__nudge-icon" aria-hidden="true">♪</span>
-      Click anywhere to enable ambient sound
-    </div>
-  );
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 export function HeroSection() {
   const glowRef    = useRef(null);
   const reelRef    = useRef(null);
   const shimmerRef = useRef(null);
   const statsRef   = useRef(null);
+  const heroVideoRef = useRef(null);
   const [statsInView, setStatsInView] = useState(false);
+  const finePointer = useFinePointer();
+  const coarsePointer = useCoarsePointer();
+  const { reduceMotion } = useAccessibility();
 
-  // Cursor parallax + shimmer
+  usePlayWhenVisible(heroVideoRef, true);
+
+  // Cursor parallax + shimmer — desktop only, saves mobile GPU/battery
   useEffect(() => {
+    if (!finePointer || reduceMotion) return;
+
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     const onMove = (e) => { mx = e.clientX; my = e.clientY; };
     window.addEventListener('mousemove', onMove, { passive: true });
@@ -96,7 +80,7 @@ export function HeroSection() {
       window.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [finePointer, reduceMotion]);
 
   // Stats intersection observer
   useEffect(() => {
@@ -126,7 +110,7 @@ export function HeroSection() {
       {/* Grain */}
       <div className="hero__grain" aria-hidden="true" />
 
-      {/* Cursor glow */}
+      {/* Cursor glow — hidden on touch devices via CSS */}
       <div ref={glowRef} className="hero__glow" aria-hidden="true" />
 
       {/* ── Inner grid ── */}
@@ -197,13 +181,15 @@ export function HeroSection() {
 
           <div ref={reelRef} className="hero__device">
             <video
+              ref={heroVideoRef}
               className="hero__device-video"
               src="https://res.cloudinary.com/dj8jyjcvo/video/upload/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4"
               poster="https://res.cloudinary.com/dj8jyjcvo/video/upload/so_0,f_jpg,w_1200,q_auto/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4"
-              autoPlay
               muted
               loop
               playsInline
+              preload={coarsePointer ? "none" : "metadata"}
+              data-hero-video
               aria-label="Project preview reel"
             />
             <div className="hero__device-vignette" aria-hidden="true" />
@@ -229,9 +215,6 @@ export function HeroSection() {
         <div className="hero__stats-divider" aria-hidden="true" />
         <Stat value={3}                        label="Enterprise clients"   inView={statsInView} />
       </div>
-
-      {/* ── Sound nudge ── */}
-      <SoundNudge />
 
     </section>
   );
