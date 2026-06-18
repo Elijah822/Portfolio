@@ -74,8 +74,8 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           z-index: 100;
           padding-top: 16px;
           padding-bottom: 16px;
-          padding-left: clamp(20px, 2.5vw, 36px);
-          padding-right: clamp(20px, 2.5vw, 36px);
+          padding-left: var(--page-gutter);
+          padding-right: var(--page-gutter);
           display: flex;
           justify-content: space-between;
           align-items: center;

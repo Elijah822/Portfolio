@@ -91,7 +91,7 @@ export default function AccessibilityMenu() {
         .a11y-trigger,
         .a11y-panel {
           left: auto !important;
-          right: clamp(20px, 2.5vw, 36px);
+          right: var(--page-gutter);
         }
       `}</style>
       <button
