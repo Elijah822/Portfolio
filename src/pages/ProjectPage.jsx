@@ -185,16 +185,14 @@ export default function ProjectPage() {
           .project-hero-media {
             width: 100%;
             max-width: 100%;
+            height: 50svh;
             aspect-ratio: auto;
-            height: auto;
-            min-height: 0;
           }
           .project-hero-media video {
             width: 100%;
-            height: auto;
+            height: 100%;
             max-width: 100%;
-            min-height: 0;
-            object-fit: contain;
+            object-fit: cover;
           }
         }
         .project-meta-badges {
