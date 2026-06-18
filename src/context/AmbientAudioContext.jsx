@@ -42,8 +42,7 @@ export function AmbientAudioProvider({ children }) {
   useEffect(() => {
     if (!soundOn) return undefined
     requestAmbientPlay()
-    const id = setInterval(() => requestAmbientPlay(), 1500)
-    return () => clearInterval(id)
+    return undefined
   }, [soundOn])
 
   const toggleSound = useCallback(() => {
@@ -52,8 +51,8 @@ export function AmbientAudioProvider({ children }) {
       setAmbientVolume(0)
       setSoundOn(false)
     } else {
-      enableSound()
       unlockAudio()
+      enableSound()
     }
   }, [soundOn, enableSound])
 
