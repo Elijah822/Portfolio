@@ -5,7 +5,6 @@ import {
   requestAmbientPlay,
   setAmbientVolume,
   setupAudioOnMouseMove,
-  shouldAutoEnableOnGesture,
   startAmbientMusic,
   stopAmbientMusic,
   unlockAudio,
@@ -27,7 +26,7 @@ export function AmbientAudioProvider({ children }) {
     initAmbientPlayer().catch(() => {})
 
     const offUnlock = onAudioUnlock(() => {
-      if (isAudioPrefOn() || shouldAutoEnableOnGesture()) enableSound()
+      if (isAudioPrefOn()) enableSound()
     })
     const cleanupGesture = setupAudioOnMouseMove(enableSound)
 

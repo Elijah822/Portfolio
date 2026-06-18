@@ -14,6 +14,11 @@ let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
+const ARP_FREQS = [196, 247, 294, 349, 392]
+let arpStep = 0
+
+const MEDIA_EVENTS = new Set(["pointerdown", "touchstart", "touchend", "keydown", "click"])
+const SOFT_EVENTS = new Set(["pointermove", "mousemove", "scroll", "wheel", "touchmove"])
 
 export function isAudioPrefOn() {
   try {
@@ -74,6 +79,40 @@ function replayPendingLoadTicks() {
   if (pendingLoadPct % 4 !== 0) playLoadTick(pendingLoadPct, true)
 }
 
+function playArpNote() {
+  if (!ambientOn || !unlocked || !ctx || !master) return
+  const t = ctx.currentTime
+  const osc = ctx.createOscillator()
+  const g = ctx.createGain()
+  osc.type = "sine"
+  osc.frequency.value = ARP_FREQS[arpStep % ARP_FREQS.length]
+  arpStep += 1
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(0.05, t + 0.1)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 2.6)
+  osc.connect(g)
+  g.connect(master)
+  osc.start(t)
+  osc.stop(t + 2.7)
+}
+
+function startWebAmbientArp() {
+  if (arpTimer) return
+  playArpNote()
+  arpTimer = setInterval(playArpNote, 2600)
+}
+
+function stopWebAmbientArp() {
+  if (arpTimer) clearInterval(arpTimer)
+  arpTimer = null
+}
+
+function kickYouTubePlayback() {
+  queueAmbientPlay()
+  tryPlayAmbient()
+  void initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+}
+
 export function playLoadTick(pct, force = false) {
   if (!unlocked || !ctx || !master) return
   const step = Math.floor(pct / 4)
@@ -109,16 +148,11 @@ export function playLoadTick(pct, force = false) {
   }
 }
 
-export async function startAmbientMusic() {
+export function startAmbientMusic() {
   setAudioPref(true)
-  queueAmbientPlay()
-  try {
-    await initAmbientPlayer()
-    tryPlayAmbient()
-    ambientOn = true
-  } catch (_) {
-    ambientOn = false
-  }
+  ambientOn = true
+  startWebAmbientArp()
+  kickYouTubePlayback()
 }
 
 function tryPlayAmbient() {
@@ -133,8 +167,7 @@ export function requestAmbientPlay() {
 export function stopAmbientMusic() {
   setAudioPref(false)
   pauseAmbientTrack()
-  if (arpTimer) clearInterval(arpTimer)
-  arpTimer = null
+  stopWebAmbientArp()
   ambientOn = false
 }
 
@@ -147,7 +180,7 @@ export function unlockAudio() {
   const wasUnlocked = unlocked
   const audioCtx = getCtx()
   if (!audioCtx) return false
-  if (audioCtx.state === "suspended") audioCtx.resume()
+  if (audioCtx.state === "suspended") void audioCtx.resume()
   if (!master) {
     master = audioCtx.createGain()
     master.gain.value = 0.15
@@ -159,47 +192,42 @@ export function unlockAudio() {
     notifyUnlock()
   }
 
-  if (isAudioPrefOn()) {
-    tryPlayAmbient()
-    initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
-  }
+  if (isAudioPrefOn()) kickYouTubePlayback()
   return !wasUnlocked
 }
 
-export function setupAudioOnMouseMove(onUnlock) {
+export function setupAudioOnMouseMove(onEnable) {
   let autoEnabled = false
-  const handler = () => {
+
+  const handle = event => {
     unlockAudio()
-    if (isAudioPrefOn()) {
-      tryPlayAmbient()
+    const type = event?.type ?? ""
+    const isMedia = MEDIA_EVENTS.has(type)
+    const isSoft = SOFT_EVENTS.has(type)
+
+    if (isAudioPrefOn() || autoEnabled) {
+      if (!ambientOn) {
+        ambientOn = true
+        startWebAmbientArp()
+      }
+      if (isMedia) kickYouTubePlayback()
+      else tryPlayAmbient()
       return
     }
-    if (!autoEnabled && shouldAutoEnableOnGesture()) {
-      autoEnabled = true
-      onUnlock?.()
-    }
+
+    if (!shouldAutoEnableOnGesture() || (!isMedia && !isSoft)) return
+
+    autoEnabled = true
+    onEnable?.()
+    if (isMedia) kickYouTubePlayback()
   }
 
   const opts = { passive: true, capture: true }
-  const events = [
-    "pointermove",
-    "mousemove",
-    "touchstart",
-    "scroll",
-    "wheel",
-    "keydown",
-  ]
-
-  events.forEach(evt => {
-    window.addEventListener(evt, handler, opts)
-    document.addEventListener(evt, handler, opts)
-  })
+  const events = [...MEDIA_EVENTS, ...SOFT_EVENTS]
+  events.forEach(evt => window.addEventListener(evt, handle, opts))
 
   return () => {
-    events.forEach(evt => {
-      window.removeEventListener(evt, handler, opts)
-      document.removeEventListener(evt, handler, opts)
-    })
+    events.forEach(evt => window.removeEventListener(evt, handle, opts))
   }
 }
 
