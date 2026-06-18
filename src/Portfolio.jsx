@@ -379,7 +379,10 @@ function Loader({ onDone }) {
   const gap = CIRC - dash
 
   return (
-    <div onMouseMove={() => { if (!isAudioUnlocked()) unlockAudio() }} onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }} onClick={() => { if (!isAudioUnlocked()) unlockAudio() }}
+    <div
+      onPointerDown={() => { if (!isAudioUnlocked()) unlockAudio() }}
+      onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }}
+      onClick={() => { if (!isAudioUnlocked()) unlockAudio() }}
       style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, marginBottom: 48, textTransform: "uppercase" }}>Akinlolu Elijah</div>
 

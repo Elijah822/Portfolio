@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import {
   isAudioPrefOn,
+  isExplicitlyMuted,
   onAudioUnlock,
   requestAmbientPlay,
   setAmbientVolume,
   setupAudioOnMouseMove,
-  shouldAutoEnableOnGesture,
   startAmbientMusic,
   stopAmbientMusic,
   unlockAudio,
@@ -27,7 +27,7 @@ export function AmbientAudioProvider({ children }) {
     initAmbientPlayer().catch(() => {})
 
     const offUnlock = onAudioUnlock(() => {
-      if (isAudioPrefOn() || shouldAutoEnableOnGesture()) enableSound()
+      if (isAudioPrefOn() && !isExplicitlyMuted()) enableSound()
     })
     const cleanupGesture = setupAudioOnMouseMove(enableSound)
 
