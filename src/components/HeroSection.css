@@ -139,6 +139,7 @@
 }
 
 .hero__role-accent {
+  color: #e0dbd2;
   font-weight: 700;
 }
 
@@ -302,7 +303,7 @@
   margin: 0 auto 28px;
   margin-left: max(clamp(20px, 2.5vw, 36px), calc((100% - min(1520px, 100%)) / 2));
   margin-right: auto;
-  padding: 16px 24px;
+  padding: 18px 26px;
   background: rgba(255,255,255,0.022);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
