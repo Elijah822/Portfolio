@@ -1,6 +1,7 @@
 import { MUSIC_AUDIO_URL } from "../data/projectMeta.js"
 
 let audio = null
+let warmed = false
 
 function ensureAudio() {
   if (!audio) {
@@ -13,26 +14,44 @@ function ensureAudio() {
 }
 
 export function initAmbientPlayer() {
-  ensureAudio().load()
+  const el = ensureAudio()
+  el.muted = true
+  el.load()
+  if (!warmed) {
+    warmed = true
+    void el.play().catch(() => {})
+  }
 }
 
 export function isAmbientPlaying() {
   return Boolean(audio && !audio.paused)
 }
 
+export function isAmbientAudible() {
+  return Boolean(audio && !audio.paused && !audio.muted)
+}
+
 export function playAmbientTrack() {
   const el = ensureAudio()
+  el.muted = false
+  el.volume = 0.22
+
   if (!el.paused) return Promise.resolve(true)
 
-  return el.play()
-    .then(() => true)
-    .catch(() => false)
+  try {
+    return el.play()
+      .then(() => true)
+      .catch(() => false)
+  } catch (_) {
+    return Promise.resolve(false)
+  }
 }
 
 export function pauseAmbientTrack() {
   if (!audio) return
   audio.pause()
   try { audio.currentTime = 0 } catch (_) {}
+  audio.muted = true
 }
 
 export function setAmbientTrackVolume(v) {

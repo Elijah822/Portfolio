@@ -1,5 +1,6 @@
 import {
   initAmbientPlayer,
+  isAmbientAudible,
   isAmbientPlaying,
   pauseAmbientTrack,
   playAmbientTrack,
@@ -13,8 +14,9 @@ let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
+const SOUND_TOGGLE = "[data-sound-toggle]"
 
-const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "touchend", "keydown", "click"]
+const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "click"]
 const SOFT_EVENTS = ["pointermove", "mousemove", "scroll", "wheel", "touchmove"]
 
 export function isAudioPrefOn() {
@@ -33,13 +35,15 @@ export function isExplicitlyMuted() {
   }
 }
 
-export function shouldAutoEnableOnGesture() {
-  return !isExplicitlyMuted() && sessionStorage.getItem(AUDIO_PREF_KEY) === null
-}
-
 function setAudioPref(on) {
   try {
     sessionStorage.setItem(AUDIO_PREF_KEY, on ? "1" : "0")
+  } catch (_) {}
+}
+
+function clearAudioPref() {
+  try {
+    sessionStorage.removeItem(AUDIO_PREF_KEY)
   } catch (_) {}
 }
 
@@ -116,14 +120,13 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
-  if (isAmbientPlaying()) {
+  if (isAmbientAudible()) {
     setAudioPref(true)
     return Promise.resolve(true)
   }
 
-  setAudioPref(true)
   return playAmbientTrack().then(ok => {
-    if (!ok) setAudioPref(false)
+    if (ok) setAudioPref(true)
     return ok
   })
 }
@@ -152,17 +155,26 @@ export function unlockAudio() {
   return true
 }
 
+function isSoundToggleTarget(target) {
+  return Boolean(target?.closest?.(SOUND_TOGGLE))
+}
+
 export function setupAudioOnMouseMove(onEnable) {
   let autoEnabled = false
 
   const markEnabled = () => {
+    if (autoEnabled) return
     autoEnabled = true
     onEnable?.()
   }
 
-  const attemptStart = () => {
+  const tryPlay = () => {
     if (isExplicitlyMuted()) return Promise.resolve(false)
     unlockAudio()
+    if (isAmbientAudible()) {
+      markEnabled()
+      return Promise.resolve(true)
+    }
     return startAmbientMusic().then(ok => {
       if (ok) markEnabled()
       return ok
@@ -170,19 +182,13 @@ export function setupAudioOnMouseMove(onEnable) {
   }
 
   const softHandler = () => {
-    if (autoEnabled || isExplicitlyMuted() || !shouldAutoEnableOnGesture()) return
-    void attemptStart()
+    if (isExplicitlyMuted() || autoEnabled) return
+    void tryPlay()
   }
 
-  const activateHandler = () => {
-    if (isExplicitlyMuted()) return
-    if (isAudioPrefOn()) {
-      unlockAudio()
-      void startAmbientMusic()
-      return
-    }
-    if (autoEnabled || !shouldAutoEnableOnGesture()) return
-    void attemptStart()
+  const activateHandler = e => {
+    if (isExplicitlyMuted() || isSoundToggleTarget(e.target)) return
+    void tryPlay()
   }
 
   const opts = { passive: true, capture: true }
@@ -204,4 +210,4 @@ export function teardownAudio() {
   lastLoadTick = -1
 }
 
-export { initAmbientPlayer }
+export { initAmbientPlayer, clearAudioPref }

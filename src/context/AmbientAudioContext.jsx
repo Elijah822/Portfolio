@@ -30,12 +30,6 @@ export function AmbientAudioProvider({ children }) {
     })
     const cleanupGesture = setupAudioOnMouseMove(markSoundOn)
 
-    if (isAudioPrefOn()) {
-      unlockAudio()
-      markSoundOn()
-      void startAmbientMusic()
-    }
-
     return () => {
       offUnlock()
       cleanupGesture()

@@ -12,6 +12,7 @@ export default function SoundButton({ compact = false }) {
       <style>{`@keyframes musicPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }`}</style>
       <button
       data-h
+      data-sound-toggle
       type="button"
       onClick={toggleSound}
       title={soundOn ? "Mute ambience" : "Move mouse or scroll to enable sound"}
