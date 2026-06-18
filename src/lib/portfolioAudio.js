@@ -167,24 +167,39 @@ export function unlockAudio() {
 }
 
 export function setupAudioOnMouseMove(onUnlock) {
-  let notified = false
+  let autoEnabled = false
   const handler = () => {
     unlockAudio()
     if (isAudioPrefOn()) {
       tryPlayAmbient()
-    } else if (!notified && shouldAutoEnableOnGesture()) {
-      notified = true
+      return
+    }
+    if (!autoEnabled && shouldAutoEnableOnGesture()) {
+      autoEnabled = true
       onUnlock?.()
     }
   }
 
   const opts = { passive: true, capture: true }
-  const events = ["pointermove", "mousemove", "touchstart", "keydown"]
+  const events = [
+    "pointermove",
+    "mousemove",
+    "touchstart",
+    "scroll",
+    "wheel",
+    "keydown",
+  ]
 
-  events.forEach(evt => document.addEventListener(evt, handler, opts))
+  events.forEach(evt => {
+    window.addEventListener(evt, handler, opts)
+    document.addEventListener(evt, handler, opts)
+  })
 
   return () => {
-    events.forEach(evt => document.removeEventListener(evt, handler, opts))
+    events.forEach(evt => {
+      window.removeEventListener(evt, handler, opts)
+      document.removeEventListener(evt, handler, opts)
+    })
   }
 }
 

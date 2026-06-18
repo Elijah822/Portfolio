@@ -1196,7 +1196,8 @@ export default function Portfolio() {
           transition: border-color 0.3s;
         }
         .industry-group-sub {
-          max-width: 36ch;
+          max-width: none;
+          white-space: nowrap;
         }
         .project-card-mobile-detail {
           display: none;
@@ -1427,6 +1428,7 @@ export default function Portfolio() {
           .industry-group-sub {
             line-height: 1.85;
             max-width: none;
+            white-space: normal;
           }
           .project-card {
             min-height: auto !important;
