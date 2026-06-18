@@ -686,12 +686,12 @@ function ProjectCard({ p, i }) {
 function Work() {
   return (
     <section id="work" className="work-section" style={{ paddingTop: 120, paddingBottom: 80 }}>
-      <ScrollReveal variant="fade-up" className="page-pad-x" style={{ marginBottom: 80, textAlign: "center" }}>
+      <ScrollReveal variant="fade-up" className="page-pad-x work-section-intro" style={{ marginBottom: 80 }}>
         <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 Selected Work ]</div>
-        <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 auto 16px", maxWidth: 720 }}>
+        <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, margin: "0 auto", lineHeight: 1.7, maxWidth: 480 }}>Click any project for the full case study.</p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, margin: 0, lineHeight: 1.7 }}>Click any project for the full case study.</p>
       </ScrollReveal>
 
       {INDUSTRIES.map((group, gi) => (
@@ -1245,6 +1245,25 @@ export default function Portfolio() {
           }
           .project-card {
             min-height: 420px;
+          }
+        }
+        .work-section-intro h2,
+        .work-section-intro p {
+          max-width: none;
+          margin-left: 0;
+          margin-right: 0;
+        }
+        @media (min-width: 769px) {
+          .work-section-intro {
+            text-align: center;
+          }
+          .work-section-intro h2 {
+            margin: 0 auto 16px;
+            max-width: 720px;
+          }
+          .work-section-intro p {
+            margin: 0 auto;
+            max-width: 480px;
           }
         }
         @media (max-width: 768px) {
