@@ -194,8 +194,8 @@ export const CASE_STUDIES = {
     ],
     deliverables: ["Payment flows", "KYC compliance UX", "AI design system", "Enterprise dashboards"],
     outcomes: [
-      "€40M+ regulatory exposure avoided across KYC workstreams.",
-      "Tens of millions saved in App Store commission via compliant billing alternatives.",
+      "€50M+ impact delivered across KYC and compliance workstreams.",
+      "Potential €10M+ saved in App Store commission via compliant billing alternatives.",
       "50% faster design delivery through AI-assisted system workflows.",
     ],
   },

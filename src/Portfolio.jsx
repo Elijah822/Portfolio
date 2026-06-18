@@ -38,12 +38,12 @@ export const INDUSTRIES = [
         id: "01", title: "Toke",
         cat: "E-Commerce · Retail · Design Systems · AI",
         year: "2024 to 25", status: "live", statusLabel: "Live",
-        impact: "€40M+ impact", accent: "#c9aa7c",
+        impact: "€50M+ impact", accent: "#c9aa7c",
         url: "https://www.toke.ai/",
         desc: "Lead Product Designer at Toke, an e-commerce and retail platform serving major enterprise clients across storefronts, payments, compliance, and AI-powered design infrastructure. Solely responsible for product design across three concurrent enterprise clients.",
         metrics: [
           { value: "€40M+", label: "Regulatory exposure avoided (KYC)" },
-          { value: "€M+", label: "App Store commissions saved" },
+          { value: "€10M+", label: "Potential App Store commission saved" },
           { value: "50%", label: "Team velocity via AI design system" },
           { value: "3", label: "Enterprise clients, simultaneously" },
         ],
@@ -58,7 +58,7 @@ export const INDUSTRIES = [
           {
             title: "App Store Commission Strategy",
             desc: "Designed compliant alternative payment flows across EU (Digital Markets Act), Thailand, South Africa, and other markets, legally bypassing Apple and Google's 30% billing commission.",
-            metric: "Tens of €M saved",
+            metric: "€10M+ potential saved",
           },
           {
             title: "KYC & Industrial Compliance",

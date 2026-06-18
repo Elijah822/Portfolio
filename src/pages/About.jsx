@@ -33,7 +33,7 @@ const RESUME_HIGHLIGHTS = [
   },
   {
     title: "Impact",
-    items: ["€40M+ regulatory exposure avoided", "18+ products shipped across 8 countries", "3 enterprise clients simultaneously"],
+    items: ["€50M+ regulatory exposure avoided", "18+ products shipped across 8 countries", "3 enterprise clients simultaneously"],
   },
 ]
 
