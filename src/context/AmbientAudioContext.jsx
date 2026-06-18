@@ -52,10 +52,12 @@ export function AmbientAudioProvider({ children }) {
       setAmbientVolume(0)
       setSoundOn(false)
     } else {
+      startAmbientMusic()
       unlockAudio()
-      enableSound()
+      setSoundOn(true)
+      setAmbientVolume(0.22)
     }
-  }, [soundOn, enableSound])
+  }, [soundOn])
 
   return (
     <AmbientAudioContext.Provider value={{ soundOn, toggleSound }}>

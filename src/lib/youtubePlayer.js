@@ -1,63 +1,22 @@
 import { MUSIC_YOUTUBE_ID } from "../data/projectMeta.js"
 
-let player = null
-let apiReadyPromise = null
-let playerReadyPromise = null
 let wantPlay = false
-
 const IFRAME_ID = "yt-ambient-player"
 
-function siteOrigin() {
-  if (typeof window === "undefined") return ""
-  return window.location.origin
-}
-
-function embedSrc(videoId) {
+function embedUrl(autoplay) {
   const params = new URLSearchParams({
-    autoplay: "0",
+    autoplay: autoplay ? "1" : "0",
+    mute: "0",
     loop: "1",
-    playlist: videoId,
+    playlist: MUSIC_YOUTUBE_ID,
     controls: "0",
     disablekb: "1",
     fs: "0",
     modestbranding: "1",
     playsinline: "1",
-    enablejsapi: "1",
-    origin: siteOrigin(),
-    widget_referrer: typeof window !== "undefined" ? window.location.href : siteOrigin(),
+    rel: "0",
   })
-  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`
-}
-
-function ensureApi() {
-  if (apiReadyPromise) return apiReadyPromise
-
-  apiReadyPromise = new Promise(resolve => {
-    if (window.YT?.Player) {
-      resolve()
-      return
-    }
-
-    const prev = window.onYouTubeIframeAPIReady
-    window.onYouTubeIframeAPIReady = () => {
-      prev?.()
-      resolve()
-    }
-
-    const existing = document.querySelector('script[src*="youtube.com/iframe_api"]')
-    if (!existing) {
-      const tag = document.createElement("script")
-      const origin = siteOrigin()
-      tag.src = origin
-        ? `https://www.youtube.com/iframe_api?origin=${encodeURIComponent(origin)}`
-        : "https://www.youtube.com/iframe_api"
-      document.head.appendChild(tag)
-    } else if (!existing.src.includes("origin=") && siteOrigin()) {
-      existing.src = `https://www.youtube.com/iframe_api?origin=${encodeURIComponent(siteOrigin())}`
-    }
-  })
-
-  return apiReadyPromise
+  return `https://www.youtube.com/embed/${MUSIC_YOUTUBE_ID}?${params.toString()}`
 }
 
 function ensureIframe() {
@@ -65,7 +24,8 @@ function ensureIframe() {
   if (!mount) {
     mount = document.createElement("div")
     mount.id = "yt-ambient-mount"
-    mount.style.cssText = "position:fixed;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none"
+    mount.setAttribute("aria-hidden", "true")
+    mount.style.cssText = "position:fixed;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none"
     document.body.appendChild(mount)
   }
 
@@ -75,79 +35,41 @@ function ensureIframe() {
     iframe.id = IFRAME_ID
     iframe.title = "Ambient audio"
     iframe.allow = "autoplay; encrypted-media"
-    iframe.style.cssText = "width:0;height:0;border:0"
-    iframe.src = embedSrc(MUSIC_YOUTUBE_ID)
+    iframe.style.cssText = "width:1px;height:1px;border:0"
     mount.appendChild(iframe)
   }
 
   return iframe
 }
 
-function tryPlay() {
-  if (!player?.playVideo) return false
-  try {
-    player.unMute?.()
-    player.playVideo()
-    return true
-  } catch (_) {
-    return false
-  }
+export async function initAmbientPlayer() {
+  const iframe = ensureIframe()
+  if (!iframe.src) iframe.src = embedUrl(false)
+  return iframe
 }
 
 export function queueAmbientPlay() {
   wantPlay = true
-  return tryPlay()
+  const iframe = ensureIframe()
+  const playing = embedUrl(true)
+  if (!iframe.src.includes("autoplay=1")) iframe.src = playing
+  return true
 }
 
 export function isPlayerReady() {
-  return Boolean(player?.playVideo)
-}
-
-export async function initAmbientPlayer() {
-  await ensureApi()
-  if (player) return player
-  if (playerReadyPromise) return playerReadyPromise
-
-  playerReadyPromise = new Promise(resolve => {
-    ensureIframe()
-
-    player = new window.YT.Player(IFRAME_ID, {
-      events: {
-        onReady: e => {
-          try { e.target.unMute() } catch (_) {}
-          e.target.setVolume(22)
-          if (wantPlay) tryPlay()
-          resolve(player)
-        },
-        onStateChange: e => {
-          if (wantPlay && e.data === window.YT.PlayerState.PAUSED) tryPlay()
-        },
-        onError: () => {
-          resolve(player)
-        },
-      },
-    })
-  })
-
-  return playerReadyPromise
+  return Boolean(document.getElementById(IFRAME_ID))
 }
 
 export async function playAmbientTrack() {
   queueAmbientPlay()
-  if (!player) await initAmbientPlayer()
-  else tryPlay()
 }
 
 export function pauseAmbientTrack() {
   wantPlay = false
-  try {
-    player?.pauseVideo?.()
-    player?.mute?.()
-  } catch (_) {}
+  const iframe = document.getElementById(IFRAME_ID)
+  if (iframe) iframe.src = embedUrl(false)
 }
 
-export function setAmbientTrackVolume(v) {
-  try {
-    player?.setVolume?.(Math.round(v * 100))
-  } catch (_) {}
+export function setAmbientTrackVolume() {
+  // Volume is controlled by the embed; mute toggle handles on/off.
 }

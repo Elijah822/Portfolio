@@ -67,10 +67,8 @@ function notifyUnlock() {
 }
 
 function kickYouTubePlayback() {
-  if (isExplicitlyMuted()) return
   queueAmbientPlay()
-  tryPlayAmbient()
-  void initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+  void initAmbientPlayer().catch(() => {})
 }
 
 export function setPendingLoadPct(pct) {
@@ -124,7 +122,6 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
-  if (isExplicitlyMuted()) return
   setAudioPref(true)
   ambientOn = true
   kickYouTubePlayback()
@@ -153,8 +150,6 @@ export function setAmbientVolume(v) {
 }
 
 export function unlockAudio() {
-  if (isExplicitlyMuted()) return false
-
   const wasUnlocked = unlocked
   const audioCtx = getCtx()
   if (!audioCtx) return false
