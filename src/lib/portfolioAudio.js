@@ -9,29 +9,26 @@ let ctx = null
 let master = null
 let unlocked = false
 let ambientOn = false
+let arpTimer = null
 let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
 
-export function isExplicitlyMuted() {
+export function isAudioPrefOn() {
   try {
-    return sessionStorage.getItem(AUDIO_PREF_KEY) === "0"
+    return sessionStorage.getItem(AUDIO_PREF_KEY) === "1"
   } catch (_) {
     return false
   }
 }
 
-export function isAudioPrefOn() {
-  try {
-    return sessionStorage.getItem(AUDIO_PREF_KEY) !== "0"
-  } catch (_) {
-    return true
-  }
-}
-
 export function shouldAutoEnableOnGesture() {
-  return !isExplicitlyMuted()
+  try {
+    return sessionStorage.getItem(AUDIO_PREF_KEY) === null
+  } catch (_) {
+    return false
+  }
 }
 
 function setAudioPref(on) {
@@ -77,12 +74,6 @@ function replayPendingLoadTicks() {
   if (pendingLoadPct % 4 !== 0) playLoadTick(pendingLoadPct, true)
 }
 
-function kickYouTubePlayback() {
-  queueAmbientPlay()
-  tryPlayAmbient()
-  void initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
-}
-
 export function playLoadTick(pct, force = false) {
   if (!unlocked || !ctx || !master) return
   const step = Math.floor(pct / 4)
@@ -118,15 +109,20 @@ export function playLoadTick(pct, force = false) {
   }
 }
 
-export function startAmbientMusic() {
-  if (isExplicitlyMuted()) return
+export async function startAmbientMusic() {
   setAudioPref(true)
-  ambientOn = true
-  kickYouTubePlayback()
+  queueAmbientPlay()
+  try {
+    await initAmbientPlayer()
+    tryPlayAmbient()
+    ambientOn = true
+  } catch (_) {
+    ambientOn = false
+  }
 }
 
 function tryPlayAmbient() {
-  if (isExplicitlyMuted()) return
+  if (!isAudioPrefOn()) return
   queueAmbientPlay()
 }
 
@@ -137,6 +133,8 @@ export function requestAmbientPlay() {
 export function stopAmbientMusic() {
   setAudioPref(false)
   pauseAmbientTrack()
+  if (arpTimer) clearInterval(arpTimer)
+  arpTimer = null
   ambientOn = false
 }
 
@@ -146,45 +144,47 @@ export function setAmbientVolume(v) {
 }
 
 export function unlockAudio() {
-  if (isExplicitlyMuted()) return false
-
   const wasUnlocked = unlocked
   const audioCtx = getCtx()
   if (!audioCtx) return false
-  if (audioCtx.state === "suspended") void audioCtx.resume()
+  if (audioCtx.state === "suspended") audioCtx.resume()
   if (!master) {
     master = audioCtx.createGain()
     master.gain.value = 0.15
     master.connect(audioCtx.destination)
   }
-
   if (!wasUnlocked) {
     unlocked = true
-    setAudioPref(true)
     if (pendingLoadPct > 0) replayPendingLoadTicks()
-    kickYouTubePlayback()
     notifyUnlock()
-    return true
   }
 
-  if (isAudioPrefOn()) kickYouTubePlayback()
-  return false
+  if (isAudioPrefOn()) {
+    tryPlayAmbient()
+    initAmbientPlayer().then(() => tryPlayAmbient()).catch(() => {})
+  }
+  return !wasUnlocked
 }
 
 export function setupAudioOnMouseMove(onUnlock) {
+  let notified = false
   const handler = () => {
-    if (unlocked || isExplicitlyMuted()) return
-    const fresh = unlockAudio()
-    if (fresh) onUnlock?.()
+    unlockAudio()
+    if (isAudioPrefOn()) {
+      tryPlayAmbient()
+    } else if (!notified && shouldAutoEnableOnGesture()) {
+      notified = true
+      onUnlock?.()
+    }
   }
 
   const opts = { passive: true, capture: true }
-  const events = ["pointermove", "mousemove", "touchstart", "touchmove", "scroll", "wheel", "keydown"]
+  const events = ["pointermove", "mousemove", "touchstart", "keydown"]
 
-  events.forEach(evt => window.addEventListener(evt, handler, opts))
+  events.forEach(evt => document.addEventListener(evt, handler, opts))
 
   return () => {
-    events.forEach(evt => window.removeEventListener(evt, handler, opts))
+    events.forEach(evt => document.removeEventListener(evt, handler, opts))
   }
 }
 
