@@ -87,9 +87,22 @@ export default function AccessibilityMenu() {
 
   return (
     <>
+      <style>{`
+        @media (max-width: 768px) {
+          .a11y-trigger {
+            left: auto !important;
+            right: clamp(20px, 2.5vw, 36px);
+          }
+          .a11y-panel {
+            left: auto !important;
+            right: clamp(20px, 2.5vw, 36px);
+          }
+        }
+      `}</style>
       <button
         type="button"
         data-h
+        className="a11y-trigger"
         aria-expanded={open}
         aria-controls="a11y-panel"
         aria-label="Accessibility options"
@@ -123,6 +136,7 @@ export default function AccessibilityMenu() {
         <div
           id="a11y-panel"
           role="dialog"
+          className="a11y-panel"
           aria-label="Accessibility settings"
           style={{
             position: "fixed",
