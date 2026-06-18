@@ -297,8 +297,9 @@
 .hero__stats {
   position: relative; z-index: 2;
   display: flex; align-items: center;
-  width: fit-content;
-  max-width: 100%;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: min(1520px, 100%);
   margin: 0 auto 28px;
   margin-left: max(clamp(20px, 2.5vw, 36px), calc((100% - min(1520px, 100%)) / 2));
   padding: 14px 20px;
@@ -424,11 +425,7 @@
   .hero-stat {
     flex: unset;
     padding: 0 8px;
-  }
-
-  .hero-stat:last-of-type {
-    grid-column: 1 / -1;
-    text-align: center;
+    text-align: left;
   }
 
   .hero__stats-divider { display: none; }
