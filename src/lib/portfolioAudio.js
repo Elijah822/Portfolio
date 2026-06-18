@@ -9,31 +9,29 @@ let ctx = null
 let master = null
 let unlocked = false
 let ambientOn = false
-let arpTimer = null
 let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
-const ARP_FREQS = [196, 247, 294, 349, 392]
-let arpStep = 0
 
-const MEDIA_EVENTS = new Set(["pointerdown", "touchstart", "touchend", "keydown", "click"])
-const SOFT_EVENTS = new Set(["pointermove", "mousemove", "scroll", "wheel", "touchmove"])
-
-export function isAudioPrefOn() {
+export function isExplicitlyMuted() {
   try {
-    return sessionStorage.getItem(AUDIO_PREF_KEY) === "1"
+    return sessionStorage.getItem(AUDIO_PREF_KEY) === "0"
   } catch (_) {
     return false
   }
 }
 
-export function shouldAutoEnableOnGesture() {
+export function isAudioPrefOn() {
   try {
-    return sessionStorage.getItem(AUDIO_PREF_KEY) === null
+    return sessionStorage.getItem(AUDIO_PREF_KEY) !== "0"
   } catch (_) {
-    return false
+    return true
   }
+}
+
+export function shouldAutoEnableOnGesture() {
+  return !isExplicitlyMuted()
 }
 
 function setAudioPref(on) {
@@ -79,34 +77,6 @@ function replayPendingLoadTicks() {
   if (pendingLoadPct % 4 !== 0) playLoadTick(pendingLoadPct, true)
 }
 
-function playArpNote() {
-  if (!ambientOn || !unlocked || !ctx || !master) return
-  const t = ctx.currentTime
-  const osc = ctx.createOscillator()
-  const g = ctx.createGain()
-  osc.type = "sine"
-  osc.frequency.value = ARP_FREQS[arpStep % ARP_FREQS.length]
-  arpStep += 1
-  g.gain.setValueAtTime(0, t)
-  g.gain.linearRampToValueAtTime(0.05, t + 0.1)
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 2.6)
-  osc.connect(g)
-  g.connect(master)
-  osc.start(t)
-  osc.stop(t + 2.7)
-}
-
-function startWebAmbientArp() {
-  if (arpTimer) return
-  playArpNote()
-  arpTimer = setInterval(playArpNote, 2600)
-}
-
-function stopWebAmbientArp() {
-  if (arpTimer) clearInterval(arpTimer)
-  arpTimer = null
-}
-
 function kickYouTubePlayback() {
   queueAmbientPlay()
   tryPlayAmbient()
@@ -149,14 +119,14 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
+  if (isExplicitlyMuted()) return
   setAudioPref(true)
   ambientOn = true
-  startWebAmbientArp()
   kickYouTubePlayback()
 }
 
 function tryPlayAmbient() {
-  if (!isAudioPrefOn()) return
+  if (isExplicitlyMuted()) return
   queueAmbientPlay()
 }
 
@@ -167,7 +137,6 @@ export function requestAmbientPlay() {
 export function stopAmbientMusic() {
   setAudioPref(false)
   pauseAmbientTrack()
-  stopWebAmbientArp()
   ambientOn = false
 }
 
@@ -177,6 +146,8 @@ export function setAmbientVolume(v) {
 }
 
 export function unlockAudio() {
+  if (isExplicitlyMuted()) return false
+
   const wasUnlocked = unlocked
   const audioCtx = getCtx()
   if (!audioCtx) return false
@@ -186,48 +157,34 @@ export function unlockAudio() {
     master.gain.value = 0.15
     master.connect(audioCtx.destination)
   }
+
   if (!wasUnlocked) {
     unlocked = true
+    setAudioPref(true)
     if (pendingLoadPct > 0) replayPendingLoadTicks()
+    kickYouTubePlayback()
     notifyUnlock()
+    return true
   }
 
   if (isAudioPrefOn()) kickYouTubePlayback()
-  return !wasUnlocked
+  return false
 }
 
-export function setupAudioOnMouseMove(onEnable) {
-  let autoEnabled = false
-
-  const handle = event => {
-    unlockAudio()
-    const type = event?.type ?? ""
-    const isMedia = MEDIA_EVENTS.has(type)
-    const isSoft = SOFT_EVENTS.has(type)
-
-    if (isAudioPrefOn() || autoEnabled) {
-      if (!ambientOn) {
-        ambientOn = true
-        startWebAmbientArp()
-      }
-      if (isMedia) kickYouTubePlayback()
-      else tryPlayAmbient()
-      return
-    }
-
-    if (!shouldAutoEnableOnGesture() || (!isMedia && !isSoft)) return
-
-    autoEnabled = true
-    onEnable?.()
-    if (isMedia) kickYouTubePlayback()
+export function setupAudioOnMouseMove(onUnlock) {
+  const handler = () => {
+    if (unlocked || isExplicitlyMuted()) return
+    const fresh = unlockAudio()
+    if (fresh) onUnlock?.()
   }
 
   const opts = { passive: true, capture: true }
-  const events = [...MEDIA_EVENTS, ...SOFT_EVENTS]
-  events.forEach(evt => window.addEventListener(evt, handle, opts))
+  const events = ["pointermove", "mousemove", "touchstart", "touchmove", "scroll", "wheel", "keydown"]
+
+  events.forEach(evt => window.addEventListener(evt, handler, opts))
 
   return () => {
-    events.forEach(evt => window.removeEventListener(evt, handle, opts))
+    events.forEach(evt => window.removeEventListener(evt, handler, opts))
   }
 }
 
