@@ -129,3 +129,50 @@ h4,
 h1 {
   font-variation-settings: "wght" 300;
 }
+
+.sound-nudge {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  padding: 10px 18px;
+  border-radius: 100px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 9999;
+}
+
+.sound-nudge--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  animation: nudgePulse 2.5s ease-in-out infinite;
+}
+
+.sound-nudge--dismissed {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+}
+
+.sound-nudge__icon {
+  animation: musicPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes nudgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.05); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+}
+
+@keyframes musicPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}

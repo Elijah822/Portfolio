@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
+import SoundNudge from "../components/SoundNudge.jsx"
 import {
   initAmbientPlayer,
   isAudioPrefOn,
@@ -12,6 +13,7 @@ import {
   unlockAudio,
 } from "../lib/portfolioAudio.js"
 
+const AUDIO_PREF_KEY = "portfolio-audio-on"
 const AmbientAudioContext = createContext(null)
 
 export function AmbientAudioProvider({ children }) {
@@ -20,6 +22,11 @@ export function AmbientAudioProvider({ children }) {
   const markSoundOn = useCallback(() => {
     setSoundOn(true)
     setAmbientVolume(0.22)
+  }, [])
+
+  useEffect(() => {
+    const prev = sessionStorage.getItem(AUDIO_PREF_KEY)
+    if (prev === "0") sessionStorage.removeItem(AUDIO_PREF_KEY)
   }, [])
 
   useEffect(() => {
@@ -54,6 +61,7 @@ export function AmbientAudioProvider({ children }) {
   return (
     <AmbientAudioContext.Provider value={{ soundOn, toggleSound }}>
       {children}
+      <SoundNudge />
     </AmbientAudioContext.Provider>
   )
 }
