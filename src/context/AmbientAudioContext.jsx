@@ -3,14 +3,12 @@ import {
   isAudioPrefOn,
   isExplicitlyMuted,
   onAudioUnlock,
-  requestAmbientPlay,
   setAmbientVolume,
   setupAudioOnMouseMove,
   startAmbientMusic,
   stopAmbientMusic,
   unlockAudio,
 } from "../lib/portfolioAudio.js"
-import { initAmbientPlayer } from "../lib/youtubePlayer.js"
 
 const AmbientAudioContext = createContext(null)
 
@@ -18,32 +16,27 @@ export function AmbientAudioProvider({ children }) {
   const [soundOn, setSoundOn] = useState(() => isAudioPrefOn())
 
   const enableSound = useCallback(() => {
-    startAmbientMusic()
     setSoundOn(true)
     setAmbientVolume(0.22)
+    startAmbientMusic()
   }, [])
 
   useEffect(() => {
-    initAmbientPlayer().catch(() => {})
-
     const offUnlock = onAudioUnlock(() => {
       if (isAudioPrefOn() && !isExplicitlyMuted()) enableSound()
     })
     const cleanupGesture = setupAudioOnMouseMove(enableSound)
 
-    if (isAudioPrefOn()) enableSound()
+    if (isAudioPrefOn()) {
+      unlockAudio()
+      enableSound()
+    }
 
     return () => {
       offUnlock()
       cleanupGesture()
     }
   }, [enableSound])
-
-  useEffect(() => {
-    if (!soundOn) return undefined
-    requestAmbientPlay()
-    return undefined
-  }, [soundOn])
 
   const toggleSound = useCallback(() => {
     if (soundOn) {
