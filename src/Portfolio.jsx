@@ -1049,6 +1049,7 @@ export default function Portfolio() {
           bottom: 0;
           height: 100%;
           width: min(44vw, 520px);
+          max-width: 100%;
           z-index: 0;
           opacity: 0.32;
           overflow: hidden;
@@ -1142,6 +1143,7 @@ export default function Portfolio() {
         .hero-section {
           min-height: 100vh;
           padding: 100px var(--page-gutter) 88px;
+          max-width: 100%;
         }
         .hero-inner {
           max-width: 85vw;

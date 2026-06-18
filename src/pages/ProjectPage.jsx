@@ -183,12 +183,18 @@ export default function ProjectPage() {
         @media (max-width: 768px) {
           .project-main { padding-top: 72px !important; padding-bottom: 80px !important; }
           .project-hero-media {
+            width: 100%;
+            max-width: 100%;
             aspect-ratio: auto;
-            min-height: calc(100svh - 248px);
-            max-height: none;
+            height: auto;
+            min-height: 0;
           }
           .project-hero-media video {
-            min-height: calc(100svh - 248px);
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            min-height: 0;
+            object-fit: contain;
           }
         }
         .project-meta-badges {

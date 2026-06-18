@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 const AUDIO_PREF_KEY = "portfolio-audio-on"
-const SHOW_EVENTS = ["mousemove", "pointermove", "scroll", "touchstart"]
+const SHOW_EVENTS = ["mousemove", "pointermove"]
+
+function isDesktopPointer() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches
+}
 
 export default function SoundNudge() {
   const nudgeRef = useRef(null)
   const shown = useRef(false)
   const dismissed = useRef(false)
   const listeners = useRef({ show: null, dismiss: null })
-  const [hint, setHint] = useState("Click anywhere to enable ambient sound")
+  const [enabled, setEnabled] = useState(false)
 
   const dismissNudge = useCallback((explicitMute = false) => {
     if (dismissed.current) return
@@ -36,14 +40,14 @@ export default function SoundNudge() {
   }, [dismissNudge])
 
   useEffect(() => {
-    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
-      setHint("Tap anywhere to enable ambient sound")
-    }
+    setEnabled(isDesktopPointer())
   }, [])
 
   useEffect(() => {
+    if (!enabled) return undefined
+
     const stored = sessionStorage.getItem(AUDIO_PREF_KEY)
-    if (stored !== null) return
+    if (stored !== null) return undefined
 
     const showNudge = () => {
       if (shown.current || dismissed.current) return
@@ -64,12 +68,14 @@ export default function SoundNudge() {
       SHOW_EVENTS.forEach(evt => document.removeEventListener(evt, showNudge))
       document.removeEventListener("pointerdown", dismissOnInteract)
     }
-  }, [dismissNudge])
+  }, [dismissNudge, enabled])
+
+  if (!enabled) return null
 
   return (
     <div ref={nudgeRef} className="sound-nudge" data-sound-nudge role="status" aria-live="polite">
       <span className="sound-nudge__icon" aria-hidden="true">♪</span>
-      <span className="sound-nudge__text">{hint}</span>
+      <span className="sound-nudge__text">Click anywhere to enable ambient sound</span>
       <button
         type="button"
         className="sound-nudge__close"
