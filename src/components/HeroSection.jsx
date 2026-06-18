@@ -150,18 +150,18 @@ export function HeroSection() {
 
           <p className="hero__role">
             I'm a{' '}
-            <em className="hero__role-accent">Fullstack product designer</em>
+            <strong className="hero__role-accent">Fullstack product designer</strong>
             {' '}and{' '}
-            <em className="hero__role-accent">AI engineer</em>
+            <strong className="hero__role-accent">AI engineer</strong>
           </p>
 
           <p className="hero__body">
             Sharp design is my craft — I turn complex products into experiences
             people actually get. I use{' '}
-            <span className="hero__tool">Figma MCP</span>,{' '}
-            <span className="hero__tool">Claude Code</span> and{' '}
-            <span className="hero__tool">Cursor</span> to move at{' '}
-            <span className="hero__tool">10× speed</span>, shipping design decisions as working software.
+            <strong className="hero__tool">Figma MCP</strong>,{' '}
+            <strong className="hero__tool">Claude Code</strong> and{' '}
+            <strong className="hero__tool">Cursor</strong> to move at{' '}
+            <strong className="hero__tool">10× speed</strong>, shipping design decisions as working software.
           </p>
 
           <div className="hero__ctas">
