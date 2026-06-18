@@ -139,8 +139,6 @@
 }
 
 .hero__role-accent {
-  color: #e0dbd2;
-  font-style: normal;
   font-weight: 700;
 }
 
@@ -153,7 +151,7 @@
   animation: heroFadeUp 0.7s ease both 0.58s;
 }
 
-.hero__tool { color: #e0dbd2; font-weight: 700; }
+.hero__tool { font-weight: 700; }
 
 /* CTAs */
 .hero__ctas {
