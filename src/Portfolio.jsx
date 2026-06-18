@@ -5,9 +5,9 @@ import { getProjectMeta } from "./data/projectMeta.js"
 import SocialLinks from "./components/SocialLinks.jsx"
 import ScrollReveal from "./components/ScrollReveal.jsx"
 import SiteNav from "./components/SiteNav.jsx"
+import { HeroSection } from "./components/HeroSection.jsx"
 import { useFinePointer } from "./hooks/useMediaQuery.js"
 import { CONTACT } from "./data/contact.js"
-import { IMPACT_STATS } from "./data/globalReach.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
   isAudioUnlocked,
@@ -403,150 +403,6 @@ function Loader({ onDone }) {
           <span style={{ fontFamily: "var(--font-heading)", fontSize: 52, fontWeight: 300, color: TEXT, lineHeight: 1 }}>{n}</span>
           <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 3, color: GOLD }}>%</span>
         </div>
-      </div>
-    </div>
-  )
-}
-
-// ── HERO ──────────────────────────────────────────────────────────────────────
-function ImpactStat({ stat }) {
-  return (
-    <div style={{ borderLeft: `1px solid ${BORDER}`, paddingLeft: 18 }}>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 28, fontWeight: 300, color: GOLD, lineHeight: 1 }}>{stat.value}</div>
-      <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM, marginTop: 6, textTransform: "uppercase" }}>{stat.label}</div>
-    </div>
-  )
-}
-
-function Hero({ ready }) {
-  const finePointer = useFinePointer()
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
-  const [reelIdx, setReelIdx] = useState(0)
-  const heroReel = SHOWREEL[reelIdx]
-
-  useEffect(() => {
-    if (!ready) return
-    const id = setInterval(() => setReelIdx(i => (i + 1) % SHOWREEL.length), 7000)
-    return () => clearInterval(id)
-  }, [ready])
-
-  const handleMouse = useCallback(e => {
-    if (!finePointer) return
-    const cx = window.innerWidth / 2
-    const cy = window.innerHeight / 2
-    setMouse({ x: (e.clientX - cx) / cx, y: (e.clientY - cy) / cy })
-  }, [finePointer])
-
-  const f = delay => ({ opacity: ready ? 1 : 0, transition: `opacity 0.9s ${delay}s ease` })
-  const titleTilt = finePointer
-    ? { transform: `perspective(800px) rotateX(${mouse.y * -2}deg) rotateY(${mouse.x * 3}deg)`, transition: "transform 0.4s ease" }
-    : {}
-
-  return (
-    <section className="hero-section" onMouseMove={handleMouse} style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
-      {heroReel && (
-        <div key={heroReel.url} className="hero-reel-float">
-          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop heroVideo />
-        </div>
-      )}
-
-      <div className="hero-ghost" style={{
-        position: "absolute", right: "-2vw", bottom: "-8vw",
-        width: "34vw", maxWidth: 520, opacity: 0.045,
-        userSelect: "none", pointerEvents: "none",
-        transform: finePointer ? `translate(${mouse.x * -18}px, ${mouse.y * -12}px)` : undefined,
-        transition: "transform 0.6s ease",
-      }}>
-        <img src="/logo-mark.png" alt="" aria-hidden="true" style={{ width: "100%", height: "auto", display: "block" }} />
-      </div>
-
-      <div className="hero-side-label" style={{ ...f(1.8), position: "absolute", right: "var(--page-gutter)", top: "50%", transform: "translateY(-50%) rotate(90deg)", transformOrigin: "center center", fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, whiteSpace: "nowrap" }}>
-        LAGOS · NIGERIA · 2025
-      </div>
-
-      <div className="hero-inner" style={{ position: "relative", zIndex: 1, maxWidth: "100%" }}>
-        <div style={{ ...f(0.1) }}>
-          <div style={{ fontFamily: "var(--font-body)", fontSize: "clamp(14px,1.5vw,18px)", fontWeight: 400, color: DIM, marginBottom: 20, letterSpacing: 0.5 }}>
-            Hello, it's me
-          </div>
-          <div style={{ ...f(0.05), fontFamily: "var(--font-heading)", fontSize: "clamp(52px,8.5vw,118px)", fontWeight: 700, lineHeight: 1.02, letterSpacing: -1.5, marginBottom: 20, color: TEXT, ...titleTilt }}>
-            {CONTACT.name}
-          </div>
-          <div style={{ ...f(0.2), fontFamily: "var(--font-heading)", fontSize: "clamp(20px,2.4vw,30px)", fontWeight: 500, lineHeight: 1.35, color: TEXT, maxWidth: 720, marginBottom: 4 }}>
-            <div>
-              I'm a <span style={{ color: GOLD }}>Fullstack product designer</span>
-            </div>
-            <div>
-              and <span style={{ color: GOLD }}>AI engineer</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bio */}
-        <p style={{ ...f(1.0), fontFamily: "var(--font-body)", fontSize: "clamp(15px,1.5vw,18px)", fontWeight: 400, color: DIM, lineHeight: 1.8, maxWidth: 560, margin: "32px 0 0" }}>
-          I design products people understand, and businesses can scale. I build fast with{" "}
-          <span style={{ color: TEXT }}>Cursor</span> and <span style={{ color: TEXT }}>Claude Code</span>, turning sharp design into shipped software.
-        </p>
-
-        {/* Impact stats */}
-        <div style={{ ...f(1.3), marginTop: 44 }} className="hero-stats-row">
-          <div className="hero-stats-desktop">
-            <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-              <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
-                {IMPACT_STATS.slice(0, 3).map(stat => (
-                  <ImpactStat key={stat.label} stat={stat} />
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: "48px 40px", flexWrap: "wrap" }}>
-                {IMPACT_STATS.slice(3).map(stat => (
-                  <ImpactStat key={stat.label} stat={stat} />
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="hero-stats-mobile">
-            {IMPACT_STATS.map(stat => (
-              <ImpactStat key={stat.label} stat={stat} />
-            ))}
-          </div>
-        </div>
-
-        {/* CTA + scroll cue */}
-        <div style={{ ...f(1.9), marginTop: 44, display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }} className="hero-cta">
-          <button data-h type="button" onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-            className="hero-cta-btn"
-            style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 3, color: TEXT, background: "none", border: `1px solid ${BORDER}`, padding: "15px 28px", textTransform: "uppercase", transition: "all 0.3s" }}
-          >View Work →</button>
-          <div className="hero-scroll-cue" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ height: 1, width: 40, background: `linear-gradient(to right, transparent, ${DIM})` }} />
-            <span style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 4, color: DIM, textTransform: "uppercase" }}>Scroll to explore</span>
-          </div>
-        </div>
-      </div>
-
-      <HeroTicker />
-    </section>
-  )
-}
-
-const TICKER_ITEMS = [
-  "FinTech",
-  "Healthcare",
-  "AI Integration",
-  "Design Systems",
-  "Regulatory UX",
-  "Consumer Apps",
-  "Acquired by LinkedIn",
-]
-
-function HeroTicker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS]
-  return (
-    <div className="hero-ticker" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 52, borderTop: `1px solid ${BORDER}`, overflow: "hidden", display: "flex", alignItems: "center" }}>
-      <div className="hero-ticker-track">
-        {items.map((label, i) => (
-          <span key={`${label}-${i}`} className="hero-ticker-item">{label}</span>
-        ))}
       </div>
     </div>
   )
@@ -1493,7 +1349,7 @@ export default function Portfolio() {
       {!loaded && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>
         <SiteNav scrollY={scrollY} home />
-        <Hero ready={ready} />
+        <HeroSection />
         <Showreel />
         <Work />
         <Testimonials />

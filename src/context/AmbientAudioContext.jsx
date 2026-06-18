@@ -26,9 +26,10 @@ export function AmbientAudioProvider({ children }) {
   }, [])
 
   useEffect(() => {
-    const prev = sessionStorage.getItem(AUDIO_PREF_KEY)
-    if (prev === "0") sessionStorage.removeItem(AUDIO_PREF_KEY)
-  }, [])
+    if (sessionStorage.getItem('portfolio-audio-on') === '0') {
+      sessionStorage.removeItem('portfolio-audio-on');
+    }
+  }, []);
 
   useEffect(() => {
     initAmbientPlayer()

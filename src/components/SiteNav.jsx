@@ -72,11 +72,18 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           left: 0;
           right: 0;
           z-index: 100;
-          padding: 16px var(--page-gutter);
+          padding-top: 16px;
+          padding-bottom: 16px;
+          padding-left: var(--page-gutter, 56px);
+          padding-right: var(--page-gutter, 56px);
           display: flex;
           justify-content: space-between;
           align-items: center;
           transition: background 0.3s, border-color 0.3s;
+        }
+        .site-nav__logo {
+          margin: 0;
+          padding: 0;
         }
         .site-nav--sticky {
           position: sticky;
@@ -156,7 +163,10 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
         }
         @media (min-width: 769px) {
           .site-nav {
-            padding: 20px var(--page-gutter);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: var(--page-gutter, 56px);
+            padding-right: var(--page-gutter, 56px);
           }
           .site-nav__desktop {
             gap: 40px;
@@ -187,7 +197,7 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           borderBottom: `1px solid ${sticky || scrolled ? BORDER : "transparent"}`,
         }}
       >
-        <Link to="/" onClick={close} style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
+        <Link to="/" onClick={close} className="site-nav__logo" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
           <SiteLogo size={30} />
         </Link>
 
