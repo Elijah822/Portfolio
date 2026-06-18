@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const AUDIO_PREF_KEY = "portfolio-audio-on"
+const SHOW_EVENTS = ["mousemove", "pointermove", "scroll", "touchstart"]
 
 export default function SoundNudge() {
   const nudgeRef = useRef(null)
   const shown = useRef(false)
   const dismissed = useRef(false)
   const listeners = useRef({ show: null, dismiss: null })
+  const [hint, setHint] = useState("Click anywhere to enable ambient sound")
 
   const dismissNudge = useCallback((explicitMute = false) => {
     if (dismissed.current) return
@@ -21,7 +23,9 @@ export default function SoundNudge() {
     }
 
     const { show, dismiss } = listeners.current
-    if (show) document.removeEventListener("mousemove", show)
+    if (show) {
+      SHOW_EVENTS.forEach(evt => document.removeEventListener(evt, show))
+    }
     if (dismiss) document.removeEventListener("pointerdown", dismiss)
   }, [])
 
@@ -32,6 +36,12 @@ export default function SoundNudge() {
   }, [dismissNudge])
 
   useEffect(() => {
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) {
+      setHint("Tap anywhere to enable ambient sound")
+    }
+  }, [])
+
+  useEffect(() => {
     const stored = sessionStorage.getItem(AUDIO_PREF_KEY)
     if (stored !== null) return
 
@@ -39,17 +49,19 @@ export default function SoundNudge() {
       if (shown.current || dismissed.current) return
       shown.current = true
       nudgeRef.current?.classList.add("sound-nudge--visible")
+      SHOW_EVENTS.forEach(evt => document.removeEventListener(evt, showNudge))
     }
 
     const dismissOnInteract = () => dismissNudge(false)
 
     listeners.current = { show: showNudge, dismiss: dismissOnInteract }
 
-    document.addEventListener("mousemove", showNudge, { once: true })
+    const opts = { passive: true }
+    SHOW_EVENTS.forEach(evt => document.addEventListener(evt, showNudge, opts))
     document.addEventListener("pointerdown", dismissOnInteract, { once: true })
 
     return () => {
-      document.removeEventListener("mousemove", showNudge)
+      SHOW_EVENTS.forEach(evt => document.removeEventListener(evt, showNudge))
       document.removeEventListener("pointerdown", dismissOnInteract)
     }
   }, [dismissNudge])
@@ -57,7 +69,7 @@ export default function SoundNudge() {
   return (
     <div ref={nudgeRef} className="sound-nudge" data-sound-nudge role="status" aria-live="polite">
       <span className="sound-nudge__icon" aria-hidden="true">♪</span>
-      <span className="sound-nudge__text">Click anywhere to enable ambient sound</span>
+      <span className="sound-nudge__text">{hint}</span>
       <button
         type="button"
         className="sound-nudge__close"
