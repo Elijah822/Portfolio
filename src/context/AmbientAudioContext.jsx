@@ -17,30 +17,30 @@ const AmbientAudioContext = createContext(null)
 export function AmbientAudioProvider({ children }) {
   const [soundOn, setSoundOn] = useState(() => isAudioPrefOn())
 
-  const enableSound = useCallback(() => {
+  const markSoundOn = useCallback(() => {
     setSoundOn(true)
     setAmbientVolume(0.22)
-    startAmbientMusic()
   }, [])
 
   useEffect(() => {
     initAmbientPlayer()
 
     const offUnlock = onAudioUnlock(() => {
-      if (isAudioPrefOn() && !isExplicitlyMuted()) enableSound()
+      if (isAudioPrefOn() && !isExplicitlyMuted()) markSoundOn()
     })
-    const cleanupGesture = setupAudioOnMouseMove(enableSound)
+    const cleanupGesture = setupAudioOnMouseMove(markSoundOn)
 
     if (isAudioPrefOn()) {
       unlockAudio()
-      enableSound()
+      markSoundOn()
+      void startAmbientMusic()
     }
 
     return () => {
       offUnlock()
       cleanupGesture()
     }
-  }, [enableSound])
+  }, [markSoundOn])
 
   const toggleSound = useCallback(() => {
     if (soundOn) {
@@ -49,9 +49,13 @@ export function AmbientAudioProvider({ children }) {
       setSoundOn(false)
     } else {
       if (!isAudioUnlocked()) unlockAudio()
-      enableSound()
+      setSoundOn(true)
+      setAmbientVolume(0.22)
+      void startAmbientMusic().then(ok => {
+        if (!ok) setSoundOn(false)
+      })
     }
-  }, [soundOn, enableSound])
+  }, [soundOn])
 
   return (
     <AmbientAudioContext.Provider value={{ soundOn, toggleSound }}>

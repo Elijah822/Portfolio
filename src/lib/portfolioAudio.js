@@ -1,5 +1,6 @@
 import {
   initAmbientPlayer,
+  isAmbientPlaying,
   pauseAmbientTrack,
   playAmbientTrack,
   setAmbientTrackVolume,
@@ -8,11 +9,13 @@ import {
 let ctx = null
 let master = null
 let unlocked = false
-let ambientOn = false
 let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
+
+const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "touchend", "keydown", "click"]
+const SOFT_EVENTS = ["pointermove", "mousemove", "scroll", "wheel", "touchmove"]
 
 export function isAudioPrefOn() {
   try {
@@ -113,25 +116,26 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
-  if (ambientOn) return
+  if (isAmbientPlaying()) {
+    setAudioPref(true)
+    return Promise.resolve(true)
+  }
+
   setAudioPref(true)
-  ambientOn = true
-  playAmbientTrack()
+  return playAmbientTrack().then(ok => {
+    if (!ok) setAudioPref(false)
+    return ok
+  })
 }
 
 export function stopAmbientMusic() {
   setAudioPref(false)
   pauseAmbientTrack()
-  ambientOn = false
 }
 
 export function setAmbientVolume(v) {
   setAmbientTrackVolume(v)
   if (master && ctx) master.gain.linearRampToValueAtTime(v * 0.3, ctx.currentTime + 0.4)
-}
-
-export function requestAmbientPlay() {
-  if (isAudioPrefOn() && !ambientOn) startAmbientMusic()
 }
 
 export function unlockAudio() {
@@ -149,34 +153,45 @@ export function unlockAudio() {
 }
 
 export function setupAudioOnMouseMove(onEnable) {
-  let triggered = false
+  let autoEnabled = false
 
-  const handler = () => {
-    if (triggered || isExplicitlyMuted()) return
-    triggered = true
+  const markEnabled = () => {
+    autoEnabled = true
+    onEnable?.()
+  }
+
+  const attemptStart = () => {
+    if (isExplicitlyMuted()) return Promise.resolve(false)
     unlockAudio()
-    if (shouldAutoEnableOnGesture()) {
-      onEnable?.()
-    } else if (isAudioPrefOn()) {
-      startAmbientMusic()
+    return startAmbientMusic().then(ok => {
+      if (ok) markEnabled()
+      return ok
+    })
+  }
+
+  const softHandler = () => {
+    if (autoEnabled || isExplicitlyMuted() || !shouldAutoEnableOnGesture()) return
+    void attemptStart()
+  }
+
+  const activateHandler = () => {
+    if (isExplicitlyMuted()) return
+    if (isAudioPrefOn()) {
+      unlockAudio()
+      void startAmbientMusic()
+      return
     }
-    window.removeEventListener("mousemove", handler)
-    window.removeEventListener("pointermove", handler)
-    window.removeEventListener("touchstart", handler)
-    window.removeEventListener("scroll", handler)
+    if (autoEnabled || !shouldAutoEnableOnGesture()) return
+    void attemptStart()
   }
 
   const opts = { passive: true, capture: true }
-  window.addEventListener("mousemove", handler, opts)
-  window.addEventListener("pointermove", handler, opts)
-  window.addEventListener("touchstart", handler, opts)
-  window.addEventListener("scroll", handler, opts)
+  SOFT_EVENTS.forEach(evt => window.addEventListener(evt, softHandler, opts))
+  ACTIVATION_EVENTS.forEach(evt => window.addEventListener(evt, activateHandler, opts))
 
   return () => {
-    window.removeEventListener("mousemove", handler, opts)
-    window.removeEventListener("pointermove", handler, opts)
-    window.removeEventListener("touchstart", handler, opts)
-    window.removeEventListener("scroll", handler, opts)
+    SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, softHandler, opts))
+    ACTIVATION_EVENTS.forEach(evt => window.removeEventListener(evt, activateHandler, opts))
   }
 }
 

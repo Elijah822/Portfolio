@@ -13,14 +13,20 @@ function ensureAudio() {
 }
 
 export function initAmbientPlayer() {
-  ensureAudio()
+  ensureAudio().load()
+}
+
+export function isAmbientPlaying() {
+  return Boolean(audio && !audio.paused)
 }
 
 export function playAmbientTrack() {
   const el = ensureAudio()
-  if (!el.paused) return true
-  void el.play().catch(() => {})
-  return true
+  if (!el.paused) return Promise.resolve(true)
+
+  return el.play()
+    .then(() => true)
+    .catch(() => false)
 }
 
 export function pauseAmbientTrack() {
