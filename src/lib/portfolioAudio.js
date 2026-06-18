@@ -17,6 +17,43 @@ const AUDIO_PREF_KEY = "portfolio-audio-on"
 
 const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "touchend", "keydown", "click"]
 const SOFT_EVENTS = ["pointermove", "mousemove", "scroll", "wheel", "touchmove"]
+const CTA_SELECTOR = 'a, button, input, select, textarea, label, [data-h], [role="button"], [role="link"]'
+
+let syntheticClickUsed = false
+
+function isCtaElement(el) {
+  if (!el || el === document.documentElement) return false
+  return Boolean(el.closest(CTA_SELECTOR))
+}
+
+function trySyntheticEmptyAreaClick(e) {
+  if (syntheticClickUsed) return false
+
+  const x = typeof e?.clientX === "number" ? e.clientX : window.innerWidth / 2
+  const y = typeof e?.clientY === "number" ? e.clientY : window.innerHeight / 2
+  const target = document.elementFromPoint(x, y)
+  if (!target || isCtaElement(target)) return false
+
+  syntheticClickUsed = true
+  const opts = {
+    bubbles: true,
+    cancelable: true,
+    clientX: x,
+    clientY: y,
+    view: window,
+    button: 0,
+  }
+  target.dispatchEvent(new MouseEvent("mousedown", { ...opts, buttons: 1 }))
+  target.dispatchEvent(new MouseEvent("mouseup", { ...opts, buttons: 0 }))
+  target.dispatchEvent(new MouseEvent("click", opts))
+  return true
+}
+
+function activateAmbient(onEnable) {
+  unlockAudio()
+  onEnable?.()
+  startAmbientMusic()
+}
 
 export function isAudioPrefOn() {
   try {
@@ -175,7 +212,7 @@ export function unlockAudio() {
 export function setupAudioOnMouseMove(onEnable) {
   let autoEnabled = false
 
-  const enableAmbient = () => {
+  const enableAmbient = e => {
     if (isExplicitlyMuted()) return
 
     if (isAudioPrefOn()) {
@@ -184,16 +221,28 @@ export function setupAudioOnMouseMove(onEnable) {
     }
 
     if (!autoEnabled && shouldAutoEnableOnGesture()) {
+      const clicked = trySyntheticEmptyAreaClick(e)
+      if (!clicked && isCtaElement(document.elementFromPoint(
+        typeof e?.clientX === "number" ? e.clientX : window.innerWidth / 2,
+        typeof e?.clientY === "number" ? e.clientY : window.innerHeight / 2,
+      ))) return
+
       autoEnabled = true
-      onEnable?.()
-      kickYouTubePlayback()
+      activateAmbient(onEnable)
     }
   }
 
   const activate = () => {
     if (isExplicitlyMuted()) return
-    unlockAudio()
-    enableAmbient()
+    if (isAudioPrefOn()) {
+      unlockAudio()
+      kickYouTubePlayback()
+      return
+    }
+    if (!autoEnabled && shouldAutoEnableOnGesture()) {
+      autoEnabled = true
+      activateAmbient(onEnable)
+    }
   }
 
   const opts = { passive: true, capture: true }
@@ -213,4 +262,5 @@ export function teardownAudio() {
   master = null
   unlocked = false
   lastLoadTick = -1
+  syntheticClickUsed = false
 }
