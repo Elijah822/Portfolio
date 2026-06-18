@@ -1,7 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import {
+  initAmbientPlayer,
   isAudioPrefOn,
   isExplicitlyMuted,
+  isAudioUnlocked,
   onAudioUnlock,
   setAmbientVolume,
   setupAudioOnMouseMove,
@@ -22,6 +24,8 @@ export function AmbientAudioProvider({ children }) {
   }, [])
 
   useEffect(() => {
+    initAmbientPlayer()
+
     const offUnlock = onAudioUnlock(() => {
       if (isAudioPrefOn() && !isExplicitlyMuted()) enableSound()
     })
@@ -44,7 +48,7 @@ export function AmbientAudioProvider({ children }) {
       setAmbientVolume(0)
       setSoundOn(false)
     } else {
-      unlockAudio()
+      if (!isAudioUnlocked()) unlockAudio()
       enableSound()
     }
   }, [soundOn, enableSound])

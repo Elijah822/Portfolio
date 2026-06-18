@@ -1,10 +1,15 @@
+import {
+  initAmbientPlayer,
+  pauseAmbientTrack,
+  playAmbientTrack,
+  setAmbientTrackVolume,
+} from "./ambientPlayer.js"
+
 let ctx = null
 let master = null
 let unlocked = false
-let ambientNodes = []
-let arpTimer = null
-let lastLoadTick = -1
 let ambientOn = false
+let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
@@ -40,18 +45,6 @@ function getCtx() {
   if (!AudioCtx) return null
   if (!ctx || ctx.state === "closed") ctx = new AudioCtx()
   return ctx
-}
-
-function makeReverb(audioCtx) {
-  const len = audioCtx.sampleRate * 2.5
-  const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate)
-  for (let ch = 0; ch < 2; ch++) {
-    const d = buf.getChannelData(ch)
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4)
-  }
-  const conv = audioCtx.createConvolver()
-  conv.buffer = buf
-  return conv
 }
 
 export function isAudioUnlocked() {
@@ -120,82 +113,25 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
-  if (ambientOn || !ctx || !master) return
+  if (ambientOn) return
   setAudioPref(true)
   ambientOn = true
-
-  const rev = makeReverb(ctx)
-  const revG = ctx.createGain()
-  revG.gain.value = 0.35
-  rev.connect(revG)
-  revG.connect(master)
-
-  const PAD = [
-    [55, 0.09, "sine"],
-    [82.4, 0.07, "sine"],
-    [110, 0.05, "triangle"],
-    [164.8, 0.04, "sine"],
-    [220, 0.025, "triangle"],
-  ]
-  const oscs = PAD.map(([f, g, type]) => {
-    const o = ctx.createOscillator()
-    o.type = type
-    o.frequency.value = f + (Math.random() - 0.5) * 0.3
-    const og = ctx.createGain()
-    og.gain.value = g
-    o.connect(og)
-    og.connect(master)
-    og.connect(rev)
-    o.start()
-    return o
-  })
-
-  const lfo = ctx.createOscillator()
-  lfo.frequency.value = 0.05
-  lfo.type = "sine"
-  const lfoG = ctx.createGain()
-  lfoG.gain.value = 0.008
-  lfo.connect(lfoG)
-  lfoG.connect(master.gain)
-  lfo.start()
-
-  const scale = [261.6, 329.6, 392, 523.3, 392, 329.6]
-  let note = 0
-  arpTimer = setInterval(() => {
-    if (!ctx || !master) return
-    const t = ctx.currentTime
-    const o = ctx.createOscillator()
-    const g = ctx.createGain()
-    o.type = "sine"
-    o.frequency.value = scale[note % scale.length]
-    g.gain.setValueAtTime(0, t)
-    g.gain.linearRampToValueAtTime(0.018, t + 0.05)
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.8)
-    o.connect(g)
-    g.connect(rev)
-    o.start(t)
-    o.stop(t + 2.9)
-    note++
-  }, 2400)
-
-  ambientNodes = [...oscs, lfo]
+  playAmbientTrack()
 }
 
 export function stopAmbientMusic() {
   setAudioPref(false)
-  if (arpTimer) clearInterval(arpTimer)
-  arpTimer = null
-  ambientNodes.forEach(n => { try { n.stop?.() } catch (_) {} })
-  ambientNodes = []
+  pauseAmbientTrack()
   ambientOn = false
 }
 
 export function setAmbientVolume(v) {
-  if (master && ctx) master.gain.linearRampToValueAtTime(v, ctx.currentTime + 0.4)
+  setAmbientTrackVolume(v)
+  if (master && ctx) master.gain.linearRampToValueAtTime(v * 0.3, ctx.currentTime + 0.4)
 }
 
 export function requestAmbientPlay() {
-  if (isAudioPrefOn() && unlocked && !ambientOn) startAmbientMusic()
+  if (isAudioPrefOn() && !ambientOn) startAmbientMusic()
 }
 
 export function unlockAudio() {
@@ -218,8 +154,8 @@ export function setupAudioOnMouseMove(onEnable) {
   const handler = () => {
     if (triggered || isExplicitlyMuted()) return
     triggered = true
-    const fresh = unlockAudio()
-    if (fresh && shouldAutoEnableOnGesture()) {
+    unlockAudio()
+    if (shouldAutoEnableOnGesture()) {
       onEnable?.()
     } else if (isAudioPrefOn()) {
       startAmbientMusic()
@@ -252,3 +188,5 @@ export function teardownAudio() {
   unlocked = false
   lastLoadTick = -1
 }
+
+export { initAmbientPlayer }

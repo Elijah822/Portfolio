@@ -1,6 +1,9 @@
 export const RESUME_URL =
   "https://res.cloudinary.com/dj8jyjcvo/raw/upload/v1781697585/Akinlolu_Elijah_General_Resume_fubgjr.docx"
 
+export const MUSIC_AUDIO_URL =
+  "https://res.cloudinary.com/dj8jyjcvo/video/upload/v1781748144/videoplayback_2_1_vfesiq.mp3"
+
 export const MUSIC_YOUTUBE_ID = "q_BCyHd0vhA"
 
 export const PROJECT_META = {
