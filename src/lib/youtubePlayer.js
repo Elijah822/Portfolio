@@ -7,6 +7,11 @@ let apiReadyPromise = null
 let playerReadyPromise = null
 let wantPlay = false
 
+function siteOrigin() {
+  if (typeof window === "undefined") return ""
+  return window.location.origin
+}
+
 function ensureApi() {
   if (apiReadyPromise) return apiReadyPromise
 
@@ -27,7 +32,10 @@ function ensureApi() {
 
     if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
       const tag = document.createElement("script")
-      tag.src = "https://www.youtube.com/iframe_api"
+      const origin = encodeURIComponent(siteOrigin())
+      tag.src = origin
+        ? `https://www.youtube.com/iframe_api?origin=${origin}`
+        : "https://www.youtube.com/iframe_api"
       document.head.appendChild(tag)
     }
   })
@@ -73,6 +81,7 @@ export async function initAmbientPlayer() {
       height: "0",
       width: "0",
       videoId: MUSIC_YOUTUBE_ID,
+      host: "https://www.youtube.com",
       playerVars: {
         autoplay: 0,
         loop: 1,
@@ -81,6 +90,8 @@ export async function initAmbientPlayer() {
         disablekb: 1,
         fs: 0,
         modestbranding: 1,
+        enablejsapi: 1,
+        origin: siteOrigin(),
       },
       events: {
         onReady: e => {
