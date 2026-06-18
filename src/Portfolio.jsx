@@ -1012,7 +1012,16 @@ export default function Portfolio() {
           padding-bottom: 56px !important;
         }
         .showreel-track-wrap {
-          overflow: hidden; border-top: 1px solid ${BORDER}; border-bottom: 1px solid ${BORDER};
+          overflow: hidden;
+          border-top: 1px solid ${BORDER};
+          border-bottom: 1px solid ${BORDER};
+          -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+          animation: showreelFadeIn 1.2s ease both;
+        }
+        @keyframes showreelFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         .showreel-track {
           display: flex; width: max-content;
@@ -1023,6 +1032,24 @@ export default function Portfolio() {
           position: relative; width: clamp(280px, 28vw, 420px); aspect-ratio: 16/10;
           flex-shrink: 0; border-right: 1px solid ${BORDER}; overflow: hidden;
           display: block; text-decoration: none; color: inherit;
+        }
+        .showreel-item video {
+          filter: brightness(0.62) contrast(1.08) saturate(0.78);
+          transition: filter 0.45s ease;
+        }
+        .showreel-item:hover video {
+          filter: brightness(0.82) contrast(1.02) saturate(0.92);
+        }
+        .showreel-item::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(7,7,12,0.18);
+          pointer-events: none;
+          transition: opacity 0.45s ease;
+        }
+        .showreel-item:hover::after {
+          opacity: 0.35;
         }
         .showreel-item-label {
           position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px;
