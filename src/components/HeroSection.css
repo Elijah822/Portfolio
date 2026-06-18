@@ -297,12 +297,14 @@
 .hero__stats {
   position: relative; z-index: 2;
   display: flex; align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: space-between;
+  width: max(55vw, min(100%, 920px));
+  min-width: 55vw;
   max-width: min(1520px, 100%);
   margin: 0 auto 28px;
   margin-left: max(clamp(20px, 2.5vw, 36px), calc((100% - min(1520px, 100%)) / 2));
-  padding: 14px 20px;
+  margin-right: auto;
+  padding: 16px 24px;
   background: rgba(255,255,255,0.022);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -312,8 +314,9 @@
 }
 
 .hero-stat {
-  flex: 0 0 auto; display: flex; flex-direction: column;
-  gap: 3px; padding: 0 14px;
+  flex: 1 1 0; display: flex; flex-direction: column;
+  gap: 3px; padding: 0 10px;
+  min-width: 0;
 }
 
 .hero-stat__number {
@@ -418,6 +421,8 @@
     gap: 20px 16px;
     padding: 20px;
     width: 100%;
+    min-width: 0;
+    justify-content: initial;
     margin-left: 0;
     margin-right: 0;
   }

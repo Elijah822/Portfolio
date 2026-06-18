@@ -88,15 +88,10 @@ export default function AccessibilityMenu() {
   return (
     <>
       <style>{`
-        @media (max-width: 768px) {
-          .a11y-trigger {
-            left: auto !important;
-            right: clamp(20px, 2.5vw, 36px);
-          }
-          .a11y-panel {
-            left: auto !important;
-            right: clamp(20px, 2.5vw, 36px);
-          }
+        .a11y-trigger,
+        .a11y-panel {
+          left: auto !important;
+          right: clamp(20px, 2.5vw, 36px);
         }
       `}</style>
       <button
@@ -110,7 +105,6 @@ export default function AccessibilityMenu() {
         style={{
           position: "fixed",
           bottom: 24,
-          left: "var(--page-gutter)",
           zIndex: 1200,
           display: "inline-flex",
           alignItems: "center",
@@ -141,7 +135,6 @@ export default function AccessibilityMenu() {
           style={{
             position: "fixed",
             bottom: 76,
-            left: "var(--page-gutter)",
             zIndex: 1200,
             width: "min(92vw, 340px)",
             background: "rgba(7,7,12,0.97)",
