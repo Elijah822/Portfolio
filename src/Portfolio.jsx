@@ -1247,6 +1247,11 @@ export default function Portfolio() {
             min-height: 420px;
           }
         }
+        .work-section-intro {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
         .work-section-intro h2,
         .work-section-intro p {
           max-width: none;
@@ -1255,14 +1260,15 @@ export default function Portfolio() {
         }
         @media (min-width: 769px) {
           .work-section-intro {
+            align-items: center;
             text-align: center;
           }
           .work-section-intro h2 {
-            margin: 0 auto 16px;
+            margin: 0 0 16px;
             max-width: 720px;
           }
           .work-section-intro p {
-            margin: 0 auto;
+            margin: 0;
             max-width: 480px;
           }
         }
