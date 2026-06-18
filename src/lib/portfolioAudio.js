@@ -67,8 +67,9 @@ function notifyUnlock() {
 }
 
 function kickYouTubePlayback() {
-  queueAmbientPlay()
-  void initAmbientPlayer().catch(() => {})
+  if (!queueAmbientPlay()) {
+    void initAmbientPlayer().then(() => queueAmbientPlay()).catch(() => {})
+  }
 }
 
 export function setPendingLoadPct(pct) {

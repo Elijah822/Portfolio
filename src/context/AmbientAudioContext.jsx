@@ -18,9 +18,9 @@ export function AmbientAudioProvider({ children }) {
   const [soundOn, setSoundOn] = useState(() => isAudioPrefOn())
 
   const enableSound = useCallback(() => {
+    startAmbientMusic()
     setSoundOn(true)
     setAmbientVolume(0.22)
-    startAmbientMusic()
   }, [])
 
   useEffect(() => {
@@ -52,12 +52,10 @@ export function AmbientAudioProvider({ children }) {
       setAmbientVolume(0)
       setSoundOn(false)
     } else {
-      startAmbientMusic()
+      enableSound()
       unlockAudio()
-      setSoundOn(true)
-      setAmbientVolume(0.22)
     }
-  }, [soundOn])
+  }, [soundOn, enableSound])
 
   return (
     <AmbientAudioContext.Provider value={{ soundOn, toggleSound }}>
