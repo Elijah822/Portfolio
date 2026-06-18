@@ -54,6 +54,11 @@ export function pauseAmbientTrack() {
   audio.muted = true
 }
 
+export function pauseAmbientSoft() {
+  if (!audio || audio.paused) return
+  audio.pause()
+}
+
 export function setAmbientTrackVolume(v) {
   ensureAudio().volume = Math.max(0, Math.min(1, v))
 }

@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import SoundNudge from "../components/SoundNudge.jsx"
+import { setupHeroVideoAmbientSync } from "../lib/heroVideoAmbient.js"
 import {
   initAmbientPlayer,
   isAudioPrefOn,
@@ -36,10 +37,12 @@ export function AmbientAudioProvider({ children }) {
       if (isAudioPrefOn() && !isExplicitlyMuted()) markSoundOn()
     })
     const cleanupGesture = setupAudioOnMouseMove(markSoundOn)
+    const cleanupHeroVideo = setupHeroVideoAmbientSync()
 
     return () => {
       offUnlock()
       cleanupGesture()
+      cleanupHeroVideo()
     }
   }, [markSoundOn])
 

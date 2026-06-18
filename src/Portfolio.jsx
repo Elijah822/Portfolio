@@ -295,7 +295,7 @@ function FilmGrain() {
   return <div className="film-grain" aria-hidden="true" />
 }
 
-function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false }) {
+function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false, heroVideo = false }) {
   const ref = useRef(null)
   useEffect(() => {
     if (!autoPlay || !ref.current) return
@@ -311,6 +311,7 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
       playsInline
       controls={controls}
       aria-label={label}
+      {...(heroVideo ? { "data-hero-video": true } : {})}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", ...style }}
     />
   )
@@ -445,7 +446,7 @@ function Hero({ ready }) {
     <section className="hero-section" onMouseMove={handleMouse} style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", overflow: "hidden" }}>
       {heroReel && (
         <div key={heroReel.url} className="hero-reel-float">
-          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop />
+          <MediaVideo src={heroReel.url} label={heroReel.label} autoPlay muted loop heroVideo />
         </div>
       )}
 
@@ -599,6 +600,7 @@ function ProjectDetail({ project, onClose }) {
               muted
               loop
               controls
+              heroVideo
             />
           </div>
         )}
@@ -671,6 +673,7 @@ function ProjectDetail({ project, onClose }) {
                   controls
                   muted={false}
                   loop={false}
+                  heroVideo
                 />
               </div>
               <div style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 400, color: DIM }}>

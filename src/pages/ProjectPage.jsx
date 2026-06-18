@@ -270,7 +270,7 @@ export default function ProjectPage() {
 
         {media?.hero && media.hero.showOnProjectPage !== false && (
           <ScrollReveal variant="scale-up" delay={100} className="project-hero-media">
-            <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline />
+            <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline data-hero-video />
           </ScrollReveal>
         )}
 
