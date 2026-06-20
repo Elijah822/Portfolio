@@ -48,19 +48,35 @@
   transition: transform 0.06s linear;
 }
 
-/* ─── Inner two-column grid ──────────────────────────────────────────────── */
-.hero__inner {
+/* ─── Content grid ───────────────────────────────────────────────────────── */
+.hero__shell {
   position: relative; z-index: 2;
   display: grid;
   grid-template-columns: 1fr 560px;
-  gap: 56px;
-  align-items: center;
+  grid-template-areas:
+    "left right"
+    "stats right";
+  gap: 32px 56px;
+  align-items: start;
   max-width: 100%;
-  margin: 0;
+  margin: 0 0 28px;
   width: 100%;
   padding-top: 80px;
   padding-bottom: 24px;
   box-sizing: border-box;
+}
+
+.hero__left {
+  grid-area: left;
+}
+
+.hero__stats {
+  grid-area: stats;
+}
+
+.hero__right {
+  grid-area: right;
+  align-self: center;
 }
 
 /* ─── Left column ────────────────────────────────────────────────────────── */
@@ -184,6 +200,17 @@
   transform: translateX(3px);
 }
 
+.hero__btn--outline {
+  padding: 12px 22px;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(224,219,210,0.72);
+}
+
+.hero__btn--outline:hover {
+  border-color: rgba(224,219,210,0.35);
+  color: #e0dbd2;
+}
+
 .hero__btn--ghost { color: rgba(224,219,210,0.38); gap: 12px; }
 .hero__btn--ghost:hover { color: rgba(224,219,210,0.72); }
 
@@ -200,8 +227,6 @@
   height: 640px;
   animation: heroFadeRight 0.9s ease both 0.40s;
 }
-
-/* Rings */
 .hero__rings {
   position: absolute; inset: 0; pointer-events: none;
 }
@@ -296,7 +321,7 @@
 
 /* ─── Stats bar ──────────────────────────────────────────────────────────── */
 .hero__stats {
-  position: relative; z-index: 2;
+  position: relative;
   display: grid;
   grid-template-columns:
     minmax(0, 1fr) 1px
@@ -305,9 +330,9 @@
     minmax(0, 1fr) 1px
     minmax(0, 1fr);
   align-items: center;
-  width: 50%;
+  width: 100%;
   min-width: 0;
-  margin: 0 0 28px;
+  margin: 0;
   padding: 28px 24px;
   background: rgba(255,255,255,0.022);
   backdrop-filter: blur(16px);
@@ -403,13 +428,17 @@
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .hero__inner {
+  .hero__shell {
     grid-template-columns: 1fr;
-    padding-top: 100px; gap: 40px;
+    grid-template-areas:
+      "left"
+      "stats"
+      "right";
+    padding-top: 100px;
+    gap: 28px;
   }
 
   .hero__right {
-    order: -1;
     width: 100%;
     height: auto;
   }

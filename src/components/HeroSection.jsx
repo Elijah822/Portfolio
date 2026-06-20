@@ -113,10 +113,9 @@ export function HeroSection() {
       {/* Cursor glow — hidden on touch devices via CSS */}
       <div ref={glowRef} className="hero__glow" aria-hidden="true" />
 
-      {/* ── Inner grid ── */}
-      <div className="hero__inner">
+      {/* ── Content grid ── */}
+      <div className="hero__shell">
 
-        {/* LEFT */}
         <div className="hero__left">
 
           <div className="hero__pill" role="status">
@@ -140,12 +139,11 @@ export function HeroSection() {
           </p>
 
           <p className="hero__body">
-            Sharp design is my craft — I turn complex products into experiences
-            people actually get. I use{' '}
+            I turn complex products into experiences people actually get — shipping with{' '}
             <strong className="hero__tool">Figma MCP</strong>,{' '}
             <strong className="hero__tool">Claude Code</strong> and{' '}
-            <strong className="hero__tool">Cursor</strong> to move at{' '}
-            <strong className="hero__tool">10× speed</strong>, shipping design decisions as working software.
+            <strong className="hero__tool">Cursor</strong> at{' '}
+            <strong className="hero__tool">10× speed</strong>.
           </p>
 
           <div className="hero__ctas">
@@ -158,20 +156,29 @@ export function HeroSection() {
                   strokeLinejoin="round" />
               </svg>
             </a>
-            <button
-              className="hero__btn hero__btn--ghost"
-              type="button"
-              onClick={() =>
-                window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
-              }
-            >
-              <span className="hero__btn-line" />
-              Scroll to explore
-            </button>
+            <a href="#contact" className="hero__btn hero__btn--outline">
+              Contact
+            </a>
           </div>
         </div>
 
-        {/* RIGHT — cinematic video panel */}
+        <div
+          ref={statsRef}
+          className="hero__stats"
+          role="list"
+          aria-label="Key achievements"
+        >
+          <Stat prefix="£" value={50} suffix="M+" label="Impact delivered"   inView={statsInView} />
+          <div className="hero__stats-divider" aria-hidden="true" />
+          <Stat value={18} suffix="+"           label="Products shipped"     inView={statsInView} />
+          <div className="hero__stats-divider" aria-hidden="true" />
+          <Stat value={8}                        label="Countries"            inView={statsInView} />
+          <div className="hero__stats-divider" aria-hidden="true" />
+          <Stat value={6}  suffix="+"           label="Years of craft"       inView={statsInView} />
+          <div className="hero__stats-divider" aria-hidden="true" />
+          <Stat value={3}                        label="Enterprise clients"   inView={statsInView} />
+        </div>
+
         <div className="hero__right">
           <div className="hero__rings" aria-hidden="true">
             <div className="hero__ring hero__ring--1" />
@@ -196,24 +203,6 @@ export function HeroSection() {
             <div className="hero__device-glare"   aria-hidden="true" />
           </div>
         </div>
-      </div>
-
-      {/* ── Stats bar ── */}
-      <div
-        ref={statsRef}
-        className="hero__stats"
-        role="list"
-        aria-label="Key achievements"
-      >
-        <Stat prefix="£" value={50} suffix="M+" label="Impact delivered"   inView={statsInView} />
-        <div className="hero__stats-divider" aria-hidden="true" />
-        <Stat value={18} suffix="+"           label="Products shipped"     inView={statsInView} />
-        <div className="hero__stats-divider" aria-hidden="true" />
-        <Stat value={8}                        label="Countries"            inView={statsInView} />
-        <div className="hero__stats-divider" aria-hidden="true" />
-        <Stat value={6}  suffix="+"           label="Years of craft"       inView={statsInView} />
-        <div className="hero__stats-divider" aria-hidden="true" />
-        <Stat value={3}                        label="Enterprise clients"   inView={statsInView} />
       </div>
 
     </section>

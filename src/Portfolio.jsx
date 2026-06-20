@@ -327,6 +327,7 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
 }
 
 function Showreel() {
+  const coarsePointer = useCoarsePointer()
   const doubled = [...SHOWREEL, ...SHOWREEL]
   return (
     <ScrollReveal as="section" variant="fade-up" threshold={0.08} className="showreel-section" style={{ paddingTop: 72, paddingBottom: 80 }}>
@@ -348,7 +349,17 @@ function Showreel() {
               aria-label={`Open ${item.label} case study`}
               onClick={() => saveHomeScroll()}
             >
-              <MediaVideo src={item.url} label={item.label} autoPlay muted loop playWhenVisible />
+              {coarsePointer ? (
+                <img
+                  className="showreel-item-poster"
+                  src={videoPoster(item.url)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <MediaVideo src={item.url} label={item.label} autoPlay muted loop playWhenVisible />
+              )}
               <div className="showreel-item-label">{item.label}</div>
             </Link>
           ))}
@@ -365,21 +376,31 @@ function Loader({ onDone }) {
 
   useEffect(() => {
     let v = 0
+    let elapsed = 0
+    const tickMs = 16
+    const maxMs = 900
+
+    const finish = () => {
+      setN(100)
+      setPendingLoadPct(100)
+      if (isAudioUnlocked()) playLoadTick(100)
+      setTimeout(() => { setExit(true); setTimeout(onDone, 350) }, 200)
+    }
+
     const id = setInterval(() => {
-      v += Math.random() * 3.5
-      if (v >= 100) {
-        setN(100)
-        setPendingLoadPct(100)
-        if (isAudioUnlocked()) playLoadTick(100)
+      elapsed += tickMs
+      v += Math.random() * 9
+      if (v >= 100 || elapsed >= maxMs) {
         clearInterval(id)
-        setTimeout(() => { setExit(true); setTimeout(onDone, 600) }, 400)
-      } else {
-        const pct = Math.floor(v)
-        setN(pct)
-        setPendingLoadPct(pct)
-        if (isAudioUnlocked()) playLoadTick(pct)
+        finish()
+        return
       }
-    }, 22)
+      const pct = Math.min(99, Math.floor(v))
+      setN(pct)
+      setPendingLoadPct(pct)
+      if (isAudioUnlocked()) playLoadTick(pct)
+    }, tickMs)
+
     return () => clearInterval(id)
   }, [onDone])
 
@@ -850,7 +871,9 @@ function Contact() {
 
 // ── APP ───────────────────────────────────────────────────────────────────────
 export default function Portfolio() {
-  const introDone = hasIntroLoaderCompleted()
+  const coarsePointer = useCoarsePointer()
+  const skipLoader = coarsePointer
+  const introDone = hasIntroLoaderCompleted() || skipLoader
   const [loaded, setLoaded] = useState(introDone)
   const [ready, setReady] = useState(introDone)
   const [scrollY, setScrollY] = useState(0)
@@ -866,8 +889,12 @@ export default function Portfolio() {
   }, [])
 
   useEffect(() => {
+    if (skipLoader && !hasIntroLoaderCompleted()) {
+      markIntroLoaderCompleted()
+      resetLoadTicks()
+    }
     if (introDone) resetLoadTicks()
-  }, [introDone])
+  }, [introDone, skipLoader])
 
   useEffect(() => {
     let ticking = false
@@ -1049,6 +1076,12 @@ export default function Portfolio() {
           position: relative; width: clamp(280px, 28vw, 420px); aspect-ratio: 16/10;
           flex-shrink: 0; border-right: 1px solid ${BORDER}; overflow: hidden;
           display: block; text-decoration: none; color: inherit;
+        }
+        .showreel-item-poster {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
         .showreel-item video {
           filter: brightness(0.62) contrast(1.08) saturate(0.78);
@@ -1426,7 +1459,7 @@ export default function Portfolio() {
         </filter>
       </svg>
 
-      {!loaded && <Loader onDone={done} />}
+      {!loaded && !skipLoader && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>
         <SiteNav scrollY={scrollY} home />
         <HeroSection />
