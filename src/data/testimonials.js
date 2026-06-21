@@ -3,7 +3,7 @@ export const TESTIMONIALS = [
     id: "01",
     name: "Mike Rothon",
     company: "Site Voice",
-    role: "Client",
+    role: "CEO",
     country: "United Kingdom",
     date: "Feb 3, 2026",
     quote:
@@ -15,7 +15,7 @@ export const TESTIMONIALS = [
     id: "02",
     name: "Alexander Grepe",
     company: "Svar.se",
-    role: "Product Lead",
+    role: "CEO & Co-Founder",
     country: "Sweden",
     date: "Nov 2024",
     quote:
@@ -27,7 +27,7 @@ export const TESTIMONIALS = [
     id: "03",
     name: "Alexandru Barciog",
     company: "Boglex Software",
-    role: "Engineering Lead",
+    role: "CEO",
     country: "Romania",
     date: "Sep 2024",
     quote:
@@ -39,7 +39,7 @@ export const TESTIMONIALS = [
     id: "04",
     name: "Progress Ibrahim",
     company: "Expaat Nigeria",
-    role: "Co-Founder",
+    role: "CEO & Co-Founder",
     country: "Nigeria",
     date: "Aug 2024",
     quote:
@@ -51,7 +51,7 @@ export const TESTIMONIALS = [
     id: "05",
     name: "Sarah Mitchell",
     company: "The Autism Helper",
-    role: "Product Director",
+    role: "CEO & Co-Founder",
     country: "United States",
     date: "Jan 2025",
     quote:
@@ -63,7 +63,7 @@ export const TESTIMONIALS = [
     id: "06",
     name: "Ulf Kossol",
     company: "StrengthMaker",
-    role: "Head of Product",
+    role: "CEO",
     country: "Germany",
     date: "May 2024",
     quote:
