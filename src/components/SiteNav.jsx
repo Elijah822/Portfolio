@@ -13,15 +13,15 @@ const DIM = "#a39e98"
 const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
-const SCROLL_LINKS = [
-  { id: "services", label: "Services" },
-  { id: "process", label: "Process" },
-  { id: "faq", label: "FAQ" },
-]
-
 const PAGE_LINKS = [
   { label: "About", href: "/about" },
   { label: "Explore", href: "/exploration" },
+]
+
+const MOBILE_SCROLL_LINKS = [
+  { id: "services", label: "Services" },
+  { id: "process", label: "Process" },
+  { id: "faq", label: "FAQ" },
 ]
 
 const linkStyle = {
@@ -194,7 +194,7 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
         }
         .site-nav__drawer-cta {
           margin-top: 24px;
-          display: inline-block;
+          display: block;
           font-size: 14px !important;
           letter-spacing: 3px !important;
           color: #07070c !important;
@@ -203,7 +203,12 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           border-radius: 999px;
           border: none !important;
           text-align: center;
-          width: auto !important;
+          width: 100% !important;
+        }
+        .site-nav__drawer-scroll {
+          font-size: 18px !important;
+          letter-spacing: 2px !important;
+          color: ${DIM} !important;
         }
         @media (min-width: 769px) {
           .site-nav {
@@ -246,11 +251,6 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
 
         <div className="site-nav__desktop">
           <WorkDropdown home={home} onNavigate={close} />
-          {SCROLL_LINKS.map(({ id, label }) => (
-            <button key={id} type="button" className="site-nav__link" onClick={() => goSection(id)} style={{ ...linkStyle, cursor: "inherit" }}>
-              {label}
-            </button>
-          ))}
           {PAGE_LINKS.map(({ label, href }) => (
             <Link key={href} to={href} className="site-nav__link" style={linkStyle}>{label}</Link>
           ))}
@@ -294,8 +294,8 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
             <button type="button" onClick={() => goSection("work")}>View all work</button>
           </div>
         )}
-        {SCROLL_LINKS.map(({ id, label }) => (
-          <button key={id} type="button" onClick={() => goSection(id)}>{label}</button>
+        {MOBILE_SCROLL_LINKS.map(({ id, label }) => (
+          <button key={id} type="button" className="site-nav__drawer-scroll" onClick={() => goSection(id)}>{label}</button>
         ))}
         {PAGE_LINKS.map(({ label, href }) => (
           <Link key={href} to={href} onClick={close}>{label}</Link>

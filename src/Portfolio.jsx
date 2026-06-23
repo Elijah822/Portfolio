@@ -713,17 +713,10 @@ function ContactCta() {
         <Link
           to="/contact"
           data-h
+          className="home-contact-cta"
           style={{
-            display: "inline-block",
-            fontFamily: "var(--font-body)",
-            fontSize: 12,
-            letterSpacing: 3,
-            textTransform: "uppercase",
             color: BG,
             background: GOLD,
-            textDecoration: "none",
-            padding: "16px 28px",
-            borderRadius: 999,
           }}
         >
           Get in touch →

@@ -16,17 +16,19 @@ export default function ProcessSection() {
         </p>
       </ScrollReveal>
 
-      <div className="process-grid">
-        {PROCESS_STEPS.map((step, i) => (
-          <ScrollReveal key={step.num} variant="fade-up" delay={i * 70} className="process-step">
-            <div className="process-step__num">{step.num}</div>
-            <h3 className="process-step__title">{step.title}</h3>
-            <p className="process-step__desc">{step.desc}</p>
-          </ScrollReveal>
-        ))}
+      <div className="process-grid-wrap">
+        <div className="process-grid" aria-label="Process steps">
+          {PROCESS_STEPS.map((step, i) => (
+            <ScrollReveal key={step.num} variant="fade-up" delay={i * 160} duration={720} className="process-step">
+              <div className="process-step__num">{step.num}</div>
+              <h3 className="process-step__title">{step.title}</h3>
+              <p className="process-step__desc">{step.desc}</p>
+            </ScrollReveal>
+          ))}
+        </div>
       </div>
 
-      <ScrollReveal variant="fade-up" delay={120} className="process-cta">
+      <ScrollReveal variant="fade-up" delay={PROCESS_STEPS.length * 160 + 80} className="process-cta">
         <p>Ready to start? Book a free discovery call.</p>
         <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="process-cta__btn" data-h>
           Book a call →

@@ -237,7 +237,26 @@ h1 {
   50% { opacity: 0.45; transform: scale(1.12); }
 }
 
+.home-contact-cta {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 28px;
+  border-radius: 999px;
+}
+
 @media (max-width: 768px) {
+  .home-contact-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 18px 24px;
+    box-sizing: border-box;
+  }
+
   .sound-nudge {
     bottom: 20px;
     max-width: calc(100vw - 40px);

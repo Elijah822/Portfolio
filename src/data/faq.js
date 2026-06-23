@@ -17,7 +17,7 @@ export const FAQ_ITEMS = [
   {
     id: "dev",
     q: "Do you design only, or build too?",
-    a: "Both. I'm a fullstack product designer — I design in Figma and can ship front-end (React, Webflow, Framer). For complex back-end work I partner with engineers, but I never hand off designs I can't build.",
+    a: "Both. I design in Figma and ship front-end in React, Vite, and Next.js. For backend and infrastructure I work with your engineers — but I always design within the technical limits of your stack, so nothing lands on the team as an impossible handoff.",
   },
   {
     id: "ai",

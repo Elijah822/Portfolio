@@ -14,6 +14,7 @@ const BORDER = "rgba(255,255,255,0.07)"
 
 const PROJECT_TYPES = [
   "Product & UX Design",
+  "Front-End Development",
   "Design System",
   "0→1 MVP",
   "Motion & Prototyping",
