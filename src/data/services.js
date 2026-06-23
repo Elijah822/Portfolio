@@ -5,6 +5,10 @@ const media = id => {
   return url ? { type: "video", url, poster: videoPoster(url) } : null
 }
 
+const tool = (name, icon, src) => ({ name, icon, src })
+
+export const toolIconUrl = t => t.src ?? `https://cdn.simpleicons.org/${t.icon}/8a8580`
+
 export const SERVICES = [
   {
     id: "product",
@@ -18,6 +22,13 @@ export const SERVICES = [
       "Stack-aware UX (feasibility built in)",
       "Usability testing & dev-ready Figma handoff",
     ],
+    tools: [
+      tool("Figma", "figma"),
+      tool("Miro", "miro"),
+      tool("Notion", "notion"),
+      tool("Linear", "linear"),
+      tool("Hotjar", "hotjar"),
+    ],
     accent: "#c9aa7c",
     media: media("03"),
   },
@@ -28,10 +39,17 @@ export const SERVICES = [
     desc: "Scalable design systems with AI-native workflows. At Toke I built a Claude MCP-integrated system that cut design cycles in half across three enterprise clients.",
     includes: [
       "Component libraries & tokens",
-      "Documentation & governance",
+      "Supernova documentation (when needed)",
       "Claude MCP & AI tooling",
       "Cross-team design ops",
       "Regulatory & compliance patterns",
+    ],
+    tools: [
+      tool("Figma", "figma"),
+      tool("Supernova", "supernova", "/tool-icons/supernova.png"),
+      tool("Claude", "claude"),
+      tool("GitHub", "github"),
+      tool("npm", "npm"),
     ],
     accent: "#9b7ec8",
     media: media("02"),
@@ -48,6 +66,13 @@ export const SERVICES = [
       "Growth & conversion flows",
       "Pitch decks & investor materials",
     ],
+    tools: [
+      tool("Notion", "notion"),
+      tool("Miro", "miro"),
+      tool("Figma", "figma"),
+      tool("Typeform", "typeform"),
+      tool("Google Analytics", "googleanalytics"),
+    ],
     accent: "#5ecfb1",
     media: media("07"),
   },
@@ -63,6 +88,11 @@ export const SERVICES = [
       "Marketing & social cuts",
       "Lottie & web animations",
     ],
+    tools: [
+      tool("After Effects", "adobeaftereffects", "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/adobeaftereffects.svg"),
+      tool("Figma", "figma"),
+      tool("LottieFiles", "lottiefiles"),
+    ],
     accent: "#f0c060",
     media: media("02"),
   },
@@ -70,13 +100,19 @@ export const SERVICES = [
     id: "frontend",
     num: "05",
     title: "Front-End Development",
-    desc: "I don't stop at Figma — I ship front-end in React, Vite, and Next.js. I work alongside backend engineers on APIs and integration, so design decisions stay grounded in what your stack can deliver.",
+    desc: "I don't stop at Figma — I ship production front-end in React, Vite, and Next.js, accelerated with Cursor AI, Codex, and Claude Code. I work alongside backend engineers on APIs and integration, so design decisions stay grounded in what your stack can deliver.",
     includes: [
       "React, Vite & Next.js front-end",
+      "AI-assisted shipping — Cursor, Codex & Claude Code",
       "Design-to-code — I build what I design",
       "Collaboration with backend engineers",
       "API integration & component implementation",
-      "Designs scoped to real technical constraints",
+    ],
+    tools: [
+      tool("Cursor", "cursor"),
+      tool("Claude Code", "claude"),
+      tool("Codex", "openai", "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/openai.svg"),
+      tool("GitHub", "github"),
     ],
     accent: "#5ba3f5",
     media: media("07"),

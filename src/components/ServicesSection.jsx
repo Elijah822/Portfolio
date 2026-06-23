@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import ScrollReveal from "./ScrollReveal.jsx"
-import { SERVICES } from "../data/services.js"
+import { SERVICES, toolIconUrl } from "../data/services.js"
 import { useCoarsePointer, useIsMobile } from "../hooks/useMediaQuery.js"
 import { usePlayWhenVisible } from "../hooks/usePlayWhenVisible.js"
 import "./HomeSections.css"
@@ -43,6 +43,32 @@ function ServiceMedia({ service, className = "", isActive = true }) {
   )
 }
 
+function ServiceTools({ tools }) {
+  if (!tools?.length) return null
+
+  return (
+    <div className="services-panel__tools">
+      <span className="services-panel__tools-label">Tools</span>
+      <ul className="services-panel__tools-list" aria-label="Tools used">
+        {tools.map(t => (
+          <li key={t.name}>
+            <img
+              src={toolIconUrl(t)}
+              alt=""
+              width={22}
+              height={22}
+              loading="lazy"
+              decoding="async"
+              title={t.name}
+            />
+            <span className="visually-hidden">{t.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 function ServiceCopy({ service, showTitle = true }) {
   return (
     <>
@@ -57,6 +83,7 @@ function ServiceCopy({ service, showTitle = true }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <ServiceTools tools={service.tools} />
       <Link to="/contact" className="services-panel__cta" data-h>
         Discuss this
       </Link>
