@@ -102,7 +102,7 @@ export default function ServicesSection() {
   const {
     active,
     sectionRef,
-    setStepRef,
+    pinRef,
     goToService,
   } = useServicesScrollSpy(SERVICES, scrollSpy)
 
@@ -161,8 +161,12 @@ export default function ServicesSection() {
           })}
         </div>
       ) : (
-        <div className={`services-scrolly${scrollSpy ? "" : " services-scrolly--static"}`}>
-          <div className="services-scrolly__pin">
+        <div
+          ref={pinRef}
+          className={`services-scrolly${scrollSpy ? "" : " services-scrolly--static"}`}
+          style={scrollSpy ? { "--services-steps": SERVICES.length } : undefined}
+        >
+          <div className="services-scrolly__sticky">
             <ScrollReveal variant="fade-up" delay={60} className="services-layout">
               <div className="services-tabs">
                 {SERVICES.map(s => (
@@ -205,17 +209,6 @@ export default function ServicesSection() {
                 </div>
               </div>
             </ScrollReveal>
-          </div>
-
-          <div className="services-scrolly__steps" aria-hidden>
-            {scrollSpy && SERVICES.map((s, i) => (
-              <div
-                key={s.id}
-                ref={el => setStepRef(i, el)}
-                className="services-scrolly__step"
-                data-service={s.id}
-              />
-            ))}
           </div>
         </div>
       )}

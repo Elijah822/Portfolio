@@ -72,38 +72,34 @@
 
 .services-scrolly {
   position: relative;
+  height: calc(var(--services-steps, 5) * 100vh);
   margin-top: 8px;
 }
 
-.services-scrolly__pin {
+.services-scrolly__sticky {
   position: sticky;
   top: 88px;
   z-index: 4;
-  padding-bottom: 24px;
+  height: calc(100vh - 112px);
+  display: flex;
+  align-items: center;
+  padding-bottom: 16px;
 }
 
-.services-scrolly__steps {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.services-scrolly__step {
-  height: 72vh;
-  min-height: 460px;
-}
-
-.services-scrolly__step:last-child {
-  margin-bottom: 80px;
+.services-scrolly__sticky .services-layout {
+  width: 100%;
+  max-height: 100%;
 }
 
 .services-scrolly--static {
+  height: auto;
   margin-bottom: 80px;
 }
 
-.services-scrolly--static .services-scrolly__pin {
+.services-scrolly--static .services-scrolly__sticky {
   position: relative;
   top: auto;
+  height: auto;
   padding-bottom: 0;
 }
 
