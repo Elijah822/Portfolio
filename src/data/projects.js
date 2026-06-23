@@ -1,4 +1,4 @@
-import { INDUSTRIES } from "../Portfolio.jsx"
+import { INDUSTRIES } from "./industries.js"
 
 export const ALL_PROJECTS = INDUSTRIES.flatMap(g => g.projects)
 
