@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAccessibility } from '../context/AccessibilityContext.jsx';
 import { useCoarsePointer, useFinePointer } from '../hooks/useMediaQuery.js';
 import { usePlayWhenVisible } from '../hooks/usePlayWhenVisible.js';
@@ -156,9 +157,9 @@ export function HeroSection() {
                   strokeLinejoin="round" />
               </svg>
             </a>
-            <a href="#contact" className="hero__btn hero__btn--outline">
+            <Link to="/contact" className="hero__btn hero__btn--outline">
               Contact
-            </a>
+            </Link>
           </div>
         </div>
 

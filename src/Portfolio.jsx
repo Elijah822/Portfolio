@@ -6,6 +6,9 @@ import SocialLinks from "./components/SocialLinks.jsx"
 import ScrollReveal from "./components/ScrollReveal.jsx"
 import SiteNav from "./components/SiteNav.jsx"
 import { HeroSection } from "./components/HeroSection.jsx"
+import ServicesSection from "./components/ServicesSection.jsx"
+import ProcessSection from "./components/ProcessSection.jsx"
+import FaqSection from "./components/FaqSection.jsx"
 import { useCoarsePointer, useFinePointer } from "./hooks/useMediaQuery.js"
 import { usePlayWhenVisible } from "./hooks/usePlayWhenVisible.js"
 import { CONTACT } from "./data/contact.js"
@@ -717,7 +720,7 @@ function Work() {
   return (
     <section id="work" className="work-section" style={{ paddingTop: 120, paddingBottom: 80 }}>
       <ScrollReveal variant="fade-up" className="page-pad-x work-section-intro" style={{ marginBottom: 80 }}>
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ 01 Selected Work ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 20, textTransform: "uppercase" }}>[ Selected Work ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(38px,5.5vw,68px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           Work that moves<br /><em>the needle</em>
         </h2>
@@ -791,7 +794,7 @@ function Testimonials() {
   return (
     <section id="testimonials" className="testimonials-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 120, borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 02 Testimonials ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ Testimonials ]</div>
         <h2 style={{ fontFamily: "var(--font-heading)", fontVariationSettings: '"wght" 500', fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
           What clients say
         </h2>
@@ -845,20 +848,38 @@ function Testimonials() {
   )
 }
 
-// ── CONTACT ───────────────────────────────────────────────────────────────────
-function Contact() {
+// ── CONTACT CTA ───────────────────────────────────────────────────────────────
+function ContactCta() {
   return (
     <section id="contact" className="contact-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 80, borderTop: `1px solid ${BORDER}` }}>
       <ScrollReveal variant="fade-up">
-        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ 03 Contact ]</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 5, color: DIM, marginBottom: 56, textTransform: "uppercase" }}>[ Contact ]</div>
       </ScrollReveal>
       <ScrollReveal variant="fade-up" delay={80}>
-        <p style={{ fontFamily: "var(--font-body)", fontSize: "clamp(16px,2.1vw,26px)", fontWeight: 400, color: DIM, maxWidth: 460, lineHeight: 1.75, margin: "0 0 32px" }}>
-          Have a product that needs the right design mind? Let's create something that matters.
+        <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(34px,4.5vw,56px)", fontWeight: 500, color: TEXT, lineHeight: 1.1, margin: "0 0 16px" }}>
+          Start with a <em>conversation</em>
+        </h2>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: 17, fontWeight: 400, color: DIM, maxWidth: 480, lineHeight: 1.75, margin: "0 0 32px" }}>
+          Tell me about your product and timeline. I'll reply within 48 hours.
         </p>
-        <a data-h href={`mailto:${CONTACT.email}`} className="contact-email" style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(20px,3.5vw,52px)", fontWeight: 300, color: TEXT, textDecoration: "none", display: "inline-block", borderBottom: `1px solid ${BORDER}`, paddingBottom: 6, transition: "all 0.3s", wordBreak: "break-all" }}>
-          {CONTACT.email}
-        </a>
+        <Link
+          to="/contact"
+          data-h
+          style={{
+            display: "inline-block",
+            fontFamily: "var(--font-body)",
+            fontSize: 12,
+            letterSpacing: 3,
+            textTransform: "uppercase",
+            color: BG,
+            background: GOLD,
+            textDecoration: "none",
+            padding: "16px 28px",
+            borderRadius: 999,
+          }}
+        >
+          Get in touch →
+        </Link>
         <SocialLinks style={{ marginTop: 44 }} />
       </ScrollReveal>
       <ScrollReveal variant="fade" delay={160} style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
@@ -1464,9 +1485,12 @@ export default function Portfolio() {
         <SiteNav scrollY={scrollY} home />
         <HeroSection />
         <Showreel />
+        <ServicesSection />
         <Work />
+        <ProcessSection />
         <Testimonials />
-        <Contact />
+        <FaqSection />
+        <ContactCta />
       </div>
     </div>
   )

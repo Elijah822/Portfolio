@@ -2,7 +2,7 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import RouterSpeedInsights from "./components/RouterSpeedInsights.jsx"
 import { AccessibilityProvider } from "./context/AccessibilityContext.jsx"
 import { AmbientAudioProvider } from "./context/AmbientAudioContext.jsx"
 import AppShell from "./components/AppShell.jsx"
@@ -16,6 +16,7 @@ import Portfolio from "./Portfolio.jsx"
 import Games from "./Games.jsx"
 import About from "./pages/About.jsx"
 import Exploration from "./pages/Exploration.jsx"
+import Contact from "./pages/Contact.jsx"
 import ProjectPage from "./pages/ProjectPage.jsx"
 
 loadFonts()
@@ -33,11 +34,12 @@ createRoot(document.getElementById("root")).render(
               <Route path="/" element={<Portfolio />} />
               <Route path="/about" element={<About />} />
               <Route path="/exploration" element={<Exploration />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/work/:id" element={<ProjectPage />} />
               <Route path="/games" element={<Games />} />
             </Routes>
             <Analytics />
-            <SpeedInsights />
+            <RouterSpeedInsights />
           </BrowserRouter>
         </AmbientAudioProvider>
       </AppShell>
