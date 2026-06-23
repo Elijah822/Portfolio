@@ -1,5 +1,6 @@
 .work-dropdown {
   position: relative;
+  --work-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .work-dropdown__trigger {
@@ -15,12 +16,13 @@
   border: none;
   padding: 0;
   cursor: inherit;
+  transition: color 0.25s ease;
 }
 
 .work-dropdown__chevron {
   font-size: 10px;
   opacity: 0.7;
-  transition: transform 0.2s ease;
+  transition: transform 0.32s var(--work-ease);
 }
 
 .work-dropdown.is-open .work-dropdown__chevron {
@@ -39,8 +41,11 @@
   backdrop-filter: blur(24px);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 0.22s ease, transform 0.2s ease, visibility 0.22s;
+  transform: translateY(-14px);
+  transition:
+    opacity 0.38s var(--work-ease),
+    transform 0.42s var(--work-ease),
+    visibility 0.38s;
   pointer-events: none;
 }
 
@@ -49,6 +54,10 @@
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
+  transition:
+    opacity 0.42s var(--work-ease) 0.06s,
+    transform 0.48s var(--work-ease) 0.06s,
+    visibility 0.42s 0.06s;
 }
 
 .work-dropdown__inner {
@@ -65,6 +74,23 @@
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.015);
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.work-dropdown.is-open .work-dropdown__grid {
+  animation: work-grid-in 0.55s var(--work-ease) 0.1s forwards;
+}
+
+@keyframes work-grid-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .work-dropdown__list {
@@ -81,6 +107,12 @@
   color: rgba(201, 170, 124, 0.9);
   text-transform: uppercase;
   margin: 0 0 20px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.work-dropdown.is-open .work-dropdown__eyebrow {
+  animation: work-fade-up 0.45s var(--work-ease) 0.14s forwards;
 }
 
 .work-dropdown__list ul {
@@ -90,6 +122,38 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.work-dropdown__list li {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.work-dropdown.is-open .work-dropdown__list li {
+  animation: work-item-in 0.48s var(--work-ease) forwards;
+  animation-delay: calc(0.16s + var(--work-item-i, 0) * 0.055s);
+}
+
+@keyframes work-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes work-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .work-dropdown__item {
@@ -104,8 +168,8 @@
   border-left: 2px solid transparent;
   text-decoration: none;
   transition:
-    background 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    background 0.32s var(--work-ease) 0s,
+    border-color 0.32s var(--work-ease) 0s;
 }
 
 .work-dropdown__item:hover,
@@ -114,6 +178,7 @@
   background: rgba(255, 255, 255, 0.028);
   border-left-color: rgba(201, 170, 124, 0.55);
   outline: none;
+  transition-delay: 0.1s;
 }
 
 .work-dropdown__item-num {
@@ -122,12 +187,13 @@
   letter-spacing: 0.06em;
   color: rgba(163, 158, 152, 0.7);
   font-variant-numeric: tabular-nums;
-  transition: color 0.24s ease;
+  transition: color 0.3s var(--work-ease) 0s;
 }
 
 .work-dropdown__item:hover .work-dropdown__item-num,
 .work-dropdown__item.is-active .work-dropdown__item-num {
   color: rgba(201, 170, 124, 0.85);
+  transition-delay: 0.12s;
 }
 
 .work-dropdown__item-body {
@@ -145,12 +211,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.24s ease;
+  transition: color 0.3s var(--work-ease) 0s;
 }
 
 .work-dropdown__item:hover .work-dropdown__item-title,
 .work-dropdown__item.is-active .work-dropdown__item-title {
   color: #e0dbd2;
+  transition-delay: 0.1s;
 }
 
 .work-dropdown__item-meta {
@@ -167,16 +234,17 @@
   font-size: 13px;
   color: #c9aa7c;
   opacity: 0;
-  transform: translateX(-8px);
+  transform: translateX(-10px);
   transition:
-    opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.34s var(--work-ease) 0s,
+    transform 0.34s var(--work-ease) 0s;
 }
 
 .work-dropdown__item:hover .work-dropdown__item-arrow,
 .work-dropdown__item.is-active .work-dropdown__item-arrow {
   opacity: 0.85;
   transform: translateX(0);
+  transition-delay: 0.16s;
 }
 
 .work-dropdown__all {
@@ -191,7 +259,13 @@
   padding: 0;
   cursor: inherit;
   align-self: flex-start;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: color 0.2s ease;
+}
+
+.work-dropdown.is-open .work-dropdown__all {
+  animation: work-fade-up 0.42s var(--work-ease) 0.42s forwards;
 }
 
 .work-dropdown__preview {
@@ -199,6 +273,23 @@
   overflow: hidden;
   min-height: 100%;
   background: #0a0a10;
+  opacity: 0;
+  transform: translateX(12px);
+}
+
+.work-dropdown.is-open .work-dropdown__preview {
+  animation: work-preview-col-in 0.55s var(--work-ease) 0.18s forwards;
+}
+
+@keyframes work-preview-col-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .work-dropdown__preview-media {
@@ -207,7 +298,7 @@
   object-fit: cover;
   display: block;
   opacity: 0.94;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.4s ease;
 }
 
 .work-dropdown__preview-empty {
@@ -241,13 +332,13 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  animation: work-preview-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: work-preview-in 0.38s var(--work-ease) 0.08s both;
 }
 
 @keyframes work-preview-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -288,5 +379,27 @@
 
   .work-dropdown__item:hover {
     background: rgba(255, 255, 255, 0.035);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-dropdown__panel,
+  .work-dropdown.is-open .work-dropdown__panel,
+  .work-dropdown__item,
+  .work-dropdown__item-arrow,
+  .work-dropdown__item-num,
+  .work-dropdown__item-title {
+    transition: none;
+  }
+
+  .work-dropdown__grid,
+  .work-dropdown__eyebrow,
+  .work-dropdown__list li,
+  .work-dropdown__all,
+  .work-dropdown__preview,
+  .work-dropdown__preview-overlay {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

@@ -13,8 +13,32 @@ export default function WorkDropdown({ home, onNavigate }) {
   const [activeId, setActiveId] = useState(FEATURED_WORK[0]?.id ?? "01")
   const wrapRef = useRef(null)
   const closeTimer = useRef(null)
+  const openTimer = useRef(null)
+  const activeTimer = useRef(null)
+
+  const OPEN_DELAY = 140
+  const HOVER_DELAY = 100
 
   const active = FEATURED_WORK.find(p => p.id === activeId) ?? FEATURED_WORK[0]
+
+  const clearOpenTimer = () => {
+    if (openTimer.current) {
+      clearTimeout(openTimer.current)
+      openTimer.current = null
+    }
+  }
+
+  const clearActiveTimer = () => {
+    if (activeTimer.current) {
+      clearTimeout(activeTimer.current)
+      activeTimer.current = null
+    }
+  }
+
+  const scheduleActive = id => {
+    clearActiveTimer()
+    activeTimer.current = setTimeout(() => setActiveId(id), HOVER_DELAY)
+  }
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -24,16 +48,23 @@ export default function WorkDropdown({ home, onNavigate }) {
   }
 
   const scheduleClose = () => {
+    clearOpenTimer()
     clearCloseTimer()
-    closeTimer.current = setTimeout(() => setOpen(false), 180)
+    closeTimer.current = setTimeout(() => setOpen(false), 200)
   }
 
   const openMenu = () => {
     clearCloseTimer()
-    setOpen(true)
+    if (open) return
+    clearOpenTimer()
+    openTimer.current = setTimeout(() => setOpen(true), OPEN_DELAY)
   }
 
-  useEffect(() => () => clearCloseTimer(), [])
+  useEffect(() => () => {
+    clearCloseTimer()
+    clearOpenTimer()
+    clearActiveTimer()
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -64,7 +95,11 @@ export default function WorkDropdown({ home, onNavigate }) {
         className="work-dropdown__trigger site-nav__link"
         aria-expanded={open}
         aria-haspopup="true"
-        onClick={() => setOpen(v => !v)}
+        onClick={() => {
+          clearOpenTimer()
+          clearCloseTimer()
+          setOpen(v => !v)
+        }}
       >
         Work
         <span className="work-dropdown__chevron" aria-hidden>▾</span>
@@ -76,12 +111,12 @@ export default function WorkDropdown({ home, onNavigate }) {
             <div className="work-dropdown__list">
               <div className="work-dropdown__eyebrow">Selected work</div>
               <ul>
-                {FEATURED_WORK.map(p => (
-                  <li key={p.id}>
+                {FEATURED_WORK.map((p, i) => (
+                  <li key={p.id} style={{ "--work-item-i": i }}>
                     <Link
                       to={`/work/${p.id}`}
                       className={`work-dropdown__item${p.id === activeId ? " is-active" : ""}`}
-                      onMouseEnter={() => setActiveId(p.id)}
+                      onMouseEnter={() => scheduleActive(p.id)}
                       onFocus={() => setActiveId(p.id)}
                       onClick={() => {
                         setOpen(false)
