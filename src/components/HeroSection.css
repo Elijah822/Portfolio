@@ -191,6 +191,7 @@
 .hero__btn--primary {
   padding: 12px 22px;
   border: 1px solid rgba(201,170,124,0.40);
+  border-radius: 10px;
   color: #c9aa7c;
 }
 
@@ -203,6 +204,7 @@
 .hero__btn--outline {
   padding: 12px 22px;
   border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
   color: rgba(224,219,210,0.72);
 }
 
@@ -331,9 +333,10 @@
     minmax(0, 1fr);
   align-items: center;
   width: 100%;
+  max-width: 560px;
   min-width: 0;
   margin: 0;
-  padding: 28px 24px;
+  padding: 24px 20px;
   background: rgba(255,255,255,0.022);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -344,7 +347,7 @@
 
 .hero-stat {
   display: flex; flex-direction: column;
-  gap: 8px; padding: 0 12px;
+  gap: 8px; padding: 0 8px;
   min-width: 0;
   width: 100%;
 }
