@@ -4,6 +4,8 @@ import ScrollReveal from "./ScrollReveal.jsx"
 import { SERVICES, toolIconUrl } from "../data/services.js"
 import { useCoarsePointer, useIsMobile } from "../hooks/useMediaQuery.js"
 import { usePlayWhenVisible } from "../hooks/usePlayWhenVisible.js"
+import { useAccessibility } from "../context/AccessibilityContext.jsx"
+import { useServicesScrollSpy } from "../hooks/useServicesScrollSpy.js"
 import "./HomeSections.css"
 
 const BORDER = "rgba(255,255,255,0.07)"
@@ -60,6 +62,7 @@ function ServiceTools({ tools }) {
               loading="lazy"
               decoding="async"
               title={t.name}
+              className={`services-panel__tool-icon${t.mono ? " services-panel__tool-icon--mono" : ""}`}
             />
             <span className="visually-hidden">{t.name}</span>
           </li>
@@ -93,15 +96,27 @@ function ServiceCopy({ service, showTitle = true }) {
 
 export default function ServicesSection() {
   const isMobile = useIsMobile()
-  const [active, setActive] = useState(SERVICES[0].id)
+  const { reduceMotion } = useAccessibility()
   const [openAccordion, setOpenAccordion] = useState(SERVICES[0].id)
+  const scrollSpy = !isMobile && !reduceMotion
+  const {
+    active,
+    sectionRef,
+    setStepRef,
+    goToService,
+  } = useServicesScrollSpy(SERVICES, scrollSpy)
 
   const toggleAccordion = id => {
     setOpenAccordion(open => (open === id ? null : id))
   }
 
   return (
-    <section id="services" className="home-section services-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 80, borderTop: `1px solid ${BORDER}` }}>
+    <section
+      id="services"
+      ref={sectionRef}
+      className="home-section services-section page-pad-x"
+      style={{ paddingTop: 120, paddingBottom: isMobile ? 80 : 0, borderTop: `1px solid ${BORDER}` }}
+    >
       <ScrollReveal variant="fade-up" className="services-section__header">
         <p className="services-section__eyebrow">Services</p>
         <h2 className="services-section__title">Design and build, end to end</h2>
@@ -146,47 +161,63 @@ export default function ServicesSection() {
           })}
         </div>
       ) : (
-        <ScrollReveal variant="fade-up" delay={60} className="services-layout">
-          <div className="services-tabs">
-            {SERVICES.map(s => (
-              <button
-                key={s.id}
-                type="button"
-                className={`services-tab${s.id === active ? " is-active" : ""}`}
-                onClick={() => setActive(s.id)}
-              >
-                <span className="services-tab__num">{s.num}</span>
-                <span className="services-tab__label">{s.title}</span>
-              </button>
-            ))}
+        <div className={`services-scrolly${scrollSpy ? "" : " services-scrolly--static"}`}>
+          <div className="services-scrolly__pin">
+            <ScrollReveal variant="fade-up" delay={60} className="services-layout">
+              <div className="services-tabs">
+                {SERVICES.map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className={`services-tab${s.id === active ? " is-active" : ""}`}
+                    aria-current={s.id === active ? "true" : undefined}
+                    onClick={() => goToService(s.id)}
+                  >
+                    <span className="services-tab__num">{s.num}</span>
+                    <span className="services-tab__label">{s.title}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="services-panel">
+                <div className="services-panel__content">
+                  {SERVICES.map(s => (
+                    <div
+                      key={s.id}
+                      className={`services-panel__pane${s.id === active ? " is-active" : ""}`}
+                      aria-hidden={s.id !== active}
+                    >
+                      <ServiceCopy service={s} showTitle={false} />
+                    </div>
+                  ))}
+                </div>
+                <div className="services-panel__media-stack">
+                  {SERVICES.map(s => (
+                    <div
+                      key={s.id}
+                      className={`services-panel__media-pane${s.id === active ? " is-active" : ""}`}
+                      aria-hidden={s.id !== active}
+                    >
+                      <ServiceMedia service={s} isActive={s.id === active} />
+                      <div className="services-panel__media-scrim" aria-hidden />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
 
-          <div className="services-panel">
-            <div className="services-panel__content">
-              {SERVICES.map(s => (
-                <div
-                  key={s.id}
-                  className={`services-panel__pane${s.id === active ? " is-active" : ""}`}
-                  aria-hidden={s.id !== active}
-                >
-                  <ServiceCopy service={s} showTitle={false} />
-                </div>
-              ))}
-            </div>
-            <div className="services-panel__media-stack">
-              {SERVICES.map(s => (
-                <div
-                  key={s.id}
-                  className={`services-panel__media-pane${s.id === active ? " is-active" : ""}`}
-                  aria-hidden={s.id !== active}
-                >
-                  <ServiceMedia service={s} isActive={s.id === active} />
-                  <div className="services-panel__media-scrim" aria-hidden />
-                </div>
-              ))}
-            </div>
+          <div className="services-scrolly__steps" aria-hidden>
+            {scrollSpy && SERVICES.map((s, i) => (
+              <div
+                key={s.id}
+                ref={el => setStepRef(i, el)}
+                className="services-scrolly__step"
+                data-service={s.id}
+              />
+            ))}
           </div>
-        </ScrollReveal>
+        </div>
       )}
     </section>
   )

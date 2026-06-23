@@ -5,7 +5,7 @@ const media = id => {
   return url ? { type: "video", url, poster: videoPoster(url) } : null
 }
 
-const tool = (name, icon, src) => ({ name, icon, src })
+const tool = (name, icon, src = null, mono = false) => ({ name, icon, src, mono })
 
 export const toolIconUrl = t => t.src ?? `https://cdn.simpleicons.org/${t.icon}/8a8580`
 
@@ -26,7 +26,7 @@ export const SERVICES = [
       tool("Figma", "figma"),
       tool("Miro", "miro"),
       tool("Notion", "notion"),
-      tool("Linear", "linear"),
+      tool("ClickUp", "clickup"),
       tool("Hotjar", "hotjar"),
     ],
     accent: "#c9aa7c",
@@ -70,7 +70,6 @@ export const SERVICES = [
       tool("Notion", "notion"),
       tool("Miro", "miro"),
       tool("Figma", "figma"),
-      tool("Typeform", "typeform"),
       tool("Google Analytics", "googleanalytics"),
     ],
     accent: "#5ecfb1",
@@ -89,7 +88,7 @@ export const SERVICES = [
       "Lottie & web animations",
     ],
     tools: [
-      tool("After Effects", "adobeaftereffects", "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/adobeaftereffects.svg"),
+      tool("After Effects", "adobeaftereffects", "/tool-icons/after-effects.svg", true),
       tool("Figma", "figma"),
       tool("LottieFiles", "lottiefiles"),
     ],
@@ -111,7 +110,7 @@ export const SERVICES = [
     tools: [
       tool("Cursor", "cursor"),
       tool("Claude Code", "claude"),
-      tool("Codex", "openai", "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/openai.svg"),
+      tool("Codex", "openai", "/tool-icons/openai.svg", true),
       tool("GitHub", "github"),
     ],
     accent: "#5ba3f5",
