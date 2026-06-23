@@ -365,25 +365,16 @@
   display: block;
   width: 22px;
   height: 22px;
-  opacity: 0.42;
-  filter: grayscale(1) brightness(1.15);
-  transition: opacity 0.22s ease, filter 0.22s ease;
-}
-
-.services-panel__tool-icon--mono {
+  object-fit: contain;
   opacity: 0.5;
-  filter: brightness(0) invert(0.62);
+  filter: grayscale(1) brightness(1.05);
+  transition: opacity 0.22s ease, filter 0.22s ease;
 }
 
 .services-panel__tools-list li:hover img,
 .services-panel__tools-list li:hover .services-panel__tool-icon {
-  opacity: 0.72;
-  filter: grayscale(0.35) brightness(1.1);
-}
-
-.services-panel__tools-list li:hover .services-panel__tool-icon--mono {
   opacity: 0.78;
-  filter: brightness(0) invert(0.82);
+  filter: grayscale(0.2) brightness(1.1);
 }
 
 .visually-hidden {

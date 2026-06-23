@@ -102,6 +102,7 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           display: flex;
           gap: 28px;
           align-items: center;
+          flex-shrink: 0;
         }
         .site-nav__cta {
           font-family: var(--font-body);

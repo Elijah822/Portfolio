@@ -62,7 +62,7 @@ function ServiceTools({ tools }) {
               loading="lazy"
               decoding="async"
               title={t.name}
-              className={`services-panel__tool-icon${t.mono ? " services-panel__tool-icon--mono" : ""}`}
+              className="services-panel__tool-icon"
             />
             <span className="visually-hidden">{t.name}</span>
           </li>

@@ -5,7 +5,7 @@ const media = id => {
   return url ? { type: "video", url, poster: videoPoster(url) } : null
 }
 
-const tool = (name, icon, src = null, mono = false) => ({ name, icon, src, mono })
+const tool = (name, icon, src = null) => ({ name, icon, src })
 
 export const toolIconUrl = t => t.src ?? `https://cdn.simpleicons.org/${t.icon}/8a8580`
 
@@ -88,7 +88,7 @@ export const SERVICES = [
       "Lottie & web animations",
     ],
     tools: [
-      tool("After Effects", "adobeaftereffects", "/tool-icons/after-effects.svg", true),
+      tool("After Effects", "adobeaftereffects", "/tool-icons/after-effects.svg"),
       tool("Figma", "figma"),
       tool("LottieFiles", "lottiefiles"),
     ],
@@ -110,7 +110,7 @@ export const SERVICES = [
     tools: [
       tool("Cursor", "cursor"),
       tool("Claude Code", "claude"),
-      tool("Codex", "openai", "/tool-icons/openai.svg", true),
+      tool("Codex", "openai", "/tool-icons/openai.svg"),
       tool("GitHub", "github"),
     ],
     accent: "#5ba3f5",
