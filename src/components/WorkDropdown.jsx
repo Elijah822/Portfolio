@@ -123,7 +123,7 @@ export default function WorkDropdown({ home, onNavigate }) {
                 <div className="work-dropdown__preview-empty" aria-hidden />
               )}
               <div className="work-dropdown__preview-scrim" aria-hidden />
-              <div className="work-dropdown__preview-overlay">
+              <div key={activeId} className="work-dropdown__preview-overlay">
                 <span className="work-dropdown__preview-label">{active?.title}</span>
                 <span className="work-dropdown__preview-impact" style={{ color: active?.accent }}>{active?.impact}</span>
               </div>

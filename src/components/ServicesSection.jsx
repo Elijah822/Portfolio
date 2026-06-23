@@ -8,10 +8,10 @@ import "./HomeSections.css"
 
 const BORDER = "rgba(255,255,255,0.07)"
 
-function ServiceMedia({ service, className = "" }) {
+function ServiceMedia({ service, className = "", isActive = true }) {
   const videoRef = useRef(null)
   const coarsePointer = useCoarsePointer()
-  usePlayWhenVisible(videoRef, Boolean(service.media?.url))
+  usePlayWhenVisible(videoRef, isActive && Boolean(service.media?.url))
 
   if (!service.media?.url) {
     return <div className={`services-panel__media-empty${className ? ` ${className}` : ""}`} aria-hidden />
@@ -68,7 +68,6 @@ export default function ServicesSection() {
   const isMobile = useIsMobile()
   const [active, setActive] = useState(SERVICES[0].id)
   const [openAccordion, setOpenAccordion] = useState(SERVICES[0].id)
-  const current = SERVICES.find(s => s.id === active) ?? SERVICES[0]
 
   const toggleAccordion = id => {
     setOpenAccordion(open => (open === id ? null : id))
@@ -76,7 +75,7 @@ export default function ServicesSection() {
 
   return (
     <section id="services" className="home-section services-section page-pad-x" style={{ paddingTop: 120, paddingBottom: 80, borderTop: `1px solid ${BORDER}` }}>
-      <ScrollReveal variant="fade-up">
+      <ScrollReveal variant="fade-up" className="services-section__header">
         <p className="services-section__eyebrow">Services</p>
         <h2 className="services-section__title">Design and build, end to end</h2>
         <p className="services-section__lead">
@@ -120,8 +119,8 @@ export default function ServicesSection() {
           })}
         </div>
       ) : (
-        <div className="services-layout">
-          <ScrollReveal variant="fade-up" delay={60} className="services-tabs">
+        <ScrollReveal variant="fade-up" delay={60} className="services-layout">
+          <div className="services-tabs">
             {SERVICES.map(s => (
               <button
                 key={s.id}
@@ -133,18 +132,34 @@ export default function ServicesSection() {
                 <span className="services-tab__label">{s.title}</span>
               </button>
             ))}
-          </ScrollReveal>
+          </div>
 
-          <ScrollReveal variant="fade-up" delay={100} className="services-panel">
-            <div className="services-panel__body">
-              <ServiceCopy service={current} showTitle={false} />
+          <div className="services-panel">
+            <div className="services-panel__content">
+              {SERVICES.map(s => (
+                <div
+                  key={s.id}
+                  className={`services-panel__pane${s.id === active ? " is-active" : ""}`}
+                  aria-hidden={s.id !== active}
+                >
+                  <ServiceCopy service={s} showTitle={false} />
+                </div>
+              ))}
             </div>
-            <div className="services-panel__media">
-              <ServiceMedia service={current} />
-              <div className="services-panel__media-scrim" aria-hidden />
+            <div className="services-panel__media-stack">
+              {SERVICES.map(s => (
+                <div
+                  key={s.id}
+                  className={`services-panel__media-pane${s.id === active ? " is-active" : ""}`}
+                  aria-hidden={s.id !== active}
+                >
+                  <ServiceMedia service={s} isActive={s.id === active} />
+                  <div className="services-panel__media-scrim" aria-hidden />
+                </div>
+              ))}
             </div>
-          </ScrollReveal>
-        </div>
+          </div>
+        </ScrollReveal>
       )}
     </section>
   )
