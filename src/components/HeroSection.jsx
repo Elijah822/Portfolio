@@ -169,15 +169,11 @@ export function HeroSection() {
           role="list"
           aria-label="Key achievements"
         >
-          <Stat prefix="£" value={50} suffix="M+" label="Impact delivered"   inView={statsInView} />
-          <div className="hero__stats-divider" aria-hidden="true" />
-          <Stat value={18} suffix="+"           label="Products shipped"     inView={statsInView} />
-          <div className="hero__stats-divider" aria-hidden="true" />
-          <Stat value={8}                        label="Countries"            inView={statsInView} />
-          <div className="hero__stats-divider" aria-hidden="true" />
-          <Stat value={6}  suffix="+"           label="Years of craft"       inView={statsInView} />
-          <div className="hero__stats-divider" aria-hidden="true" />
-          <Stat value={3}                        label="Enterprise clients"   inView={statsInView} />
+          <Stat prefix="£" value={50} suffix="M+" label="Impact"     inView={statsInView} />
+          <Stat value={18} suffix="+"           label="Products"   inView={statsInView} />
+          <Stat value={8}                        label="Countries"  inView={statsInView} />
+          <Stat value={6}  suffix="+"           label="Years"      inView={statsInView} />
+          <Stat value={3}                        label="Enterprise" inView={statsInView} />
         </div>
 
         <div className="hero__right">
