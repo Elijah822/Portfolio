@@ -8,8 +8,7 @@ const SVAR_VIDEO = `${VIDEO}/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_r
 const RISKEASE_VIDEO = `${VIDEO}/v1781690565/RiskEase_1_cban6j.mp4`
 
 // Gallery item shapes:
-// { type: "image", src: "<public_id or full Cloudinary URL>", alt, caption?, featured? }
-// { type: "videoFrame", src: "<video public path>", at: <seconds>, alt, caption?, featured? }
+// { type: "image", src: "<public_id>", alt, caption?, featured? }
 
 export const PROJECT_MEDIA = {
   "01": {
@@ -26,12 +25,6 @@ export const PROJECT_MEDIA = {
       url: QUEUEPAY_VIDEO,
       label: "QueuePay: Self-Checkout",
     },
-    gallery: [
-      { type: "videoFrame", src: QUEUEPAY_VIDEO, at: 1, alt: "QueuePay mobile scan flow", caption: "Scan-and-pay customer flow", featured: true },
-      { type: "videoFrame", src: QUEUEPAY_VIDEO, at: 5, alt: "QueuePay cart summary", caption: "Live cart total while shopping" },
-      { type: "videoFrame", src: QUEUEPAY_VIDEO, at: 9, alt: "QueuePay payment options", caption: "Multiple payment methods at checkout" },
-      { type: "videoFrame", src: QUEUEPAY_VIDEO, at: 14, alt: "QueuePay digital receipt", caption: "Digital receipt for exit verification" },
-    ],
   },
   "03": {
     hero: {
@@ -39,25 +32,20 @@ export const PROJECT_MEDIA = {
       url: SIMPAT_VIDEO,
       label: "SimPat: Medical Simulation",
     },
-    gallery: [
-      { type: "videoFrame", src: SIMPAT_VIDEO, at: 2, alt: "SimPat case discovery", caption: "Case library with difficulty indicators", featured: true },
-      { type: "videoFrame", src: SIMPAT_VIDEO, at: 7, alt: "SimPat voice simulation", caption: "Voice-based OSCE-style consultation" },
-      { type: "videoFrame", src: SIMPAT_VIDEO, at: 12, alt: "SimPat AI examiner feedback", caption: "Transcript and examiner feedback side by side" },
-    ],
-  },
-  "04": {
-    gallery: [
-      // Add Cloudinary stills: { type: "image", src: "public_id", alt, caption }
-    ],
   },
   "05": {
     gallery: [
-      // Add Cloudinary stills when uploaded
+      { type: "image", src: "Dreamtter_1_aqsvj8", alt: "Dreamtter onboarding", caption: "Welcome flow — personalize your dream world", featured: true },
+      { type: "image", src: "Dreamtter_o6y3om", alt: "Dreamtter mentorship", caption: "Choose guardians and mentors for your journey" },
+      { type: "image", src: "Dec_1_g8gysn", alt: "Dream pledge ritual", caption: "Sign your dream into existence with a personal pledge" },
+      { type: "image", src: "Dec_2_iltr7j", alt: "Habit progress tracking", caption: "Streaks, reminders, and progress toward long-term goals" },
+      { type: "image", src: "Dec_3_cr0ttn", alt: "AI Sensei conversation", caption: "AI-guided coaching for career growth and life balance" },
     ],
   },
   "06": {
     gallery: [
-      // Add Cloudinary stills when uploaded
+      { type: "image", src: "Jan_1_sd3jvd", alt: "Job application tracker", caption: "Visual pipeline from saved to offer with AI keyword analysis", featured: true },
+      { type: "image", src: "Jan_3_psgjc2", alt: "Profile management", caption: "Account hub for resume tools, goals, and document management" },
     ],
   },
   "07": {
@@ -66,11 +54,6 @@ export const PROJECT_MEDIA = {
       url: SVAR_VIDEO,
       label: "Svar.se: Expert Marketplace",
     },
-    gallery: [
-      { type: "videoFrame", src: SVAR_VIDEO, at: 2, alt: "Svar.se AI search", caption: "Natural-language expert search", featured: true },
-      { type: "videoFrame", src: SVAR_VIDEO, at: 6, alt: "Svar.se expert profiles", caption: "Expert discovery and comparison" },
-      { type: "videoFrame", src: SVAR_VIDEO, at: 11, alt: "Svar.se booking flow", caption: "Search to booked session in under two minutes" },
-    ],
   },
 }
 
