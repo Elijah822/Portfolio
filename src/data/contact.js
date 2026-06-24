@@ -8,3 +8,9 @@ export const CONTACT = {
   alias: "Dean~The UX Fixer",
   aliasHighlight: "#b8a4e8",
 }
+
+/** Open Calendly in a new tab — reliable on mobile where target="_blank" alone can navigate away. */
+export function openCalendly(e) {
+  e?.preventDefault()
+  window.open(CONTACT.calendly, "_blank", "noopener,noreferrer")
+}

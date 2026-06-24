@@ -1,5 +1,5 @@
 import ScrollReveal from "./ScrollReveal.jsx"
-import { CONTACT } from "../data/contact.js"
+import { CONTACT, openCalendly } from "../data/contact.js"
 import { PROCESS_STEPS } from "../data/process.js"
 import "./HomeSections.css"
 
@@ -30,7 +30,7 @@ export default function ProcessSection() {
 
       <ScrollReveal variant="fade-up" delay={PROCESS_STEPS.length * 160 + 80} className="process-cta">
         <p>Ready to start? Book a free discovery call.</p>
-        <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="process-cta__btn" data-h>
+        <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="process-cta__btn" data-h onClick={openCalendly}>
           Book a call →
         </a>
       </ScrollReveal>

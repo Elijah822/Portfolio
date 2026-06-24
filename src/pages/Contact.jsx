@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import SiteNav from "../components/SiteNav.jsx"
 import ScrollReveal from "../components/ScrollReveal.jsx"
 import SocialLinks from "../components/SocialLinks.jsx"
-import { CONTACT } from "../data/contact.js"
+import { CONTACT, openCalendly } from "../data/contact.js"
 import "./ContactPage.css"
 
 const BG = "#07070c"
@@ -192,6 +192,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="contact-aside__cta-btn"
                 data-h
+                onClick={openCalendly}
               >
                 Book a 30-min call →
               </a>

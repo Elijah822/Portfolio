@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import ScrollReveal from "../components/ScrollReveal.jsx"
+import CaseStudyGallery from "../components/CaseStudyGallery.jsx"
 import SiteNav from "../components/SiteNav.jsx"
 import { ALL_PROJECTS } from "../data/projects.js"
 import { getCaseStudy } from "../data/caseStudies.js"
@@ -272,6 +273,10 @@ export default function ProjectPage() {
           <ScrollReveal variant="scale-up" delay={100} className="project-hero-media">
             <video src={media.hero.url} poster={videoPoster(media.hero.url)} controls playsInline data-hero-video />
           </ScrollReveal>
+        )}
+
+        {media?.gallery?.length > 0 && (
+          <CaseStudyGallery items={media.gallery} accent={project.accent} />
         )}
 
         <ProjectMetrics metrics={project.metrics} accent={project.accent} />

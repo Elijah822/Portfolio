@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import SoundButton from "./SoundButton.jsx"
 import SiteLogo from "./SiteLogo.jsx"
 import WorkDropdown from "./WorkDropdown.jsx"
-import { CONTACT } from "../data/contact.js"
+import { CONTACT, openCalendly } from "../data/contact.js"
 import { FEATURED_WORK } from "../data/featuredWork.js"
 import { saveHomeScroll } from "../lib/scrollRestore.js"
 import "./WorkDropdown.css"
@@ -58,6 +58,10 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
     const onKey = e => { if (e.key === "Escape") setOpen(false) }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
+  }, [open])
+
+  useEffect(() => {
+    if (!open) setWorkOpen(false)
   }, [open])
 
   const close = () => setOpen(false)
@@ -168,8 +172,8 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
         .site-nav__drawer.open {
           display: flex;
         }
-        .site-nav__drawer a,
-        .site-nav__drawer button {
+        .site-nav__drawer > a,
+        .site-nav__drawer > button {
           font-family: var(--font-body);
           font-size: 22px;
           font-weight: 400;
@@ -183,15 +187,104 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           padding: 16px 0;
           border-bottom: 1px solid ${BORDER};
           width: 100%;
+          cursor: inherit;
         }
-        .site-nav__drawer-sub {
-          padding-left: 16px;
+        .site-nav__drawer-group {
+          border-bottom: 1px solid ${BORDER};
         }
-        .site-nav__drawer-sub a {
-          font-size: 16px;
-          letter-spacing: 1px;
+        .site-nav__drawer-work-trigger {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          width: 100%;
+          font-family: var(--font-body);
+          font-size: 22px;
+          font-weight: 400;
+          letter-spacing: 2px;
+          color: ${TEXT};
+          text-transform: uppercase;
+          text-align: left;
+          background: none;
+          border: none;
+          padding: 16px 0;
+          cursor: inherit;
+        }
+        .site-nav__drawer-work-trigger.is-open {
+          color: ${GOLD};
+        }
+        .site-nav__drawer-chevron {
+          font-size: 20px;
+          font-weight: 300;
           color: ${DIM};
-          padding: 12px 0;
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        .site-nav__drawer-work-trigger.is-open .site-nav__drawer-chevron {
+          color: ${GOLD};
+        }
+        .site-nav__drawer-work-panel {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 0 0 14px;
+        }
+        .site-nav__drawer-work-item {
+          display: grid;
+          grid-template-columns: 28px minmax(0, 1fr);
+          gap: 12px;
+          align-items: start;
+          padding: 14px 14px;
+          border-radius: 10px;
+          text-decoration: none;
+          background: rgba(255, 255, 255, 0.025);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .site-nav__drawer-work-num {
+          font-family: var(--font-body);
+          font-size: 11px;
+          letter-spacing: 0.06em;
+          color: rgba(163, 158, 152, 0.75);
+          padding-top: 3px;
+          font-variant-numeric: tabular-nums;
+        }
+        .site-nav__drawer-work-body {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          min-width: 0;
+        }
+        .site-nav__drawer-work-title {
+          font-family: var(--font-heading);
+          font-size: 17px;
+          font-weight: 400;
+          color: ${TEXT};
+          line-height: 1.3;
+          text-transform: none;
+          letter-spacing: 0.01em;
+        }
+        .site-nav__drawer-work-meta {
+          font-family: var(--font-body);
+          font-size: 11px;
+          line-height: 1.45;
+          color: ${DIM};
+          text-transform: none;
+          letter-spacing: 0.02em;
+          white-space: normal;
+        }
+        .site-nav__drawer-work-all {
+          margin-top: 4px;
+          padding: 10px 0 2px;
+          font-family: var(--font-body);
+          font-size: 12px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: ${GOLD};
+          background: none;
+          border: none;
+          text-align: left;
+          cursor: inherit;
         }
         .site-nav__drawer-cta {
           margin-top: 24px;
@@ -235,6 +328,11 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           .site-nav__link:hover { color: ${TEXT} !important; }
           .site-nav__link--gold:hover { color: ${GOLD} !important; }
           .site-nav__cta:hover { background: ${TEXT}; }
+          .site-nav__drawer-work-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+          }
+          .site-nav__drawer-work-all:hover { color: ${TEXT}; }
         }
       `}</style>
 
@@ -257,7 +355,7 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
           ))}
           <Link to="/contact" className="site-nav__link" style={linkStyle}>Contact</Link>
           <Link to="/games" className="site-nav__link site-nav__link--gold" style={linkStyle}>Game ✦</Link>
-          <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="site-nav__cta" data-h>Book a call</a>
+          <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="site-nav__cta" data-h onClick={openCalendly}>Book a call</a>
           <SoundButton />
         </div>
 
@@ -282,19 +380,38 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
       </nav>
 
       <div className={`site-nav__drawer${open ? " open" : ""}`} aria-hidden={!open}>
-        <button type="button" onClick={() => setWorkOpen(v => !v)}>
-          Work {workOpen ? "−" : "+"}
-        </button>
-        {workOpen && (
-          <div className="site-nav__drawer-sub">
-            {FEATURED_WORK.map(p => (
-              <Link key={p.id} to={`/work/${p.id}`} onClick={() => { close(); saveHomeScroll() }}>
-                {p.title}
-              </Link>
-            ))}
-            <button type="button" onClick={() => goSection("work")}>View all work</button>
-          </div>
-        )}
+        <div className="site-nav__drawer-group">
+          <button
+            type="button"
+            className={`site-nav__drawer-work-trigger${workOpen ? " is-open" : ""}`}
+            aria-expanded={workOpen}
+            onClick={() => setWorkOpen(v => !v)}
+          >
+            <span>Work</span>
+            <span className="site-nav__drawer-chevron" aria-hidden>{workOpen ? "−" : "+"}</span>
+          </button>
+          {workOpen && (
+            <div className="site-nav__drawer-work-panel">
+              {FEATURED_WORK.map(p => (
+                <Link
+                  key={p.id}
+                  to={`/work/${p.id}`}
+                  className="site-nav__drawer-work-item"
+                  onClick={() => { close(); saveHomeScroll() }}
+                >
+                  <span className="site-nav__drawer-work-num">{p.id}</span>
+                  <span className="site-nav__drawer-work-body">
+                    <span className="site-nav__drawer-work-title">{p.title}</span>
+                    <span className="site-nav__drawer-work-meta">{p.cat} · {p.year}</span>
+                  </span>
+                </Link>
+              ))}
+              <button type="button" className="site-nav__drawer-work-all" onClick={() => goSection("work")}>
+                View all work →
+              </button>
+            </div>
+          )}
+        </div>
         {MOBILE_SCROLL_LINKS.map(({ id, label }) => (
           <button key={id} type="button" className="site-nav__drawer-scroll" onClick={() => goSection(id)}>{label}</button>
         ))}
@@ -303,7 +420,7 @@ export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
         ))}
         <Link to="/contact" onClick={close}>Contact</Link>
         <Link to="/games" onClick={close}>Game ✦</Link>
-        <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" onClick={close} className="site-nav__drawer-cta">Book a call</a>
+        <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" onClick={e => { close(); openCalendly(e) }} className="site-nav__drawer-cta">Book a call</a>
       </div>
     </>
   )
