@@ -30,7 +30,7 @@ const BUDGET_RANGES = [
   "Not sure yet",
 ]
 
-const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || CONTACT.formspree
 
 export default function Contact() {
   const [status, setStatus] = useState("idle")
@@ -42,21 +42,8 @@ export default function Contact() {
 
     const form = e.currentTarget
     const data = new FormData(form)
-
-    if (!FORMSPREE_ENDPOINT) {
-      const name = data.get("name")
-      const email = data.get("email")
-      const company = data.get("company")
-      const projectType = data.get("projectType")
-      const budget = data.get("budget")
-      const message = data.get("message")
-      const subject = encodeURIComponent(`Project inquiry from ${name}`)
-      const body = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\nCompany: ${company || "—"}\nProject type: ${projectType}\nBudget: ${budget}\n\n${message}`
-      )
-      window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`
-      return
-    }
+    data.set("_replyto", data.get("email") ?? "")
+    data.set("_subject", `Project inquiry from ${data.get("name") ?? "Portfolio"}`)
 
     setStatus("sending")
     try {
@@ -149,12 +136,6 @@ export default function Contact() {
                 <button type="submit" className="contact-form__submit" disabled={status === "sending"}>
                   {status === "sending" ? "Sending…" : "Send message →"}
                 </button>
-
-                {!FORMSPREE_ENDPOINT && (
-                  <p className="contact-form__note">
-                    Form opens your email client. For direct delivery, add <code>VITE_FORMSPREE_ENDPOINT</code> in Vercel env vars.
-                  </p>
-                )}
               </form>
             )}
           </ScrollReveal>

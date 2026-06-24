@@ -4,6 +4,7 @@ export const CONTACT = {
   twitter: "https://x.com/uxfixer",
   whatsapp: "https://wa.me/2348165345591",
   calendly: "https://calendly.com/akinloluelijah822/30mins",
+  formspree: "https://formspree.io/f/mykqzqob",
   name: "Akinlolu Elijah",
   alias: "Dean~The UX Fixer",
   aliasHighlight: "#b8a4e8",
