@@ -36,10 +36,28 @@ const linkStyle = {
   padding: 0,
 }
 
-export default function SiteNav({ scrollY = 0, home = false, sticky = false }) {
+export default function SiteNav({ home = false, sticky = false }) {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [workOpen, setWorkOpen] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
+
+  useEffect(() => {
+    if (!home) return undefined
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        setScrollY(window.scrollY)
+        ticking = false
+      })
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [home])
+
   const max = Math.max(
     1,
     (typeof document !== "undefined" ? document.documentElement.scrollHeight : 1) -

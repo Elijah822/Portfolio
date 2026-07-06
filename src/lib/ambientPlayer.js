@@ -1,26 +1,19 @@
 import { MUSIC_AUDIO_URL } from "../data/projectMeta.js"
 
 let audio = null
-let warmed = false
 
 function ensureAudio() {
   if (!audio) {
     audio = new Audio(MUSIC_AUDIO_URL)
     audio.loop = true
-    audio.preload = "auto"
+    audio.preload = "none"
     audio.volume = 0.22
   }
   return audio
 }
 
 export function initAmbientPlayer() {
-  const el = ensureAudio()
-  el.muted = true
-  el.load()
-  if (!warmed) {
-    warmed = true
-    void el.play().catch(() => {})
-  }
+  ensureAudio()
 }
 
 export function isAmbientPlaying() {

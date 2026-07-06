@@ -14,11 +14,7 @@ import { usePlayWhenVisible } from "./hooks/usePlayWhenVisible.js"
 import { CONTACT } from "./data/contact.js"
 import { TESTIMONIALS } from "./data/testimonials.js"
 import {
-  isAudioUnlocked,
-  playLoadTick,
   resetLoadTicks,
-  setPendingLoadPct,
-  unlockAudio,
 } from "./lib/portfolioAudio.js"
 import { hasIntroLoaderCompleted, markIntroLoaderCompleted } from "./lib/loaderState.js"
 import { saveHomeScroll } from "./lib/scrollRestore.js"
@@ -56,97 +52,7 @@ function StatusBadge({ status, label }) {
   )
 }
 
-// ── CANVAS PARTICLES ──────────────────────────────────────────────────────────
-function Stars() {
-  const canvasRef = useRef(null)
-  const mouse = useRef({ x: -9999, y: -9999 })
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    let W, H, pts, raf
-    const resize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight }
-    resize()
-    pts = Array.from({ length: 75 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
-      r: Math.random() * 1.0 + 0.3,
-    }))
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H)
-      for (const p of pts) {
-        const dx = mouse.current.x - p.x, dy = mouse.current.y - p.y
-        const d = Math.sqrt(dx * dx + dy * dy)
-        if (d < 160) { p.vx += dx / d * 0.01; p.vy += dy / d * 0.01 }
-        p.vx *= 0.987; p.vy *= 0.987
-        p.x += p.vx; p.y += p.vy
-        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0
-        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0
-      }
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y
-          const d = Math.sqrt(dx * dx + dy * dy)
-          if (d < 110) {
-            ctx.beginPath()
-            ctx.strokeStyle = `rgba(201,170,124,${(1 - d / 110) * 0.1})`
-            ctx.lineWidth = 0.5
-            ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y)
-            ctx.stroke()
-          }
-        }
-        const dx = pts[i].x - mouse.current.x, dy = pts[i].y - mouse.current.y
-        const d = Math.sqrt(dx * dx + dy * dy)
-        if (d < 170) {
-          ctx.beginPath()
-          ctx.strokeStyle = `rgba(201,170,124,${(1 - d / 170) * 0.4})`
-          ctx.lineWidth = 0.5
-          ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mouse.current.x, mouse.current.y)
-          ctx.stroke()
-        }
-        ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, pts[i].r, 0, Math.PI * 2)
-        ctx.fillStyle = "rgba(201,170,124,0.4)"; ctx.fill()
-      }
-      raf = requestAnimationFrame(draw)
-    }
-    draw()
-    const onMove = e => { const r = canvas.getBoundingClientRect(); mouse.current = { x: e.clientX - r.left, y: e.clientY - r.top } }
-    window.addEventListener("resize", resize)
-    window.addEventListener("mousemove", onMove)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); window.removeEventListener("mousemove", onMove) }
-  }, [])
-  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
-}
-
 // ── AMBIENT LAYERS ────────────────────────────────────────────────────────────
-function AmbientOrbs({ scrollY }) {
-  const orbs = [
-    { x: "12%", y: "18%", size: 420, color: "rgba(201,170,124,0.07)", speed: 0.0004 },
-    { x: "78%", y: "62%", size: 520, color: "rgba(155,124,224,0.06)", speed: 0.0003 },
-    { x: "55%", y: "82%", size: 360, color: "rgba(94,207,177,0.05)", speed: 0.0005 },
-  ]
-  return (
-    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-      {orbs.map((o, i) => (
-        <div key={i} className="ambient-orb" style={{
-          position: "absolute",
-          left: o.x, top: o.y,
-          width: o.size, height: o.size,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${o.color} 0%, transparent 70%)`,
-          transform: `translateY(${Math.sin(scrollY * o.speed + i) * 40}px) translateX(${Math.cos(scrollY * o.speed * 1.3 + i) * 24}px)`,
-          transition: "transform 0.1s linear",
-          filter: "blur(40px)",
-        }} />
-      ))}
-    </div>
-  )
-}
-
-function FilmGrain() {
-  return <div className="film-grain" aria-hidden="true" />
-}
-
 function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = true, loop = true, controls = false, heroVideo = false, playWhenVisible = false }) {
   const ref = useRef(null)
   const coarsePointer = useCoarsePointer()
@@ -170,7 +76,7 @@ function MediaVideo({ src, label, poster, style = {}, autoPlay = false, muted = 
       controls={controls}
       aria-label={label}
       autoPlay={autoPlay && !lazyPlay}
-      preload={lazyPlay ? "none" : "auto"}
+      preload={controls ? "metadata" : "none"}
       {...(heroVideo ? { "data-hero-video": true } : {})}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", ...style }}
     />
@@ -226,33 +132,32 @@ function Loader({ onDone }) {
   const [exit, setExit] = useState(false)
 
   useEffect(() => {
-    let v = 0
-    let elapsed = 0
-    const tickMs = 16
-    const maxMs = 900
+    const maxMs = 650
+    const start = performance.now()
+    let raf
+    let lastPct = -1
 
     const finish = () => {
       setN(100)
-      setPendingLoadPct(100)
-      if (isAudioUnlocked()) playLoadTick(100)
-      setTimeout(() => { setExit(true); setTimeout(onDone, 350) }, 200)
+      setTimeout(() => { setExit(true); setTimeout(onDone, 350) }, 180)
     }
 
-    const id = setInterval(() => {
-      elapsed += tickMs
-      v += Math.random() * 9
-      if (v >= 100 || elapsed >= maxMs) {
-        clearInterval(id)
+    const step = now => {
+      const elapsed = now - start
+      const pct = elapsed >= maxMs ? 100 : Math.min(99, Math.floor((elapsed / maxMs) * 100))
+      if (pct !== lastPct) {
+        lastPct = pct
+        setN(pct)
+      }
+      if (elapsed >= maxMs) {
         finish()
         return
       }
-      const pct = Math.min(99, Math.floor(v))
-      setN(pct)
-      setPendingLoadPct(pct)
-      if (isAudioUnlocked()) playLoadTick(pct)
-    }, tickMs)
+      raf = requestAnimationFrame(step)
+    }
 
-    return () => clearInterval(id)
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
   }, [onDone])
 
   const R = 64
@@ -262,8 +167,6 @@ function Loader({ onDone }) {
 
   return (
     <div
-      onTouchStart={() => { if (!isAudioUnlocked()) unlockAudio() }}
-      onClick={() => { if (!isAudioUnlocked()) unlockAudio() }}
       style={{ position: "fixed", inset: 0, zIndex: 1000, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", transition: "opacity 0.7s ease, transform 0.7s ease", opacity: exit ? 0 : 1, transform: exit ? "scale(0.96)" : "scale(1)", pointerEvents: exit ? "none" : "all" }}>
       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 5, color: DIM, marginBottom: 48, textTransform: "uppercase" }}>Akinlolu Elijah</div>
 
@@ -738,7 +641,6 @@ export default function Portfolio() {
   const introDone = hasIntroLoaderCompleted() || skipLoader
   const [loaded, setLoaded] = useState(introDone)
   const [ready, setReady] = useState(introDone)
-  const [scrollY, setScrollY] = useState(0)
   const done = useCallback(() => {
     markIntroLoaderCompleted()
     resetLoadTicks()
@@ -757,20 +659,6 @@ export default function Portfolio() {
     }
     if (introDone) resetLoadTicks()
   }, [introDone, skipLoader])
-
-  useEffect(() => {
-    let ticking = false
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        setScrollY(window.scrollY)
-        ticking = false
-      })
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
 
   return (
     <div className="portfolio-root" style={{ background: BG, minHeight: "100vh", color: TEXT, position: "relative" }}>
@@ -1323,8 +1211,8 @@ export default function Portfolio() {
 
       {!loaded && !skipLoader && <Loader onDone={done} />}
       <div style={{ position: "relative", zIndex: 1 }}>
-        <SiteNav scrollY={scrollY} home />
-        <HeroSection />
+        <SiteNav home />
+        <HeroSection effectsEnabled={ready} />
         <Showreel />
         <ServicesSection />
         <Work />

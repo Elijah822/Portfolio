@@ -1,4 +1,4 @@
-import { StrictMode } from "react"
+import { StrictMode, lazy, Suspense } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Analytics } from "@vercel/analytics/react"
@@ -12,16 +12,21 @@ import { applyA11yPrefs, loadA11yPrefs } from "./lib/accessibilityState.js"
 import { initScrollRestoration } from "./lib/scrollToTop.js"
 import "@fontsource-variable/bricolage-grotesque/wght.css"
 import "./styles/global.css"
-import Portfolio from "./Portfolio.jsx"
-import Games from "./Games.jsx"
-import About from "./pages/About.jsx"
-import Exploration from "./pages/Exploration.jsx"
-import Contact from "./pages/Contact.jsx"
-import ProjectPage from "./pages/ProjectPage.jsx"
+
+const Portfolio = lazy(() => import("./Portfolio.jsx"))
+const Games = lazy(() => import("./Games.jsx"))
+const About = lazy(() => import("./pages/About.jsx"))
+const Exploration = lazy(() => import("./pages/Exploration.jsx"))
+const Contact = lazy(() => import("./pages/Contact.jsx"))
+const ProjectPage = lazy(() => import("./pages/ProjectPage.jsx"))
 
 loadFonts()
 initScrollRestoration()
 applyA11yPrefs(loadA11yPrefs())
+
+function RouteFallback() {
+  return <div style={{ minHeight: "100vh", background: "#07070c" }} aria-hidden />
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -30,14 +35,16 @@ createRoot(document.getElementById("root")).render(
         <AmbientAudioProvider>
           <BrowserRouter>
             <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Portfolio />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/exploration" element={<Exploration />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/work/:id" element={<ProjectPage />} />
-              <Route path="/games" element={<Games />} />
-            </Routes>
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/" element={<Portfolio />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/exploration" element={<Exploration />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/work/:id" element={<ProjectPage />} />
+                <Route path="/games" element={<Games />} />
+              </Routes>
+            </Suspense>
             <Analytics />
             <RouterSpeedInsights />
           </BrowserRouter>

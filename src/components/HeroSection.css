@@ -328,9 +328,10 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: stretch;
   width: 100%;
+  max-width: 520px;
   min-width: 0;
   margin: 0;
-  padding: 18px 0;
+  padding: 16px 0;
   background: rgba(255,255,255,0.022);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -345,9 +346,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
-  padding: 6px 10px;
+  padding: 4px 6px;
   text-align: center;
   border-left: 1px solid rgba(255,255,255,0.08);
 }
@@ -359,7 +360,7 @@
 .hero-stat__number {
   font-family: var(--font-heading,
     "Bricolage Grotesque Variable", system-ui, sans-serif);
-  font-size: clamp(20px, 1.9vw, 28px);
+  font-size: clamp(18px, 1.7vw, 26px);
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -373,12 +374,16 @@
 
 .hero-stat__label {
   font-family: var(--font-body, "Graphie", system-ui, sans-serif);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  font-size: 8px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(224,219,210,0.32);
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.2;
+  min-height: 2.4em;
+  width: 100%;
+  text-align: center;
+  padding: 0 2px;
+  box-sizing: border-box;
 }
 
 /* ─── Sound nudge ────────────────────────────────────────────────────────── */

@@ -34,7 +34,7 @@ function Stat({ prefix = '', value, suffix = '', label, inView }) {
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export function HeroSection() {
+export function HeroSection({ effectsEnabled = false }) {
   const glowRef    = useRef(null);
   const reelRef    = useRef(null);
   const shimmerRef = useRef(null);
@@ -47,9 +47,9 @@ export function HeroSection() {
 
   usePlayWhenVisible(heroVideoRef, true);
 
-  // Cursor parallax + shimmer — desktop only, saves mobile GPU/battery
+  // Cursor parallax — desktop only, after loader finishes
   useEffect(() => {
-    if (!finePointer || reduceMotion) return;
+    if (!finePointer || reduceMotion || !effectsEnabled) return;
 
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     const onMove = (e) => { mx = e.clientX; my = e.clientY; };
@@ -81,7 +81,7 @@ export function HeroSection() {
       window.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(rafId);
     };
-  }, [finePointer, reduceMotion]);
+  }, [finePointer, reduceMotion, effectsEnabled]);
 
   // Stats intersection observer
   useEffect(() => {
@@ -169,11 +169,11 @@ export function HeroSection() {
           role="list"
           aria-label="Key achievements"
         >
-          <Stat prefix="£" value={50} suffix="M+" label="Impact"     inView={statsInView} />
-          <Stat value={18} suffix="+"           label="Products"   inView={statsInView} />
-          <Stat value={8}                        label="Countries"  inView={statsInView} />
-          <Stat value={6}  suffix="+"           label="Years"      inView={statsInView} />
-          <Stat value={3}                        label="Enterprise" inView={statsInView} />
+          <Stat prefix="£" value={50} suffix="M+" label="Impact made"      inView={statsInView} />
+          <Stat value={18} suffix="+"           label="Product shipped"  inView={statsInView} />
+          <Stat value={8}                        label="Countries served" inView={statsInView} />
+          <Stat value={6}  suffix="+"           label="Years of exp"     inView={statsInView} />
+          <Stat value={3}                        label="Enterprise served" inView={statsInView} />
         </div>
 
         <div className="hero__right">
@@ -192,7 +192,7 @@ export function HeroSection() {
               muted
               loop
               playsInline
-              preload={coarsePointer ? "none" : "metadata"}
+              preload="none"
               data-hero-video
               aria-label="Project preview reel"
             />

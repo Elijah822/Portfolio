@@ -18,6 +18,7 @@ export default function CustomCursor() {
     let ry = 0
     let big = false
     let raf
+    let running = true
 
     const onMove = e => {
       mx = e.clientX
@@ -30,29 +31,42 @@ export default function CustomCursor() {
 
     const opts = { passive: true, capture: true }
     document.addEventListener("pointermove", onMove, opts)
-    document.addEventListener("mousemove", onMove, opts)
     document.addEventListener("mouseover", onOver, opts)
 
     const tick = () => {
-      dx += (mx - dx) * 0.35
-      dy += (my - dy) * 0.35
-      rx += (mx - rx) * 0.12
-      ry += (my - ry) * 0.12
-      if (dot.current) {
-        dot.current.style.transform = `translate3d(${dx - 4}px,${dy - 4}px,0) scale(${big ? 2.5 : 1})`
-      }
-      if (ring.current) {
-        ring.current.style.transform = `translate3d(${rx - 20}px,${ry - 20}px,0) scale(${big ? 1.6 : 1})`
+      if (!running) return
+      if (!document.hidden) {
+        dx += (mx - dx) * 0.35
+        dy += (my - dy) * 0.35
+        rx += (mx - rx) * 0.12
+        ry += (my - ry) * 0.12
+        if (dot.current) {
+          dot.current.style.transform = `translate3d(${dx - 4}px,${dy - 4}px,0) scale(${big ? 2.5 : 1})`
+        }
+        if (ring.current) {
+          ring.current.style.transform = `translate3d(${rx - 20}px,${ry - 20}px,0) scale(${big ? 1.6 : 1})`
+        }
       }
       raf = requestAnimationFrame(tick)
     }
     tick()
 
+    const onVisibility = () => {
+      if (document.hidden) {
+        dx = mx
+        dy = my
+        rx = mx
+        ry = my
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+
     return () => {
+      running = false
       cancelAnimationFrame(raf)
       document.removeEventListener("pointermove", onMove, opts)
-      document.removeEventListener("mousemove", onMove, opts)
       document.removeEventListener("mouseover", onOver, opts)
+      document.removeEventListener("visibilitychange", onVisibility)
       document.documentElement.classList.remove("custom-cursor-active")
       document.body.style.cursor = ""
     }

@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import SoundNudge from "../components/SoundNudge.jsx"
 import { setupHeroVideoAmbientSync } from "../lib/heroVideoAmbient.js"
 import {
-  initAmbientPlayer,
   isAudioPrefOn,
   isExplicitlyMuted,
   isAudioUnlocked,
@@ -14,7 +13,6 @@ import {
   unlockAudio,
 } from "../lib/portfolioAudio.js"
 
-const AUDIO_PREF_KEY = "portfolio-audio-on"
 const AmbientAudioContext = createContext(null)
 
 export function AmbientAudioProvider({ children }) {
@@ -26,14 +24,12 @@ export function AmbientAudioProvider({ children }) {
   }, [])
 
   useEffect(() => {
-    if (sessionStorage.getItem('portfolio-audio-on') === '0') {
-      sessionStorage.removeItem('portfolio-audio-on');
+    if (sessionStorage.getItem("portfolio-audio-on") === "0") {
+      sessionStorage.removeItem("portfolio-audio-on")
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    initAmbientPlayer()
-
     const offUnlock = onAudioUnlock(() => {
       if (isAudioPrefOn() && !isExplicitlyMuted()) markSoundOn()
     })

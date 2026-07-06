@@ -14,12 +14,11 @@ let lastLoadTick = -1
 let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
-const SOUND_TOGGLE = "[data-sound-toggle]"
-const SOUND_NUDGE = "[data-sound-nudge]"
-const SOUND_NUDGE_CLOSE = "[data-sound-nudge-close]"
 
-const ACTIVATION_EVENTS = ["pointerdown", "touchstart", "click"]
-const SOFT_EVENTS = ["pointermove", "mousemove", "scroll", "wheel", "touchmove"]
+export function setupAudioOnMouseMove(_onEnable) {
+  // Audio starts only from the explicit nav sound toggle — keeps first click fast.
+  return () => {}
+}
 
 export function isAudioPrefOn() {
   try {
@@ -122,6 +121,7 @@ export function playLoadTick(pct, force = false) {
 }
 
 export function startAmbientMusic() {
+  initAmbientPlayer()
   if (isAmbientAudible()) {
     setAudioPref(true)
     return Promise.resolve(true)
@@ -155,57 +155,6 @@ export function unlockAudio() {
   if (pendingLoadPct > 0) replayPendingLoadTicks()
   notifyUnlock()
   return true
-}
-
-function isIgnoredActivationTarget(target) {
-  return Boolean(target?.closest?.(`${SOUND_TOGGLE}, ${SOUND_NUDGE_CLOSE}`))
-}
-
-export function setupAudioOnMouseMove(onEnable) {
-  let autoEnabled = false
-
-  const markEnabled = () => {
-    if (autoEnabled) return
-    autoEnabled = true
-    onEnable?.()
-  }
-
-  const tryPlay = () => {
-    if (isExplicitlyMuted()) return Promise.resolve(false)
-    unlockAudio()
-    if (isAmbientAudible()) {
-      markEnabled()
-      return Promise.resolve(true)
-    }
-    return startAmbientMusic().then(ok => {
-      if (ok) markEnabled()
-      return ok
-    })
-  }
-
-  const softHandler = () => {
-    if (isExplicitlyMuted() || autoEnabled) return
-    void tryPlay()
-  }
-
-  const activateHandler = e => {
-    if (isExplicitlyMuted() || isIgnoredActivationTarget(e.target)) return
-    void tryPlay()
-  }
-
-  const opts = { passive: true, capture: true }
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches
-  if (finePointer) {
-    SOFT_EVENTS.forEach(evt => window.addEventListener(evt, softHandler, opts))
-  }
-  ACTIVATION_EVENTS.forEach(evt => window.addEventListener(evt, activateHandler, opts))
-
-  return () => {
-    if (finePointer) {
-      SOFT_EVENTS.forEach(evt => window.removeEventListener(evt, softHandler, opts))
-    }
-    ACTIVATION_EVENTS.forEach(evt => window.removeEventListener(evt, activateHandler, opts))
-  }
 }
 
 export function teardownAudio() {
