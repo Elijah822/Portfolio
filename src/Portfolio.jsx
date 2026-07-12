@@ -34,7 +34,7 @@ function StatusBadge({ status, label }) {
     live:     { dot: "#4ade80", color: "#4ade80", bg: "rgba(74,222,128,0.08)" },
     partial:  { dot: "#60a5fa", color: "#60a5fa", bg: "rgba(96,165,250,0.08)" },
     testing:  { dot: "#fbbf24", color: "#fbbf24", bg: "rgba(251,191,36,0.08)" },
-    acquired: { dot: "#c9aa7c", color: "#c9aa7c", bg: "rgba(201,170,124,0.12)" },
+    shipped:  { dot: "#c9aa7c", color: "#c9aa7c", bg: "rgba(201,170,124,0.12)" },
     proven:   { dot: "#9b7ce0", color: "#9b7ce0", bg: "rgba(155,124,224,0.10)" },
   }
   const c = cfg[status] || cfg.testing
@@ -627,7 +627,13 @@ function ContactCta() {
         <SocialLinks style={{ marginTop: 44 }} />
       </ScrollReveal>
       <ScrollReveal variant="fade" delay={160} style={{ marginTop: 100, paddingTop: 28, borderTop: `1px solid ${BORDER}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>
-        <span>© 2025 Akinlolu Elijah · also known as {CONTACT.alias}</span>
+        <span>
+          © 2025 Akinlolu Elijah · also known as {CONTACT.alias}
+          {" · "}
+          <Link to="/games" style={{ color: DIM, textDecoration: "none", borderBottom: `1px solid ${BORDER}` }}>
+            a couple of games I built ✦
+          </Link>
+        </span>
         <SocialLinks />
       </ScrollReveal>
     </section>

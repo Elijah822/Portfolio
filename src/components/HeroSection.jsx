@@ -169,7 +169,7 @@ export function HeroSection({ effectsEnabled = false }) {
           role="list"
           aria-label="Key achievements"
         >
-          <Stat prefix="£" value={50} suffix="M+" label="Impact made"      inView={statsInView} />
+          <Stat prefix="€" value={50} suffix="M+" label="Exposure avoided"  inView={statsInView} />
           <Stat value={18} suffix="+"           label="Product shipped"  inView={statsInView} />
           <Stat value={8}                        label="Countries served" inView={statsInView} />
           <Stat value={6}  suffix="+"           label="Years of exp"     inView={statsInView} />

@@ -372,7 +372,6 @@ export default function SiteNav({ home = false, sticky = false }) {
             <Link key={href} to={href} className="site-nav__link" style={linkStyle}>{label}</Link>
           ))}
           <Link to="/contact" className="site-nav__link" style={linkStyle}>Contact</Link>
-          <Link to="/games" className="site-nav__link site-nav__link--gold" style={linkStyle}>Game ✦</Link>
           <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" className="site-nav__cta" data-h onClick={openCalendly}>Book a call</a>
           <SoundButton />
         </div>
@@ -437,7 +436,6 @@ export default function SiteNav({ home = false, sticky = false }) {
           <Link key={href} to={href} onClick={close}>{label}</Link>
         ))}
         <Link to="/contact" onClick={close}>Contact</Link>
-        <Link to="/games" onClick={close}>Game ✦</Link>
         <a href={CONTACT.calendly} target="_blank" rel="noopener noreferrer" onClick={e => { close(); openCalendly(e) }} className="site-nav__drawer-cta">Book a call</a>
       </div>
     </>

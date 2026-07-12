@@ -57,7 +57,7 @@ function StatusBadge({ status, label }) {
     live: { color: "#4ade80", bg: "rgba(74,222,128,0.08)" },
     partial: { color: "#60a5fa", bg: "rgba(96,165,250,0.08)" },
     testing: { color: "#fbbf24", bg: "rgba(251,191,36,0.08)" },
-    acquired: { color: "#c9aa7c", bg: "rgba(201,170,124,0.12)" },
+    shipped: { color: "#c9aa7c", bg: "rgba(201,170,124,0.12)" },
     proven: { color: "#9b7ce0", bg: "rgba(155,124,224,0.10)" },
   }
   const c = cfg[status] || cfg.testing
@@ -282,6 +282,14 @@ export default function ProjectPage() {
         <ProjectMetrics metrics={project.metrics} accent={project.accent} />
 
         <Section label="Overview"><Prose>{overview}</Prose></Section>
+
+        {study?.disclosure && (
+          <ScrollReveal variant="fade-up" style={{ marginBottom: 48 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: 14, fontStyle: "italic", lineHeight: 1.7, color: DIM, margin: 0, padding: "14px 18px", borderLeft: `2px solid ${project.accent}66`, background: "rgba(255,255,255,0.02)" }}>
+              {study.disclosure}
+            </p>
+          </ScrollReveal>
+        )}
 
         {study?.problem && <Section label="The Problem"><Prose>{study.problem}</Prose></Section>}
         {study?.challenge && <Section label="Challenge"><Prose>{study.challenge}</Prose></Section>}

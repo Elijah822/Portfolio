@@ -13,13 +13,13 @@ const GOLD = "#c9aa7c"
 const BORDER = "rgba(255,255,255,0.07)"
 
 const EXPERIENCE = [
-  { role: "Senior Product Designer", company: "Toke", period: "Sep 2024 to Present", place: "United Kingdom" },
-  { role: "Product Designer", company: "Boglex Software", period: "Aug 2023 to Present", place: "Romania" },
-  { role: "CEO & Co-Founder", company: "QueuePay Africa", period: "Aug 2024 to Present", place: "Nigeria" },
-  { role: "Senior Product Designer", company: "The Autism Helper", period: "Sep 2024 to Feb 2025", place: "United States" },
-  { role: "Senior Product Designer", company: "StrengthMaker", period: "Nov 2023 to Jun 2024", place: "Germany" },
-  { role: "Product Designer", company: "SwipeAbove", period: "Sep 2023 to Feb 2024", place: "United Kingdom" },
-  { role: "Senior Product Designer", company: "Expaat", period: "Apr 2022 to Aug 2023", place: "Nigeria" },
+  { role: "Lead Product Designer", company: "Toke", period: "Sep 2024 to Present", place: "United Kingdom", type: "Full-time" },
+  { role: "Product Designer", company: "Boglex Software", period: "Aug 2023 to Present", place: "Romania", type: "Freelance / Contract" },
+  { role: "CEO & Co-Founder", company: "QueuePay Africa", period: "Aug 2024 to Present", place: "Nigeria", type: "Own company" },
+  { role: "Senior Product Designer", company: "The Autism Helper", period: "Sep 2024 to Feb 2025", place: "United States", type: "Freelance / Contract" },
+  { role: "Senior Product Designer", company: "StrengthMaker", period: "Nov 2023 to Jun 2024", place: "Germany", type: "Freelance / Contract" },
+  { role: "Product Designer", company: "SwipeAbove", period: "Sep 2023 to Feb 2024", place: "United Kingdom", type: "Freelance / Contract" },
+  { role: "Senior Product Designer", company: "Expaat", period: "Apr 2022 to Aug 2023", place: "Nigeria", type: "Freelance / Contract" },
 ]
 
 const RESUME_HIGHLIGHTS = [
@@ -83,7 +83,7 @@ export default function About() {
                 Product designer from Lagos, Nigeria, designing products people understand and businesses can grow with.
               </p>
               <p style={{ fontFamily: "var(--font-body)", fontSize: 18, fontWeight: 400, color: DIM, lineHeight: 1.9, margin: 0 }}>
-                Nigeria gave me resourcefulness. Experience across the UK, US, and Europe gave me rigour and access. I work where user needs, business goals, and regulatory reality collide, currently as Senior Product Designer at Toke, building e-commerce and retail experiences alongside AI-powered design infrastructure for enterprise clients.
+                Nigeria gave me resourcefulness. Experience across the UK, US, and Europe gave me rigour and access. I work where user needs, business goals, and regulatory reality collide, currently as Lead Product Designer at Toke, building e-commerce and retail experiences alongside AI-powered design infrastructure for enterprise clients.
               </p>
             </ScrollReveal>
 
@@ -93,7 +93,14 @@ export default function About() {
                 {EXPERIENCE.map((job, i) => (
                   <ScrollReveal key={i} variant="slide-left" delay={i * 60} style={{ padding: "24px 0", borderTop: i === 0 ? `1px solid ${BORDER}` : "none", borderBottom: `1px solid ${BORDER}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 8 }}>
-                      <div style={{ fontFamily: "var(--font-body)", fontSize: 22, color: TEXT }}>{job.role}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                        <div style={{ fontFamily: "var(--font-body)", fontSize: 22, color: TEXT }}>{job.role}</div>
+                        {job.type && (
+                          <span style={{ fontFamily: "var(--font-body)", fontSize: 10, letterSpacing: 1.5, color: DIM, border: `1px solid ${BORDER}`, padding: "3px 8px", textTransform: "uppercase" }}>
+                            {job.type}
+                          </span>
+                        )}
+                      </div>
                       <div style={{ fontFamily: "var(--font-body)", fontSize: 11, letterSpacing: 2, color: DIM }}>{job.period}</div>
                     </div>
                     <div style={{ fontFamily: "var(--font-body)", fontSize: 12, letterSpacing: 2, color: GOLD }}>{job.company} · {job.place}</div>

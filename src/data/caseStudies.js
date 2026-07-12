@@ -2,8 +2,10 @@
 export const CASE_STUDIES = {
   "02": {
     docUrl: "https://docs.google.com/document/d/1ChYHqMfBycpp4P4KBoxAtJ6oZiLi5A9IoGFLxJYM3XI/edit",
-    role: "Lead UX/Product Designer",
+    role: "Founder & Lead Product Designer",
     productType: "Retail Self-Checkout · Mobile",
+    disclosure:
+      "Full disclosure: QueuePay Africa is my own company — I'm the founder & CEO, and this is a founder-led product, not a third-party client engagement.",
     overview:
       "QueuePay is a smart mobile self-checkout system built to help retail stores cut down long checkout lines. Customers scan items with their phones and pay instantly, no extra hardware required.",
     problem:
@@ -111,7 +113,7 @@ export const CASE_STUDIES = {
     ],
     impact: [
       "68% onboarding completion, more than double the 20 to 30% industry average",
-      "42% of users returned after 7 days",
+      "42% of users returned after 30 days",
       "Users broke dreams into an average of 3.2 habits and 8 tasks per dream",
       "35% increase in weekly active users with AI sensei vs. early beta",
     ],
@@ -145,7 +147,6 @@ export const CASE_STUDIES = {
       "Users track an average of 8 to 10 applications per month",
       "More than 60% use resume tailoring for at least one application",
       "Most active users return weekly to update progress",
-      "Acquired by LinkedIn",
     ],
     problemsSolved: [
       "Scattered job search → One organised system for all applications and follow-ups",
@@ -194,7 +195,7 @@ export const CASE_STUDIES = {
     ],
     deliverables: ["Payment flows", "KYC compliance UX", "AI design system", "Enterprise dashboards"],
     outcomes: [
-      "€50M+ impact delivered across KYC and compliance workstreams.",
+      "€40M+ regulatory exposure avoided across KYC and compliance workstreams.",
       "Potential €10M+ saved in App Store commission via compliant billing alternatives.",
       "50% faster design delivery through AI-assisted system workflows.",
     ],

@@ -11,9 +11,9 @@ export const GLOBAL_COUNTRIES = [
 ]
 
 export const IMPACT_STATS = [
-  { value: "€50M+", label: "Impact delivered" },
+  { value: "€50M+", label: "Exposure avoided" },
   { value: "18+", label: "Products shipped" },
   { value: "8", label: "Countries" },
-  { value: "6+", label: "Years of craft" },
+  { value: "8+", label: "Years of experience" },
   { value: "3", label: "Enterprise clients" },
 ]
