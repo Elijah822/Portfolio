@@ -15,9 +15,44 @@ let pendingLoadPct = 0
 const unlockListeners = new Set()
 const AUDIO_PREF_KEY = "portfolio-audio-on"
 
-export function setupAudioOnMouseMove(_onEnable) {
-  // Audio starts only from the explicit nav sound toggle — keeps first click fast.
-  return () => {}
+// Mobile only: first tap or first scroll starts ambient sound automatically.
+// Desktop stays explicit-toggle-only (that's what fixed the INP/FID regression).
+const MOBILE_ACTIVATION_EVENTS = ["touchstart", "click", "scroll"]
+
+function isIgnoredActivationTarget(target) {
+  return Boolean(target?.closest?.("[data-sound-toggle], [data-sound-nudge-close]"))
+}
+
+export function setupAudioOnMouseMove(onEnable) {
+  const coarsePointer = !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  if (!coarsePointer) return () => {}
+
+  let triggered = false
+  const opts = { passive: true, capture: true }
+  const detach = () => MOBILE_ACTIVATION_EVENTS.forEach(evt => window.removeEventListener(evt, handler, opts))
+
+  const tryPlay = () => {
+    if (triggered || isExplicitlyMuted()) return
+    triggered = true
+    if (!unlocked) unlockAudio()
+    startAmbientMusic().then(ok => {
+      if (ok) {
+        onEnable?.()
+        detach()
+      } else {
+        triggered = false
+      }
+    })
+  }
+
+  function handler(e) {
+    if (isIgnoredActivationTarget(e.target)) return
+    tryPlay()
+  }
+
+  MOBILE_ACTIVATION_EVENTS.forEach(evt => window.addEventListener(evt, handler, opts))
+
+  return detach
 }
 
 export function isAudioPrefOn() {

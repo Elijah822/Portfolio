@@ -10,10 +10,12 @@ import ScrollToTop from "./components/ScrollToTop.jsx"
 import { loadFonts } from "./tokens/typography.js"
 import { applyA11yPrefs, loadA11yPrefs } from "./lib/accessibilityState.js"
 import { initScrollRestoration } from "./lib/scrollToTop.js"
+import Portfolio from "./Portfolio.jsx"
 import "@fontsource-variable/bricolage-grotesque/wght.css"
 import "./styles/global.css"
 
-const Portfolio = lazy(() => import("./Portfolio.jsx"))
+// Home route stays eager (no extra round-trip before first paint).
+// Everything else is lazy since it's never needed on first load.
 const Games = lazy(() => import("./Games.jsx"))
 const About = lazy(() => import("./pages/About.jsx"))
 const Exploration = lazy(() => import("./pages/Exploration.jsx"))

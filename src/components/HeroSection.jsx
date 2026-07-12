@@ -188,11 +188,12 @@ export function HeroSection({ effectsEnabled = false }) {
               ref={heroVideoRef}
               className="hero__device-video"
               src="https://res.cloudinary.com/dj8jyjcvo/video/upload/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4"
-              poster="https://res.cloudinary.com/dj8jyjcvo/video/upload/so_0,f_jpg,w_1200,q_auto/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4"
+              poster={`https://res.cloudinary.com/dj8jyjcvo/video/upload/so_0,f_jpg,w_${coarsePointer ? 640 : 1200},q_auto/v1781689583/freecompress-Svar_Portfolio_FINAL_1_1_ri3rzv.mp4`}
               muted
               loop
               playsInline
               preload="none"
+              fetchPriority="high"
               data-hero-video
               aria-label="Project preview reel"
             />
