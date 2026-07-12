@@ -172,7 +172,7 @@ export function HeroSection({ effectsEnabled = false }) {
           <Stat prefix="€" value={50} suffix="M+" label="Exposure avoided"  inView={statsInView} />
           <Stat value={18} suffix="+"           label="Product shipped"  inView={statsInView} />
           <Stat value={8}                        label="Countries served" inView={statsInView} />
-          <Stat value={6}  suffix="+"           label="Years of exp"     inView={statsInView} />
+          <Stat value={6}  suffix="+"           label="Yrs product design" inView={statsInView} />
           <Stat value={3}                        label="Enterprise served" inView={statsInView} />
         </div>
 

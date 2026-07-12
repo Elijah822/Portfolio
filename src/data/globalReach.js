@@ -14,6 +14,6 @@ export const IMPACT_STATS = [
   { value: "€50M+", label: "Exposure avoided" },
   { value: "18+", label: "Products shipped" },
   { value: "8", label: "Countries" },
-  { value: "8+", label: "Years of experience" },
+  { value: "8+", label: "Years in design" },
   { value: "3", label: "Enterprise clients" },
 ]
